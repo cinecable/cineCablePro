@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="consultaExcedente" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fac77c8a-efd0-4c06-9593-df6721d9fd1c">
+	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P_IDEXCEDENTE" class="java.lang.Integer"/>
+	<parameter name="P_LOGO" class="java.io.InputStream"/>
+	<queryString>
+		<![CDATA[select e.*, (select f.nombre from fpago f where f.idfpago = e.idfpago) as formapago ,
+(select be.nombre from bancos be where be.idbanco = e.idbcoemisor) as bcoemisor,
+(select bt.nombre from bancos bt where bt.idbanco = e.idbcoemisortar) as bcoemisortar
+from excedentes e where e.idexcedente = $P{P_IDEXCEDENTE}]]>
+	</queryString>
+	<field name="idexcedente" class="java.lang.Integer"/>
+	<field name="valpago" class="java.lang.Float"/>
+	<field name="idfpago" class="java.lang.Integer"/>
+	<field name="nrodocumento" class="java.lang.String"/>
+	<field name="idbcoemisor" class="java.lang.Integer"/>
+	<field name="idbcoemisortar" class="java.lang.Integer"/>
+	<field name="fcaducidad" class="java.sql.Date"/>
+	<field name="codseguridad" class="java.lang.String"/>
+	<field name="propietario" class="java.lang.String"/>
+	<field name="nrocuenta" class="java.lang.String"/>
+	<field name="idestado" class="java.lang.Integer"/>
+	<field name="idempresa" class="java.lang.Integer"/>
+	<field name="idcuenta" class="java.lang.Integer"/>
+	<field name="valpendiente" class="java.lang.Float"/>
+	<field name="fecha" class="java.sql.Timestamp"/>
+	<field name="idusuario" class="java.lang.Integer"/>
+	<field name="ip" class="java.lang.String"/>
+	<field name="idpago" class="java.lang.Integer"/>
+	<field name="formapago" class="java.lang.String"/>
+	<field name="bcoemisor" class="java.lang.String"/>
+	<field name="bcoemisortar" class="java.lang.String"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="72">
+			<frame>
+				<reportElement uuid="ebddeffa-fe2b-4585-8cd3-dc1a5a525a97" mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699"/>
+				<staticText>
+					<reportElement uuid="57f7b6a7-3998-4508-b693-1f41c7960e3b" x="370" y="44" width="205" height="30" forecolor="#FFFFFF"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="20" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Datos del Excedente]]></text>
+				</staticText>
+				<image>
+					<reportElement uuid="9dc7ca0c-b347-4f53-bafe-8974ee9c826e" x="20" y="21" width="81" height="53"/>
+					<imageExpression><![CDATA[$P{P_LOGO}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement uuid="de00063f-d97c-48c3-9290-abd727b288c2" x="108" y="31" width="250" height="43" forecolor="#FFFFFF"/>
+					<textElement>
+						<font size="34" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cine Cable]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="13"/>
+	</pageHeader>
+	<detail>
+		<band height="533">
+			<staticText>
+				<reportElement uuid="31689c2d-2026-481d-a702-460f8eb92154" mode="Opaque" x="45" y="77" width="152" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement>
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Id Excedente]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="8b70b23d-18c2-4412-b492-e317b5fd0bee" mode="Opaque" x="211" y="77" width="295" height="20" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{idexcedente}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="f7700b94-a57d-4bdc-8bf9-cd98772fae93" mode="Opaque" x="45" y="112" width="152" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement>
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Real Excedente]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="58d6d430-ce47-45f8-9a2e-0ccb096c3b1f" mode="Opaque" x="211" y="112" width="295" height="20" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valpago}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="84364461-ba74-4e83-b6b4-19be8dcb0207" mode="Opaque" x="45" y="182" width="152" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement>
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Forma de Pago]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="f1270791-ae53-4b7a-ad4b-dd15287aa238" mode="Opaque" x="211" y="182" width="295" height="20" backcolor="#E6E6E6"/>
+				<textElement>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{formapago}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="cba3d2d7-5455-4b49-9e05-943f059422b8" mode="Opaque" x="45" y="252" width="152" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement>
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No. Documento]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="84e414e1-1aa8-466b-9979-626a434ed42c" mode="Opaque" x="211" y="252" width="295" height="20" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph leftIndent="10" rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nrodocumento}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="c388e33d-5517-4a93-b7a5-8dd4b80313f4" mode="Opaque" x="45" y="287" width="152" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement>
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Banco Emisor]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="1bbf33d1-898f-4a20-93df-ae1da9f5e890" mode="Opaque" x="211" y="287" width="295" height="20" backcolor="#E6E6E6"/>
+				<textElement>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bcoemisor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="92fdcb6e-32bc-4355-905f-28e5c4e09ae1" mode="Opaque" x="45" y="322" width="152" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement>
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Banco Tarjeta]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="49cccdfa-4c05-43c5-98b1-9190b6a7d4a7" mode="Opaque" x="211" y="322" width="295" height="20" backcolor="#E6E6E6"/>
+				<textElement>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bcoemisortar}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="487d7d10-caa8-4b1a-b7f2-218ae5f3df68" mode="Opaque" x="45" y="392" width="152" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement>
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Caducidad]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="618a7020-a1c3-49af-9b8b-14e9d4c4ceb1" mode="Opaque" x="211" y="392" width="295" height="20" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fcaducidad}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="f56663ef-baab-4802-ab61-3c675c99e1a4" mode="Opaque" x="45" y="357" width="152" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement>
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Propietario]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cd0c2026-fc4a-49bf-9ab8-01c10c129727" mode="Opaque" x="211" y="357" width="295" height="20" backcolor="#E6E6E6"/>
+				<textElement>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{propietario}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="e2c0c0fb-c5f2-4472-9f66-85db76ba9888" mode="Opaque" x="45" y="217" width="152" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement>
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No Cuenta Cliente]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="340f4602-1e42-443e-a7f8-74f0b234f205" mode="Opaque" x="211" y="217" width="295" height="20" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nrocuenta}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="52551917-101e-4170-a009-bb6d8cfc33d2" mode="Opaque" x="45" y="42" width="152" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement>
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Id. Cuenta del Cliente]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="17ba0dad-294d-4e89-98e5-ffc9e9b33c22" mode="Opaque" x="211" y="42" width="295" height="20" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{idcuenta}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b53ff8de-346a-41b5-ac9b-b9b63fda8031" mode="Opaque" x="45" y="147" width="152" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement>
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Pendiente]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cbf7380e-835c-4e50-bf2c-caddfc6f1147" mode="Opaque" x="211" y="147" width="295" height="20" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valpendiente}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="17">
+			<textField>
+				<reportElement uuid="72e1ff3e-4e7a-4d92-8068-ad0bfa9f19c2" mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="93a41e5a-14a3-4ebb-9d04-e424d747b4b7" mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="5521ac9e-3b54-434c-85dc-900b9d76df19" x="0" y="4" width="100" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

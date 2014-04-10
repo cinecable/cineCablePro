@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h1 align="center" style="border-bottom: 2px solid #dddddd;">Créditos</h1>
+    <h:panelGrid id="pnlParametros" columns="1" width="100%">
+	    <h:outputLabel value="Fecha Desde:" for="idfechadesde" />
+		<p:calendar id="idfechadesde" value="#{consultaCreditoBean.fechaDesde}" yearRange="c-20:c" locale="es" pattern="dd/MM/yyyy" navigator="true" />
+		
+		<h:outputLabel value="Fecha Hasta:" for="idfechahasta" />
+		<p:calendar id="idfechahasta" value="#{consultaCreditoBean.fechaHasta}" yearRange="c-20:c" locale="es" pattern="dd/MM/yyyy" navigator="true" />
+		
+		<h:outputText value="" />
+		<p:commandButton id="btnconsultar" value="Consultar" icon="ui-icon-search" style="float: right;margin-top: 20px;" actionListener="#{consultaCreditoBean.consultarCredito}" update=":form-principal:form-contentpage:mensajes, :form-principal:pnlCreditos" process="pnlParametros, pnlCreditos" />
+	</h:panelGrid>
+	<br />
+	<h:panelGrid id="pnlCreditos" columns="1" width="100%">
+		<p:selectOneListbox id="idlisCreditos" value="#{consultaCreditoBean.creditoSeleccionado}" converter="creditoc" style="width: 100%" rendered="#{consultaCreditoBean.lisCreditos.size() > 0}" >
+			<p:ajax listener="#{consultaCreditoBean.consultaReferenciales()}" update=":form-principal:form-contentpage:pnlDatos, :form-principal:form-contentpage:mensajes" />
+			<f:selectItems value="#{consultaCreditoBean.lisCreditos}" var="i" itemLabel="#{i.textoCredito}" itemValue="#{i}" /> 
+		</p:selectOneListbox>
+	</h:panelGrid>
+</ui:composition>

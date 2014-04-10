@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:form id="form-contentpage">
+		<p:growl id="mensajes" showDetail="true" />
+		<h1 class="title ui-widget-header" style="text-align: center;">Datos del Crédito</h1>
+		
+		<p:panel id="pnlDatos" styleClass="hidepanel">
+			<h:link style="float: right;" value="Imprimir" outcome="browser_credito.jsf" target="_blank" >
+				<f:param name="idfactura" value="#{consultaCreditoBean.creditoSeleccionado.idfactura}"></f:param>
+			</h:link>
+			<h:link style="float: right;" title="Imprimir" outcome="browser_credito.jsf" target="_blank" >
+				<span class="ui-button-icon-left ui-icon ui-c ui-icon-print"></span>
+				<f:param name="idfactura" value="#{consultaCreditoBean.creditoSeleccionado.idfactura}"></f:param>
+			</h:link>
+			<br clear="all" />
+			<p:panelGrid id="pnlDatosCreditos" style="width: 100%" >
+				<p:row>
+				<p:column style="width: 50%">
+				<h:outputLabel value="Id Factura: " for="txtidfactura" />
+				</p:column>
+				<p:column >
+				<h:outputText id="txtidfactura" value="#{consultaCreditoBean.creditoSeleccionado.idfactura}" />
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column>
+				<h:outputLabel value="Motivo: " for="txtmotivo" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtmotivo" value="#{consultaCreditoBean.motivos.nombre}" />
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column>
+				<h:outputLabel value="Observaciones: " for="txtobservacion" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtobservacion" value="#{consultaCreditoBean.creditoSeleccionado.observaciones}" />
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column>
+				<h:outputLabel value="Valor Fijo: " for="txtvalorfijo" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtvalorfijo" value="#{consultaCreditoBean.creditoSeleccionado.valrealfijo}" >
+					<f:convertNumber pattern="0.00" />
+				</h:outputText>
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column>
+				<h:outputLabel value="Valor Crédito Pendiente: " for="txtvalorcredito" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtvalorcredito" value="#{consultaCreditoBean.creditoSeleccionado.vacredito}" >
+					<f:convertNumber pattern="0.00" />
+				</h:outputText>
+				</p:column>
+				</p:row>
+	
+				<p:row>
+				<p:column>
+				<h:outputLabel value="Fecha: " for="txtfecha" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtfecha" value="#{consultaCreditoBean.creditoSeleccionado.fecha}" >
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText>
+				</p:column>
+				</p:row>
+			</p:panelGrid>
+			
+			<br />
+			<p:commandButton value="Regresar" style="float: right;" onclick="history.back();" immediate="true" />
+		</p:panel>
+	</h:form>
+</ui:composition>

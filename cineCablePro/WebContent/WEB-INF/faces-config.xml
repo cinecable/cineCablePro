@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+ xmlns:xi="http://www.w3.org/2001/XInclude"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+ <application/>
+ <converter>
+  <converter-id>factura</converter-id>
+  <converter-class>faces.converter.FacturaConverter</converter-class>
+ </converter>
+ <converter>
+  <converter-id>pagoc</converter-id>
+  <converter-class>faces.converter.PagoConverter</converter-class>
+ </converter> 
+ <converter>
+  <converter-id>fpago</converter-id>
+  <converter-class>faces.converter.FpagoConverter</converter-class>
+ </converter>
+ <converter>
+  <converter-id>excedentec</converter-id>
+  <converter-class>faces.converter.ExcedenteConverter</converter-class>
+ </converter>
+ <converter>
+  <converter-id>creditoc</converter-id>
+  <converter-class>faces.converter.CreditoConverter</converter-class>
+ </converter>
+ <converter>
+  <converter-id>bancos</converter-id>
+  <converter-class>faces.converter.BancosConverter</converter-class>
+ </converter>
+  <converter>
+  <converter-id>callePrincipal</converter-id>
+  <converter-class>faces.converter.CallePrincipalConverter</converter-class>
+ </converter>
+  <converter>
+  <converter-id>calleSecundaria</converter-id>
+  <converter-class>faces.converter.CalleSecundariaConverter</converter-class>
+ </converter>
+ <converter>
+  <converter-id>producto</converter-id>
+  <converter-class>faces.converter.ProductosServConverter</converter-class>
+ </converter>
+ <lifecycle>
+  <phase-listener>faces.listeners.SecurityPhaseListener</phase-listener>
+ </lifecycle>
+ 
+ </faces-config>

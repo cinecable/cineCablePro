@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+	<composite:interface displayName="Parametros"
+		shortDescription="Recibe parametros para ser usados en el componente">
+		<composite:attribute name="rutaPadre" required="true"
+			shortDescription="Ruta completa de los id de los contenedores del componente" />
+	</composite:interface>
+
+	<composite:implementation>
+		<h:form id="form-productoscomponent">
+			<p:growl id="mensajes" showDetail="true" />
+			<p:panel header="Ingreso de Productos contratados por el cliente">
+
+				<p:focus id="idfocus"></p:focus>
+				<p:panelGrid id="idPanelEditor" style="width: 100%;">
+					<p:row>
+						<p:column>
+							<h:outputLabel value="Producto  :" for="idCmbProd" />
+						</p:column>
+						<p:column>
+							<p:autoComplete id="idCmbProd" size="60"
+								value="#{productosBean.productoSelected}"
+								completeMethod="#{productosBean.buscarProductos}" var="i"
+								itemLabel="#{i.nombre}" itemValue="#{i}" converter="producto"
+								minQueryLength="1" forceSelection="true" required="true"
+								requiredMessage="es obligatoria" >
+								
+								<p:ajax event="itemSelect" update="#{cc.attrs.rutaPadre}:form-productoscomponent:mensajes"></p:ajax>
+								
+								<f:facet name="itemtip">
+									<h:panelGrid columns="2" cellpadding="5" width="250px">
+										<h:outputText value="Nombre: " style="font-weight: bold;" />
+										<h:outputText id="idtoolnomcp" value="#{i.nombre}" />
+									</h:panelGrid>
+								</f:facet>
+							</p:autoComplete>
+						</p:column>
+
+					</p:row>
+					<p:row>
+						<p:column>
+							<h:outputLabel value="Cantidad :" for="idtxcan" />
+						</p:column>
+						<p:column>
+							<h:inputText id="idtxcan" size="15"
+								value="#{productosBean.cantidad}" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column colspan="2">
+							<p:spacer height="60px;" />
+						</p:column>
+					</p:row>
+
+					<f:facet name="footer">
+						<p:row>
+							<p:column colspan="2" style="text-align: right;">
+								<p:commandButton id="idbtnAgregarProducto" value="Insertar"
+									actionListener="#{productosBean.agregarProductos}"
+									update="#{cc.attrs.rutaPadre}:form-productoscomponent:idPanelEditor, #{cc.attrs.rutaPadre}:form-productoscomponent:idTablaProductos, #{cc.attrs.rutaPadre}:form-productoscomponent:mensajes"
+									process="idPanelEditor, idTablaProductos">
+								</p:commandButton>
+							</p:column>
+						</p:row>
+					</f:facet>
+
+				</p:panelGrid>
+				<br />
+				<p:contextMenu for="idTablaProductos">  
+			        <p:menuitem value="Quitar" update="idTablaProductos" icon="ui-icon-close" actionListener="#{productosBean.quitarProducto}"/>  
+			    </p:contextMenu>  
+				<p:dataTable id="idTablaProductos"
+					value="#{productosBean.lisProductosId}" var="prodid"
+					rowKey="#{prodid.idProducto}" widgetVar="vartablajProd"
+					paginator="true" rows="10"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					selection="#{productosBean.productoIdSelected}"
+					selectionMode="single" emptyMessage="No se encontraron registros" >
+
+					<p:ajax event="rowSelect" update="#{cc.attrs.rutaPadre}:form-productoscomponent:mensajes" />  
+
+					<f:facet name="header">
+						Productos
+					</f:facet>
+
+					<p:column id="idProductoHeader" headerText="Nombre Producto">
+						<h:outputText value="#{prodid.nombreProd}" />
+					</p:column>
+
+					<p:column id="idCantidadHeader" headerText="Cantidad">
+						<h:outputText value="#{prodid.cantidad}" />
+					</p:column>
+
+					<p:column id="idQuitarHeader" headerText="Quitar">
+						<p:commandButton icon="ui-icon ui-icon-trash"
+							id="idconfirmardelete"
+							action="#{productosBean.quitarProducto}"
+							process="idTablaProductos"
+							update="#{cc.attrs.rutaPadre}:form-productoscomponent:mensajes, 
+					   #{cc.attrs.rutaPadre}:form-productoscomponent:idTablaProductos, #{cc.attrs.rutaPadre}:form-productoscomponent:idPanelEditor">
+							<f:setPropertyActionListener value="#{prodid}" target="#{productosBean.productoIdSelected}" for="idconfirmardelete" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+
+			</p:panel>
+		</h:form>
+	</composite:implementation>
+</ui:composition>

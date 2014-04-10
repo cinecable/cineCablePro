@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+	
+	<composite:interface displayName="Parametros" shortDescription="Recibe parametros para ser usados en el componente">
+		<composite:attribute name="rutaPadre" required="true" shortDescription="Ruta completa de los id de los contenedores del componente" />
+	</composite:interface>
+	
+	<composite:implementation>
+	<h:form id="form-direccioncomponent" >
+		<p:growl id="mensajes" showDetail="true" />  
+		   <h:panelGrid id="idpanelDatosGenerales" columns="2" >  
+		   
+		         <h:outputLabel value="Pais :" for="idcombopais" />  
+ 				   <p:selectOneMenu id="idcombopais" value="#{direccionBean.paisSelected.idpais}" >
+                       <f:selectItems value="#{direccionBean.lisPais}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idpais}" />
+                       <p:ajax listener="#{direccionBean.llenarLisProvincia}" update="#{cc.attrs.rutaPadre}:form-direccioncomponent:idcomboprovincia, #{cc.attrs.rutaPadre}:form-direccioncomponent:idcombociudad,
+                        #{cc.attrs.rutaPadre}:form-direccioncomponent:mensajes,#{cc.attrs.rutaPadre}:form-direccioncomponent:idcombosector,
+                        ,#{cc.attrs.rutaPadre}:form-direccioncomponent:idComboTipoSector, #{cc.attrs.rutaPadre}:form-direccioncomponent:idComboEdificio,
+                        #{cc.attrs.rutaPadre}:form-direccioncomponent:idComboCallePrin,#{cc.attrs.rutaPadre}:form-direccioncomponent:idComboCallesec,
+                        #{cc.attrs.rutaPadre}:form-direccioncomponent:idComboUbicacion,#{cc.attrs.rutaPadre}:form-direccioncomponent:idComboNodos" />
+                   </p:selectOneMenu>
+                   
+                   <h:outputLabel value="Provincia :" for="idcomboprovincia" />  
+                   <p:selectOneMenu id="idcomboprovincia" value="#{direccionBean.provinciaSelected.idprovincia}">
+                       <f:selectItems value="#{direccionBean.lisProvincia}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idprovincia}" />
+                       <p:ajax listener="#{direccionBean.llenarLisCiudad}" update="#{cc.attrs.rutaPadre}:form-direccioncomponent:idcombociudad,
+                        #{cc.attrs.rutaPadre}:form-direccioncomponent:idcombosector,
+                   	 #{cc.attrs.rutaPadre}:form-direccioncomponent:idComboEdificio,#{cc.attrs.rutaPadre}:form-direccioncomponent:idComboCallePrin,
+                  	 	 #{cc.attrs.rutaPadre}:form-direccioncomponent:idComboCallesec,#{cc.attrs.rutaPadre}:form-direccioncomponent:idComboUbicacion,
+                 	     #{cc.attrs.rutaPadre}:form-direccioncomponent:idComboNodos,#{cc.attrs.rutaPadre}:form-direccioncomponent:idComboTipoSector" />
+                   </p:selectOneMenu>
+                   
+                   
+                    <h:outputLabel value="Ciudad :" for="idcombociudad" />
+                   <p:selectOneMenu id="idcombociudad" value="#{direccionBean.ciudadSelected.idciudad}">
+                       <f:selectItems value="#{direccionBean.lisCiudad}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idciudad}" />
+                        <p:ajax listener="#{direccionBean.llenarDependientes}" update="#{cc.attrs.rutaPadre}:form-direccioncomponent:idcombosector" />
+                   </p:selectOneMenu>
+                   
+                   
+                   <h:outputLabel value="Sector :" for="idcombosector" />
+                     <p:selectOneMenu id="idcombosector" value="#{direccionBean.sectorSelected.idsector}">
+                       <f:selectItems value="#{direccionBean.lisSector}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idsector}" />
+                    <p:ajax listener="#{direccionBean.llenarDependientesSector()}" update="#{cc.attrs.rutaPadre}:form-direccioncomponent:idcombosector,
+                    #{cc.attrs.rutaPadre}:form-direccioncomponent:idComboEdificio,#{cc.attrs.rutaPadre}:form-direccioncomponent:idComboCallePrin,
+                    #{cc.attrs.rutaPadre}:form-direccioncomponent:idComboCallesec,#{cc.attrs.rutaPadre}:form-direccioncomponent:idComboUbicacion,
+                    #{cc.attrs.rutaPadre}:form-direccioncomponent:idComboNodos,#{cc.attrs.rutaPadre}:form-direccioncomponent:idComboTipoSector" />
+                   </p:selectOneMenu>
+                   
+                    <h:outputLabel value="Tipo Sector :" for="idComboTipoSector" />
+                    <p:selectOneMenu id="idComboTipoSector" disabled="#{direccionBean.habilitaTipoSector}" value="#{direccionBean.tiposectorSelected.idtiposector}">
+                       <f:selectItems value="#{direccionBean.lisTipoSector}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idtiposector}" />
+                   <p:ajax listener="#{direccionBean.llenarDependientesTipoSector()}" update="#{cc.attrs.rutaPadre}:form-direccioncomponent:idComboCallesec,
+                   #{cc.attrs.rutaPadre}:form-direccioncomponent:idComboCallePrin,#{cc.attrs.rutaPadre}:form-direccioncomponent:idComboUbicacion" />                          
+                   </p:selectOneMenu>
+                   
+                   <h:outputLabel value="Calle Principal  :" for="idComboCallePrin" />
+                <p:autoComplete id="idComboCallePrin" size="60" value="#{direccionBean.calleprincipalSelected}" completeMethod="#{direccionBean.CompletarCallesPrincipales}" 
+				var="i" itemLabel="#{i.nombre}" itemValue="#{i}" converter="callePrincipal" minQueryLength="1"  
+				forceSelection="true" required="true" requiredMessage="es obligatoria">
+					
+					<f:facet name="itemtip">  
+	                    <h:panelGrid  columns="2" cellpadding="5" width="250px">  
+	                        <h:outputText value="Nombre: " style="font-weight: bold;" />  
+	                        <h:outputText id="idtoolnomcp" value="#{i.nombre}" />  
+	                    </h:panelGrid>  
+                   </f:facet>
+				</p:autoComplete>
+				
+	            <h:outputLabel value="Calle Secundaria :" for="idComboCallesec" />
+	            <p:autoComplete id="idComboCallesec" size="60" value="#{direccionBean.callesecundariaSelected}" completeMethod="#{direccionBean.CompletarCallesSecundarias}" 
+					var="i" itemLabel="#{i.nombre}" itemValue="#{i}" converter="calleSecundaria" minQueryLength="1"  
+					forceSelection="true" required="true" requiredMessage="es obligatoria">
+						
+					<f:facet name="itemtip">  
+	                    <h:panelGrid  columns="2" cellpadding="5" width="250px">  
+	                        <h:outputText value="Nombre: " style="font-weight: bold;" />  
+	                        <h:outputText id="idtoolnomcs" value="#{i.nombre}" />  
+	                    </h:panelGrid>  
+	                </f:facet>
+				</p:autoComplete>                  
+                  
+                    <h:outputLabel value="Ubicacion :" for="idComboUbicacion" />
+                    <p:selectOneMenu id="idComboUbicacion" value="#{direccionBean.ubicacionSelected.idubicacion}">
+                       <f:selectItems value="#{direccionBean.lisUbicacion}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idubicacion}" />
+                   </p:selectOneMenu>
+                   
+                    <h:outputLabel value="Edificio :" for="idComboEdificio" />
+                     <p:selectOneMenu id="idComboEdificio" value="#{direccionBean.edificioSelected.idedificio}">
+                       <f:selectItems value="#{direccionBean.lisEdificio}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idedificio}" />
+                   </p:selectOneMenu>
+                   
+                   <h:outputLabel value="Nodo :" for="idComboNodos" />
+                    <p:selectOneMenu id="idComboNodos" value="#{direccionBean.nodosSelected.idnodo}">
+                       <f:selectItems value="#{direccionBean.lisNodos}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idnodo}" />
+                   </p:selectOneMenu>
+                 
+                  <h:outputLabel value="Numero :" for="idtxtnub" />               
+                  <h:inputText id="idtxtnub" size="10" maxlength="20" value="#{direccionBean.numeroUbicacion}"/>
+                  
+                  <h:outputLabel value="Piso :" for="idtxtpiso" />
+                  <h:inputText id="idtxtpiso" size="10" value="#{direccionBean.idPiso}" />
+                  
+                  <h:outputLabel value="Departamento/Oficina :" for="idtxtDO" />
+                  <h:inputText id="idtxtDO" size="10" value="#{direccionBean.idDepartamento}"/>
+                                
+                   <h:outputLabel value="Referencia :" for="idReferencia" />
+                  <p:inputTextarea id ="idReferencia" rows="6" cols="33"  />                
+		          </h:panelGrid>
+        </h:form>
+	</composite:implementation>
+</ui:composition>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:my="http://java.sun.com/jsf/composite/components/paginas">
+
+	<h:form id="form-contentpage">
+	<p:growl id="mensajes" showDetail="true" />
+	<h1 class="title ui-widget-header" style="text-align: center;">Clientes Nuevos</h1>
+	<br />
+	<p:accordionPanel id="acc" >
+
+		<p:tab title="Datos Basicos" titleStyleClass="tabStyle"  titletip="hola"  >
+			<h:panelGrid columns="1" cellpadding="10">
+				 <my:dBasicosCli_component id="idcomponentedbasicos"
+					rutaPadre=":form-contentpage:acc:idcomponentedbasicos"></my:dBasicosCli_component> 
+			</h:panelGrid>
+		</p:tab>		
+							
+		<p:tab  title="Nombre Cuenta"  titleStyleClass="tabStyle">
+			<h:panelGrid columns="2" cellpadding="10">
+				
+			</h:panelGrid>
+		</p:tab>
+		<p:tab title="Productos Cliente "  titleStyleClass="tabStyle">
+			<h:outputLabel value="Nombre de Cuenta :" for="idtxncta" />						
+			<h:inputText id="idtxncta" size="45" value="#{clientesNuevosBean.nombreCuenta}" />
+			<h:panelGrid columns="1" cellpadding="10">
+
+				<my:productos_component id="idcomponenteproductos"
+					rutaPadre=":form-contentpage:acc:idcomponenteproductos"></my:productos_component>
+
+			</h:panelGrid>
+		</p:tab>
+		<p:tab title="Direccion"  titleStyleClass="tabStyle" >
+			<h:panelGrid columns="1" cellpadding="10">
+				 <my:direccion_component id="idcomponentedireccion"
+					rutaPadre=":form-contentpage:acc:idcomponentedireccion"></my:direccion_component>
+			</h:panelGrid>
+		</p:tab>
+		<p:tab title="Debito Bancario"  titleStyleClass="tabStyle">
+			<h:panelGrid columns="1" cellpadding="10">
+
+				 <my:dbancario_component id="idcomponentedbancario"
+					rutaPadre=":form-contentpage:acc:idcomponentedbancario"></my:dbancario_component> 
+			</h:panelGrid>
+		</p:tab>
+		<p:tab title="Telefonos Cliente"  titleStyleClass="tabStyle">
+			<h:panelGrid columns="1" cellpadding="10">
+
+			 <my:telefonos_component id="idcomponentetelefono"
+					rutaPadre=":form-contentpage:acc:idcomponentetelefono"></my:telefonos_component> 
+			</h:panelGrid>
+		</p:tab>
+
+
+	</p:accordionPanel>
+	<p:spacer height="50px"></p:spacer>
+	<center>
+	<p:commandButton value="Grabar Todo" style="float: right;" actionListener="#{clientesNuevosBean.grabarNuevoCliente()}" update=":form-contentpage:mensajes" />
+	<p:commandButton value="Regresar" style="float: left;" onclick="history.back();" immediate="true" />
+	</center>
+	</h:form>	
+</ui:composition>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="factura" language="groovy" pageWidth="323" pageHeight="342" columnWidth="285" leftMargin="19" rightMargin="19" topMargin="8" bottomMargin="25" uuid="8cac0dbe-c86c-48d4-86af-3944c6900ffe">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="42"/>
+	<subDataset name="detalleFacturaDS" uuid="5bcbda42-f30b-499e-9de9-4e08d654ff74">
+		<parameter name="P_IDFACTURA" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[select d.orden, d.detalle as producto, d.valor from detimpfacturas as d, cabimpfacturas as c
+where c.idfactura = $P{P_IDFACTURA}
+and c.idestado = 1
+and d.idcabfacturas = c.idcabfactura
+and d.idestado = 1
+order by d.orden]]>
+		</queryString>
+		<field name="orden" class="java.lang.Integer"/>
+		<field name="producto" class="java.lang.String"/>
+		<field name="valor" class="java.lang.Float"/>
+	</subDataset>
+	<parameter name="P_IDFACTURA" class="java.lang.String">
+		<defaultValueExpression><![CDATA[001-001-0000005]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select nomscliente as nombre, dircliente, idcliente, telcliente as telefono, subtotal as valbase, totalfactura as valtotal, valimpiva, valimpice from cabimpfacturas
+where idfactura = $P{P_IDFACTURA}
+and idestado = 1]]>
+	</queryString>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="dircliente" class="java.lang.String"/>
+	<field name="idcliente" class="java.lang.String"/>
+	<field name="telefono" class="java.lang.String"/>
+	<field name="valbase" class="java.lang.Float"/>
+	<field name="valtotal" class="java.lang.Float"/>
+	<field name="valimpiva" class="java.lang.Float"/>
+	<field name="valimpice" class="java.lang.Float"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="136" splitType="Stretch">
+			<textField>
+				<reportElement uuid="48465e88-2df7-4c88-b2e2-542079e23195" x="64" y="74" width="221" height="11"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd MMMMM yyyy ").format(new Date())]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="901898a7-0407-4cc4-bcd9-19506eb04183" x="64" y="86" width="221" height="11"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="10e32ad0-b907-4572-bbc0-cb1604b7b569" x="64" y="98" width="221" height="11"/>
+				<textElement>
+					<font size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dircliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3f8ba804-f8c5-461d-93df-6e60e1662826" x="64" y="110" width="83" height="11"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{idcliente}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="5d3e643d-8002-4a52-b2a2-7aab83d7df24" x="202" y="109" width="83" height="11"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{telefono}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8e1f7fea-ff61-4eea-a1ba-01612e675cac" x="185" y="40" width="100" height="11"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_IDFACTURA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="94" splitType="Stretch">
+			<componentElement>
+				<reportElement uuid="a63d22a4-e051-4627-aa1f-216cfa66779c" x="17" y="2" width="268" height="12"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="detalleFacturaDS" uuid="15cf0af0-b508-42d6-946d-294dab3ca1cd">
+						<datasetParameter name="P_IDFACTURA">
+							<datasetParameterExpression><![CDATA[$P{P_IDFACTURA}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="12" width="268">
+						<textField>
+							<reportElement uuid="63c607dd-3e7e-4e78-9856-c27b27bbc15f" x="0" y="0" width="175" height="11"/>
+							<textElement>
+								<font size="6"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{producto}]]></textFieldExpression>
+						</textField>
+						<textField pattern="###0.00">
+							<reportElement uuid="2aced1ca-c903-4e72-9796-08cc9774aba2" x="222" y="0" width="46" height="11"/>
+							<textElement textAlignment="Right">
+								<font size="6"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</detail>
+	<summary>
+		<band height="52" splitType="Stretch">
+			<textField pattern="###0.00">
+				<reportElement uuid="7bad1af8-2347-4c09-90b9-c1e3da79263c" x="239" y="0" width="46" height="11"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valbase}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement uuid="0891429d-e4b5-422d-94ed-a80a3a0fa428" x="239" y="41" width="46" height="11"/>
+				<textElement textAlignment="Right">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valtotal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement uuid="3706e636-5871-4c91-9851-4b5f7868f807" x="239" y="11" width="46" height="11"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valimpiva}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="c6decebf-0ffc-4707-95a8-aab3264f57c9" x="192" y="11" width="46" height="11"/>
+				<textElement textAlignment="Right">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Iva]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f3c9f89f-465e-4b3a-bca4-57e2d1301ed0" x="192" y="22" width="46" height="11"/>
+				<textElement textAlignment="Right">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ice]]></text>
+			</staticText>
+			<textField pattern="###0.00">
+				<reportElement uuid="8aa6663b-a2f8-4b4c-8af9-59c135ba97c5" x="238" y="22" width="46" height="11"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valimpice}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="c6decebf-0ffc-4707-95a8-aab3264f57c9" x="192" y="0" width="46" height="11"/>
+				<textElement textAlignment="Right">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Subtotal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c6decebf-0ffc-4707-95a8-aab3264f57c9" x="192" y="41" width="46" height="11"/>
+				<textElement textAlignment="Right">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

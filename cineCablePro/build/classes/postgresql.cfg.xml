@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+    	<!-- Descomentar para ingeniería inversa -->
+	    <!--
+	    <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+	    <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/cinecable</property>
+	    <property name="hibernate.connection.username">postgres</property>
+	    <property name="hibernate.connection.password">postgres</property>-->
+
+		<!-- Comentar para ingeniería inversa-->
+	    <!----><property name="hibernate.connection.datasource">java:/CinecablePostgresqlDS</property>	    
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        <property name="hibernate.current_session_context_class">org.hibernate.context.JTASessionContext</property>
+	    <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+	    <property name="hibernate.search.autoregister_listeners">false</property>
+	    <property name="hibernate.show_sql">true</property>
+	    <property name="hibernate.format_sql">false</property>
+	    <property name="hibernate.use_sql_comments">false</property>
+	    <!-- <property name="hibernate.jdbc.use_streams_for_binary">true</property> -->
+	    <!-- Usar en Desarrollo, comentar en Producción 
+	    <property name="hbm2ddl.auto">update</property>-->
+	    <!-- Para no usar jboss\common\lib -->
+	    <property name="hibernate.validator.apply_to_ddl">false</property>
+	    <property name="hibernate.validator.autoregister_listeners">false</property>
+	    
+	    <!-- Mapeos -->
+	    <mapping class="pojo.annotations.Pais" />
+        <mapping class="pojo.annotations.Costoproducto" />
+        <mapping class="pojo.annotations.Excedentes" />
+        <mapping class="pojo.annotations.Servicio" />
+        <mapping class="pojo.annotations.Telefono" />
+        <mapping class="pojo.annotations.Fpago" />
+        <mapping class="pojo.annotations.Bancos" />
+        <mapping class="pojo.annotations.Ubicacion" />
+        <mapping class="pojo.annotations.Ctasprod" />
+        <mapping class="pojo.annotations.Prodservicio" />
+        <mapping class="pojo.annotations.Impservicios" />
+        <mapping class="pojo.annotations.Nrosfactura" />
+        <mapping class="pojo.annotations.Menu" />
+        <mapping class="pojo.annotations.Direccion" />
+        <mapping class="pojo.annotations.Edificio" />
+        <mapping class="pojo.annotations.Evento" />
+        <mapping class="pojo.annotations.Controlador" />
+        <mapping class="pojo.annotations.Tipodebito" />
+        <mapping class="pojo.annotations.Comunicacion" />
+        <mapping class="pojo.annotations.Clientes" />
+        <mapping class="pojo.annotations.Motivos" />
+        <mapping class="pojo.annotations.Usuario" />
+        <mapping class="pojo.annotations.Toperaciones" />
+        <mapping class="pojo.annotations.Costoservicio" />
+        <mapping class="pojo.annotations.Estadocivil" />
+        <mapping class="pojo.annotations.Operaciones" />
+        <mapping class="pojo.annotations.Usuariomenu" />
+        <mapping class="pojo.annotations.Tipomotivo" />
+        <mapping class="pojo.annotations.Cargos" />
+        <mapping class="pojo.annotations.Tipoentidad" />
+        <mapping class="pojo.annotations.Promociones" />
+        <mapping class="pojo.annotations.Modcronograma" />
+        <mapping class="pojo.annotations.Control" />
+        <mapping class="pojo.annotations.Ciudad" />
+        <mapping class="pojo.annotations.Factura" />
+        <mapping class="pojo.annotations.Claves" />
+        <mapping class="pojo.annotations.Cronograma" />
+        <mapping class="pojo.annotations.Calleprincipal" />
+        <mapping class="pojo.annotations.Tipomenu" />
+        <mapping class="pojo.annotations.Persona" />
+        <mapping class="pojo.annotations.Tiposector" />
+        <mapping class="pojo.annotations.Pagosant" />
+        <mapping class="pojo.annotations.Area" />
+        <mapping class="pojo.annotations.Comandos" />
+        <mapping class="pojo.annotations.Producto" />
+        <mapping class="pojo.annotations.Tipocargo" />
+        <mapping class="pojo.annotations.Ctacliente" />
+        <mapping class="pojo.annotations.Nodos" />
+        <mapping class="pojo.annotations.Tipooperacion" />
+        <mapping class="pojo.annotations.Tpagosant" />
+        <mapping class="pojo.annotations.Conyuge" />
+        <mapping class="pojo.annotations.Sector" />
+        <mapping class="pojo.annotations.Provincia" />
+        <mapping class="pojo.annotations.Tipocliente" />
+        <mapping class="pojo.annotations.Tpagos" />
+        <mapping class="pojo.annotations.Callesecundaria" />
+        <mapping class="pojo.annotations.Estado" />
+        <mapping class="pojo.annotations.Tiposervicio" />
+        <mapping class="pojo.annotations.Pagos" />
+        <mapping class="pojo.annotations.Empresa" />
+        <mapping class="pojo.annotations.Debitobco" />
+        <mapping class="pojo.annotations.Creditos" />
+        <mapping class="pojo.annotations.Referenciadir" />
+        <mapping class="pojo.annotations.Cabimpfacturas" />
+        <mapping class="pojo.annotations.Detimpfacturas" />
+    </session-factory>
+</hibernate-configuration>

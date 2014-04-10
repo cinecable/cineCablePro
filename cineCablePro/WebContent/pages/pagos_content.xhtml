@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<h:form id="form-contentpage">
+		<p:growl id="mensajes" showDetail="true" />
+		<h1 class="title ui-widget-header" style="text-align: center;" >Caja</h1>
+		<p:spacer height="15px;"/>
+		<p:panel id="idcabecera">
+			<h1>#{pagosBean.ctacliente.clientes.nombre1} #{pagosBean.ctacliente.clientes.nombre2} #{pagosBean.ctacliente.clientes.apellido1} #{pagosBean.ctacliente.clientes.apellido2}</h1>
+			<h1>Cuenta ##{pagosBean.ctacliente.idcuenta}</h1>
+		</p:panel> 
+        <p:tabView id="idTabTipoPagos" activeIndex="#{pagosBean.activeIndex}" dynamic="true" cache="false" effect="fade" effectDuration="normal" style="min-height: 200px;">
+        	
+        	<p:ajax event="tabChange" listener="#{pagosBean.tabChangeListener}" update=":form-sidepage:idpanelsidepage, :form-contentpage:idTabTipoPagos, :form-contentpage:mensajes" />
+        	
+        	<p:tab id="idanticipados" title="#{pagosBean.TAB_ANTICIPO_TITLE}" rendered="#{pagosBean.tabAnticipadosRendered}">
+        		<h:panelGrid id="idpanelanticipados" columns="1">
+					
+				</h:panelGrid>
+			</p:tab>
+			<p:tab id="idfacturas" title="#{pagosBean.TAB_FACTURA_TITLE}" rendered="#{pagosBean.tabFacturaRendered}">
+				<h:panelGrid id="idpanelfacturas" columns="1" width="100%">
+					<c:forEach items="#{pagosBean.lisDetalleFacturaPojo}" var="detalleFactura">
+						<p:panel>
+							<h1>Factura ##{detalleFactura.factura.idfactura}</h1>
+							<table width="100%" class="my-ui-alternate">
+							<tr>
+								<td></td><td width="70px"></td>
+							</tr>
+							<c:forEach items="#{detalleFactura.lisCargosNivelDetalle}" var="cargodetalle">
+								<tr>
+									<td><b>#{cargodetalle.motivo}</b></td> 
+									<td align="right">
+										<h:outputText value="#{cargodetalle.valpendiente}" >
+											<f:convertNumber pattern="0.00" />
+										</h:outputText> 
+									</td>
+								</tr>
+							</c:forEach>
+							<tr>
+								<td><span style="visibility: hidden;">...</span></td><td></td>
+							</tr>
+							<c:forEach items="#{detalleFactura.lisCargosNivelDescuento}" var="cargodescuento">
+								<tr>
+									<td><b>#{cargodescuento.motivo}</b></td> 
+									<td align="right">
+										<h:outputText value="#{cargodescuento.valpendiente}" >
+											<f:convertNumber pattern="0.00" />
+										</h:outputText>
+									</td>
+								</tr>
+							</c:forEach>
+							<tr>
+								<td><span style="visibility: hidden;">...</span></td><td></td>
+							</tr>
+							<tr>
+								<td><b>Subtotal</b></td>
+								<td align="right">
+									<h:outputText value="#{detalleFactura.factura.valbase}" style="font-weight: bold;" >
+										<f:convertNumber pattern="0.00" />
+									</h:outputText> 
+								</td>
+							</tr>
+							<c:forEach items="#{detalleFactura.lisCargosNivelImpuesto}" var="cargoimpuesto">
+								<tr>
+									<td><b>#{cargoimpuesto.motivo}</b></td> 
+									<td align="right">
+										<h:outputText value="#{cargoimpuesto.valpendiente}" >
+											<f:convertNumber pattern="0.00" />
+										</h:outputText> 
+									</td>
+								</tr>
+							</c:forEach>
+							<tr>
+								<td><span style="visibility: hidden;">...</span></td><td></td>
+							</tr>
+							<tr>
+								<td><b>Créditos</b></td> 
+								<td align="right">
+									<h:outputText value="-#{detalleFactura.factura.valcreditos}" >
+										<f:convertNumber pattern="0.00" />
+									</h:outputText> 
+								</td>
+							</tr>
+							<tr>
+								<td><b>Excedentes</b></td> 
+								<td align="right">
+									<h:outputText value="-#{detalleFactura.factura.valorexcedentes}" >
+										<f:convertNumber pattern="0.00" />
+									</h:outputText> 
+								</td>
+							</tr>
+							<tr>
+								<td><b>Abonos</b></td> 
+								<td align="right">
+									<h:outputText value="-#{detalleFactura.totalTpagosAbonosByFactura}" >
+										<f:convertNumber pattern="0.00" />
+									</h:outputText>
+								</td>
+							</tr>
+							<tr>
+								<td><span style="visibility: hidden;">...</span></td><td></td>
+							</tr>
+							<tr>
+								<td><b>Total</b></td>
+								<td align="right">
+									<h:outputText value="#{detalleFactura.factura.valpendiente}" style="font-weight: bold;" >
+										<f:convertNumber pattern="0.00" />
+									</h:outputText> 
+								</td>
+							</tr>
+							</table>
+						</p:panel>
+					</c:forEach>
+					<p:panel>
+					<table width="100%">
+						<tr>
+							<td width="75%"></td>
+							<td><span style="visibility: hidden;">...</span></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><b>Total Facturas</b></td>
+							<td align="right">
+								<h:outputText value="#{pagosBean.totalFacturas}" style="font-weight: bold;" >
+									<f:convertNumber pattern="0.00" />
+								</h:outputText>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><b>Total Créditos</b></td>
+							<td align="right">
+								<h:outputText value="#{pagosBean.totalCreditosCuenta}" >
+									<f:convertNumber pattern="0.00" />
+								</h:outputText>
+							</td>
+						</tr>
+						<!-- SE COMENTA PORQUE EN LOS ABONOS CONSULTADOS A LA TABLA PAGOS VIENE INCLUIDO CREDITOS Y EXCEDENTES, LO QUE HACE DUPLICAR CON LOS CREDITOS Y EXCEDENTES POR FACTURA -->
+						<!-- <tr>
+							<td><b>Total Abonos</b></td>
+							<td align="right">
+								<h:outputLabel value="#{ppagosBean.totalAbonosCuenta}" >
+									<f:convertNumber pattern="0.00" />
+								</h:outputLabel>
+							</td>
+						</tr> -->
+						<tr>
+							<td></td>
+							<td><b>Total Excedentes</b></td>
+							<td align="right">
+								<h:outputText value="#{pagosBean.totalExcedentesCuenta}" >
+									<f:convertNumber pattern="0.00" />
+								</h:outputText>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><b>Total General</b></td>
+							<td align="right">
+								<h:outputText value="#{pagosBean.totalGeneral}" style="font-weight: bold;" >
+									<f:convertNumber pattern="0.00" />
+								</h:outputText>
+							</td>
+						</tr>
+					</table>
+					</p:panel>
+				</h:panelGrid>
+			</p:tab>
+			<p:tab id="idotroscargos" title="#{pagosBean.TAB_GENERACION_TITLE}" rendered="#{pagosBean.tabGeneracionRendered}">
+				<h:panelGrid id="idpanelotroscargos" columns="1" width="100%">
+					<c:forEach items="#{pagosBean.lisDetalleFacturaPojo}" var="detalleGeneracion">
+						<p:panel>
+							<h1>Generación ##{detalleGeneracion.factura.idgeneracion}</h1>
+							<table width="100%" class="my-ui-alternate">
+							<tr>
+								<td></td><td width="70px"></td>
+							</tr>
+							<c:forEach items="#{detalleGeneracion.lisCargosNivelDetalle}" var="generaciondetalle">
+								<tr>
+									<td><b>#{generaciondetalle.motivo}</b></td> 
+									<td align="right">
+										<h:outputText value="#{generaciondetalle.valpendiente}" >
+											<f:convertNumber pattern="0.00" />
+										</h:outputText> 
+									</td>
+								</tr>
+							</c:forEach>
+							<tr>
+								<td><span style="visibility: hidden;">...</span></td><td></td>
+							</tr>
+							<c:forEach items="#{detalleGeneracion.lisCargosNivelDescuento}" var="generaciondescuento">
+								<tr>
+									<td><b>#{generaciondescuento.motivo}</b></td> 
+									<td align="right">
+										<h:outputText value="#{generaciondescuento.valpendiente}" >
+											<f:convertNumber pattern="0.00" />
+										</h:outputText>
+									</td>
+								</tr>
+							</c:forEach>
+							<tr>
+								<td><span style="visibility: hidden;">...</span></td><td></td>
+							</tr>
+							<tr>
+								<td><b>Subtotal</b></td>
+								<td align="right">
+									<h:outputText value="#{detalleGeneracion.factura.valbase}" style="font-weight: bold;" >
+										<f:convertNumber pattern="0.00" />
+									</h:outputText> 
+								</td>
+							</tr>
+							<c:forEach items="#{detalleGeneracion.lisCargosNivelImpuesto}" var="generacionimpuesto">
+								<tr>
+									<td><b>#{generacionimpuesto.motivo}</b></td> 
+									<td align="right">
+										<h:outputText value="#{generacionimpuesto.valpendiente}" >
+											<f:convertNumber pattern="0.00" />
+										</h:outputText> 
+									</td>
+								</tr>
+							</c:forEach>
+							<tr>
+								<td><span style="visibility: hidden;">...</span></td><td></td>
+							</tr>
+							<!-- <tr>
+								<td><b>Créditos</b></td> 
+								<td align="right">
+									<h:outputLabel value="-#{ddetalleGeneracion.factura.valcreditos}" >
+										<f:convertNumber pattern="0.00" />
+									</h:outputLabel> 
+								</td>
+							</tr> -->
+							<!-- <tr>
+								<td><b>Excedentes</b></td> 
+								<td align="right">
+									<h:outputLabel value="-#{ddetalleGeneracion.factura.valorexcedentes}" >
+										<f:convertNumber pattern="0.00" />
+									</h:outputLabel> 
+								</td>
+							</tr> -->
+							<!-- <tr>
+								<td><b>Abonos</b></td> 
+								<td align="right">
+									<h:outputLabel value="-#{ddetalleGeneracion.totalTpagosAbonosByFactura}" >
+										<f:convertNumber pattern="0.00" />
+									</h:outputLabel>
+								</td>
+							</tr> -->
+							<!-- <tr>
+								<td>&nbsp;</td><td>&nbsp;</td>
+							</tr> -->
+							<tr>
+								<td><b>Total</b></td>
+								<td align="right">
+									<h:outputText value="#{detalleGeneracion.factura.valpendiente}" style="font-weight: bold;" >
+										<f:convertNumber pattern="0.00" />
+									</h:outputText> 
+								</td>
+							</tr>
+							</table>
+						</p:panel>
+					</c:forEach>
+					<p:panel>
+					<table width="100%">
+						<tr>
+							<td width="75%"></td>
+							<td><span style="visibility: hidden;">...</span></td>
+							<td width="70px" ></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><b>Total Generaciones</b></td>
+							<td align="right">
+								<h:outputText value="#{pagosBean.totalFacturas}" style="font-weight: bold;" >
+									<f:convertNumber pattern="0.00" />
+								</h:outputText>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><b>Total Créditos</b></td>
+							<td align="right">
+								<h:outputText value="#{pagosBean.totalCreditosCuenta}" >
+									<f:convertNumber pattern="0.00" />
+								</h:outputText>
+							</td>
+						</tr>
+						<!-- SE COMENTA PORQUE EN LOS ABONOS CONSULTADOS A LA TABLA PAGOS VIENE INCLUIDO CREDITOS Y EXCEDENTES, LO QUE HACE DUPLICAR CON LOS CREDITOS Y EXCEDENTES POR FACTURA -->
+						<!-- <tr>
+							<td><b>Total Abonos</b></td>
+							<td align="right">
+								<h:outputLabel value="#{ppagosBean.totalAbonosCuenta}" >
+									<f:convertNumber pattern="0.00" />
+								</h:outputLabel>
+							</td>
+						</tr> -->
+						<tr>
+							<td></td>
+							<td><b>Total Excedentes</b></td>
+							<td align="right">
+								<h:outputText value="#{pagosBean.totalExcedentesCuenta}" >
+									<f:convertNumber pattern="0.00" />
+								</h:outputText>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><b>Total General</b></td>
+							<td align="right">
+								<h:outputText value="#{pagosBean.totalGeneral}" style="font-weight: bold;" >
+									<f:convertNumber pattern="0.00" />
+								</h:outputText>
+							</td>
+						</tr>
+					</table>
+					</p:panel>
+				</h:panelGrid>
+			</p:tab>
+			<p:tab id="idcontratos" title="#{pagosBean.TAB_CONTRATOS_TITLE}" rendered="#{pagosBean.tabContratosRendered}">
+				<h:panelGrid id="idpanelcontratos" columns="1" width="100%">
+					<c:forEach items="#{pagosBean.lisDetalleContratoPojo}" var="detalleContrato">
+						<h1>Producto #{detalleContrato.producto.nombre}</h1>
+						<p:panel>
+							<table width="100%" class="my-ui-alternate">
+								<tr>
+									<td width="150px"></td>
+									<td></td>
+									<td width="70px"></td>
+								</tr>
+								<c:forEach items="#{detalleContrato.lisServicioValor}" var="servicioValor">
+									<tr>
+										<td></td>
+										<td>#{servicioValor.servicio.nombre}</td>
+										<td align="right">
+											<h:outputText value="#{servicioValor.servicio.costoservicio.costo}" >
+												<f:convertNumber pattern="0.00" />
+											</h:outputText> 
+										</td>
+									</tr>
+									<tr>
+										<td></td>
+										<td>#{servicioValor.nombreDescuento}</td>
+										<td align="right">
+											<h:outputText value="#{servicioValor.valorDescuento}" >
+												<f:convertNumber pattern="0.00" />
+											</h:outputText> 
+										</td>
+									</tr>
+									<c:forEach items="#{servicioValor.lisImpuestoValor}" var="impuestoValor">
+										<tr>
+											<td></td>
+											<td>#{impuestoValor.impservicios.descripcion}</td>
+											<td align="right">
+												<h:outputText value="#{impuestoValor.valor}" >
+													<f:convertNumber pattern="0.00" />
+												</h:outputText> 
+											</td>
+										</tr>
+									</c:forEach>
+									<tr>
+										<td><span style="visibility: hidden;">...</span></td>
+										<td></td>
+										<td></td>
+									</tr>
+								</c:forEach>
+							</table>
+						</p:panel>
+					</c:forEach>
+					<p:panel>
+					<table width="100%">
+						<tr>
+							<td width="75%"></td>
+							<td><span style="visibility: hidden;">...</span></td>
+							<td width="70px"></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><b>Total Servicios</b></td>
+							<td align="right">
+								<h:outputText value="#{pagosBean.totalServiciosContrato}" style="font-weight: bold;" >
+									<f:convertNumber pattern="0.00" />
+								</h:outputText>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><b>Total Descuentos</b></td>
+							<td align="right">
+								<h:outputText value="#{pagosBean.totalDescuentosContrato}" style="font-weight: bold;" >
+									<f:convertNumber pattern="0.00" />
+								</h:outputText>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><b>Total Impuestos</b></td>
+							<td align="right">
+								<h:outputText value="#{pagosBean.totalImpuestosContrato}" style="font-weight: bold;" >
+									<f:convertNumber pattern="0.00" />
+								</h:outputText>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><span style="visibility: hidden;">...</span></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><b>Total a Pagar</b></td>
+							<td align="right">
+								<h:outputText value="#{pagosBean.totalPagarContrato}" style="font-weight: bold;" >
+									<f:convertNumber pattern="0.00" />
+								</h:outputText>
+							</td>
+						</tr>
+					</table>
+					</p:panel>
+				</h:panelGrid>
+			</p:tab>
+		</p:tabView>
+		<p:spacer height="15px;"/>
+		<p:panel id="idpanelformapago" header="Formas de Pago">
+			<p:spacer height="30px;"/>
+			<p:focus id="idfocus" for="#{pagosBean.focusId}" ></p:focus>
+			<p:panelGrid id="idPanelEditor" style="width: 100%;">
+				
+				<f:facet name="header">  	
+					<p:row>
+					<p:column colspan="4">
+					Editor 
+					</p:column>
+					</p:row> 
+				</f:facet>
+			
+				<p:row>
+				<p:column>
+				<h:outputLabel for="idFormaPago" value="Forma de Pago: " />
+				</p:column>
+				<p:column> 
+				<p:selectOneMenu id="idFormaPago" value="#{pagosBean.tpagosEditor.fpago}" converter="fpago" >
+	                <f:selectItems value="#{pagosBean.lisFpago}" var="i" itemLabel="#{i.nombre}" itemValue="#{i}" />
+	            </p:selectOneMenu>
+	            </p:column>
+	            <p:column>
+	            <h:outputLabel for="idValorPago" value="Valor: " />
+	            </p:column>
+	            <p:column>
+	            <p:inputText id="idValorPago" value="#{pagosBean.tpagosEditor.valpago}"></p:inputText>
+	            </p:column>
+	            </p:row>
+	            
+	            <p:row>
+	            <p:column>
+	            <h:outputLabel for="idNumeroDoc" value="No. Documento: " />
+	            </p:column>
+	            <p:column>
+	            <p:inputText id="idNumeroDoc" value="#{pagosBean.tpagosEditor.nrodocumento}"></p:inputText>
+	            </p:column>
+	            <p:column>
+	            <h:outputLabel for="idEntidadBanco" value="Entidad Bancaria: " />
+	            </p:column>
+	            <p:column>
+				<p:selectOneMenu id="idEntidadBanco" value="#{pagosBean.tpagosEditor.bancosByIdbcoemisor}" converter="bancos" >
+	                <f:selectItems value="#{pagosBean.lisEntidadBancos}" var="i" itemLabel="#{i.nombre}" itemValue="#{i}" />
+	            </p:selectOneMenu>
+	            </p:column>
+	            </p:row>
+	            
+	            <p:row>
+	            <p:column>
+	            <h:outputLabel for="idNumeroCtaBco" value="No. Cuenta Banco: " />
+	            </p:column>
+	            <p:column>
+	            <p:inputText id="idNumeroCtaBco" value="#{pagosBean.tpagosEditor.nrocuenta}"></p:inputText>
+	            </p:column>
+	            <p:column>
+	            <h:outputLabel for="idEntidadTarjeta" value="Entidad Tarjeta: " />
+	            </p:column>
+	            <p:column>
+				<p:selectOneMenu id="idEntidadTarjeta" value="#{pagosBean.tpagosEditor.bancosByIdbcoemisortar}" converter="bancos" >
+	                <f:selectItems value="#{pagosBean.lisEntidadTarjeta}" var="i" itemLabel="#{i.nombre}" itemValue="#{i}" />
+	            </p:selectOneMenu>
+	            </p:column>
+	            </p:row>
+	            
+	            <p:row>
+	            <p:column>
+	            <h:outputLabel for="idCodigoSeguridad" value="Codigo Seguridad: " />
+	            </p:column>
+	            <p:column>
+	            <p:inputText id="idCodigoSeguridad" value="#{pagosBean.tpagosEditor.codseguridad}"></p:inputText>
+	            </p:column>
+	            <p:column>
+	            <h:outputLabel for="idFechaCaducidad" value="Fecha Caducidad: " />
+	            </p:column>
+	            <p:column>
+	            <p:calendar id="idFechaCaducidad" value="#{pagosBean.tpagosEditor.fcaducidad}" yearRange="c-20:c" locale="es" pattern="dd/MM/yyyy" navigator="true" />
+	            </p:column>
+	            </p:row>
+	            
+	            <p:row>
+	            <p:column>
+	            <h:outputLabel for="idPropietario" value="Propietario: " />
+	            </p:column>
+	            <p:column colspan="3">
+	            <p:inputText id="idPropietario" value="#{pagosBean.tpagosEditor.propietario}" style="width: 380px;"></p:inputText>
+	            </p:column>
+	            </p:row>
+		            
+		        <f:facet name="footer">    
+		        	<p:row>
+		        	<p:column colspan="4" style="text-align: right;">
+					<p:commandButton value="Agregar Item" action="#{pagosBean.agregarFormaPago}" update=":form-contentpage:idpanelformapago, :form-contentpage:mensajes" oncomplete="vartablajFormaPago.unselectAllRows()" />
+					</p:column>
+					</p:row>
+				</f:facet>
+			</p:panelGrid>
+			<p:spacer height="30px;"/>
+			<p:dataTable id="idTablaFormaPago" value="#{pagosBean.lisTpagos}" var="tpagos" rowKey="#{tpagos.idtpago}" widgetVar="vartablajFormaPago"
+				paginator="true" rows="10" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				selection="#{pagosBean.tpagosSelected}" selectionMode="single" emptyMessage="No se encontraron registros">
+
+				<f:facet name="header">
+					Formas de Pago
+				</f:facet>
+				
+				<p:column id="idFormaPagoHeader" headerText="Forma Pago" >
+                 	<h:outputText value="#{tpagos.fpago.nombre}"  />
+				</p:column>
+				
+				<p:column id="idValorHeader" headerText="Valor" >
+                 	<h:outputText value="#{tpagos.valpago}"  />
+				</p:column>
+				
+				<p:column id="idNoDocumentoHeader" headerText="No.Documento">
+                	<h:outputText value="#{tpagos.nrodocumento}" />
+				</p:column>
+				
+				<p:column id="idEntidadBancariaHeader" headerText="E.Bancaria">
+                	<h:outputText value="#{tpagos.bancosByIdbcoemisor.nombre}" />
+				</p:column>
+                
+                <p:column id="idNoCuentaHeader" headerText="No.Cuenta">
+                    <h:outputText value="#{tpagos.nrocuenta}" />
+				</p:column>
+				
+				<p:column id="idEntidadTarjetaHeader" headerText="E.Tarjeta">
+                	<h:outputText value="#{tpagos.bancosByIdbcoemisortar.nombre}" />
+				</p:column>
+				
+				<p:column id="idCodSeguridadHeader" headerText="Cod.Seguridad">
+                    <h:outputText value="#{tpagos.codseguridad}" />
+				</p:column>
+				
+				<p:column id="idFechaCaducidadHeader" headerText="Fecha Caducidad">
+                    <h:outputText value="#{tpagos.fcaducidad}" >
+                    	<f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+				</p:column>
+                            
+                <p:column id="idPropietarioHeader" headerText="Propietario">
+                    <h:outputText value="#{tpagos.propietario}" />
+				</p:column>
+				
+				<p:column id="idQuitarHeader" headerText="Quitar" >
+					<p:commandButton id="btnQuitar" icon="ui-icon ui-icon-trash" onclick="vardialogdelete.show()" >
+						<p:ajax  update=":form-contentpage:idpaneldelete"></p:ajax>
+						<f:setPropertyActionListener value="#{tpagos}" target="#{pagosBean.tpagosSelected}" />
+					</p:commandButton>
+				</p:column>
+				
+			</p:dataTable>
+			<br />
+			<div align="right" style="font-weight: bold; font-size: 12px">
+				<h:outputLabel value="Total Pagos: " for="idTotalPagos" />
+				<h:outputText id="idTotalPagos" value="#{pagosBean.totalFormasPagos}" />
+			</div>
+		</p:panel>
+		<p:spacer height="15px;"/>
+		<p:panel id="idpanelbotones" style="width: 100%;text-align: center;">
+			<p:commandButton id="idGrabar" value="Pagar Factura(s)" onclick="vardialoggrabar.show()" update=":form-contentpage:idpanelgrabar" rendered="#{pagosBean.botonRendered}" ></p:commandButton>
+			<h:link id="btnimprimir" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" style="padding: 5px;" includeViewParams="true" value="Imprimir" outcome="browser_facturacaja.jsf" target="_blank" rendered="#{not empty pagosBean.numeroFactura}" >
+				<f:param name="idfactura" value="#{pagosBean.numeroFactura}"></f:param>
+			</h:link>
+		</p:panel>
+		<p:dialog id="iddialogdelete"  header="Quitar Forma de Pago" closable="true" widgetVar="vardialogdelete" onHide="vartablajFormaPago.unselectAllRows()" modal="true" showEffect="fade" hideEffect="fade" height="80" width="450">
+			<p:panelGrid id="idpaneldelete" columns="2" styleClass="gridnoborder">
+				<p:row>
+				<p:column>
+				<h:outputText id="idlabeldelete" value="¿Quitar forma de pago #{pagosBean.tpagosSelected.fpago.nombre}?" />
+				</p:column>
+				<p:column>
+				<h:outputText value="" />
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column colspan="2">
+				<h:panelGrid id="idpanel2delete" columns="2" style="position: absolute;right: 0;bottom: 0;">
+					<p:commandButton id="idconfirmardelete" value="Confirmar" actionListener="#{pagosBean.quitarFormaPago()}" oncomplete="vardialogdelete.hide()" update=":form-contentpage:mensajes, :form-contentpage:idTablaFormaPago, :form-contentpage:idTotalPagos" />
+					<p:commandButton id="idcancelardelete" value="Cancelar" onclick="vardialogdelete.hide()" />
+				</h:panelGrid>
+				</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:dialog>
+		<p:dialog id="iddialoggrabar" header="Pagar Factura(s)" closable="true" widgetVar="vardialoggrabar" modal="true" showEffect="fade" hideEffect="fade">
+			<h:panelGrid id="idpanelgrabar" columns="2" >
+				<h:outputText id="idlabelgrabar" value="Confirme si desea efectuar el pago" />
+				<h:panelGrid columns="2" >
+					<p:commandButton id="idbtngrabar" value="SI" style="width: 50px" action="#{pagosBean.grabarFactura()}" oncomplete="vardialoggrabar.hide()" update=":form-contentpage:mensajes, :form-contentpage:idGrabar, :form-contentpage:idpanelbotones" />
+					<p:commandButton value="NO" style="width: 50px" onclick="vardialoggrabar.hide()" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</p:dialog>
+	</h:form>
+</ui:composition>

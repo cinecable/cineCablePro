@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+	<composite:interface displayName="Parametros"
+		shortDescription="Recibe parametros para ser usados en el componente">
+		<composite:attribute name="rutaPadre" required="true"
+			shortDescription="Ruta completa de los id de los contenedores del componente" />
+	</composite:interface>
+
+	<composite:implementation>
+		<h:form id="form-dbancarioscomponent">
+			<p:growl id="mensajes" showDetail="true" />
+			<h:panelGrid id="idpDebitos" columns="5">
+				<h:outputLabel value="Forma Cobro :" for="idComboTipodb" />
+				<p:selectOneMenu id="idComboTipodb"
+					value="#{debitosBancariosBean.tipoDebitoSelected.idtipodebito}">
+					<f:selectItems value="#{debitosBancariosBean.lisTipodebito}"
+						var="i" itemLabel="#{i.nombre}" itemValue="#{i.idtipodebito}" />
+					<p:ajax listener="#{debitosBancariosBean.cargaBcoTar()}"
+						update="#{cc.attrs.rutaPadre}:form-dbancarioscomponent:idComboTipodb,#{cc.attrs.rutaPadre}:form-dbancarioscomponent:idComboBcoEmi,
+		        #{cc.attrs.rutaPadre}:form-dbancarioscomponent:idComboTarEmi,#{cc.attrs.rutaPadre}:form-dbancarioscomponent:idComboTcuenta" />
+				</p:selectOneMenu>
+
+				<p:spacer width="8" />
+
+				<h:outputLabel value="Banco/Tarjeta :" for="idComboBcoEmi" />
+				<p:selectOneMenu id="idComboBcoEmi"
+					value="#{debitosBancariosBean.bancosSelected.idbanco}">
+					<f:selectItems value="#{debitosBancariosBean.lisBancos}" var="i"
+						itemLabel="#{i.nombre}" itemValue="#{i.idbanco}" />
+				</p:selectOneMenu>
+
+
+				<h:outputLabel value="Emisor Tarjeta :" for="idComboTarEmi" />
+				<p:selectOneMenu id="idComboTarEmi"
+					value="#{debitosBancariosBean.tarjetasSelected.idbanco}">
+					<f:selectItems value="#{debitosBancariosBean.lisTarjetas}" var="i"
+						itemLabel="#{i.nombre}" itemValue="#{i.idbanco}" />
+				</p:selectOneMenu>
+
+				<p:spacer width="8" />
+
+				<h:outputLabel value="Tipo de Cuenta :" for="idComboTcuenta" />
+				<p:selectOneMenu id="idComboTcuenta"
+					value="#{debitosBancariosBean.tipoCuentaSelected.idtipoCuenta}">
+					<f:selectItems value="#{debitosBancariosBean.lisTipoCuenta}"
+						var="i" itemLabel="#{i.nombre}" itemValue="#{i.idtipoCuenta}" />
+				</p:selectOneMenu>
+
+				<h:outputLabel value="Nro Doc :" for="idtxndoc" />
+				<h:inputText required="#{debitosBancariosBean.reqBanco}"
+					id="idtxndoc" size="15" maxlength="20"
+					value="#{debitosBancariosBean.nroDocumento}" />
+
+				<p:spacer width="8" />
+
+				<h:outputLabel value="Cod. Seguridad :" for="idtxtcodS" />
+				<h:inputText id="idtxtcodS" size="10"
+					value="#{debitosBancariosBean.codSeguridad}" />
+
+				<h:outputLabel value="Propietario :" for="idtxtPro" />
+				<h:inputText id="idtxtPro" size="30"
+					value="#{debitosBancariosBean.propietario}" />
+				<h:outputText value="" />
+				<h:outputText value="" />
+				<h:outputText value="" />
+			</h:panelGrid>
+		</h:form>
+	</composite:implementation>
+</ui:composition>

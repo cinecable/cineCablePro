@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:form id="form-contentpage">
+		<p:growl id="mensajes" showDetail="true" />
+		<h1 class="title ui-widget-header" style="text-align: center;">Datos de la Factura</h1>
+		
+		<p:panel id="pnlDatos" styleClass="hidepanel">
+			<h:link style="float: right;" value="Imprimir" outcome="browser_factura.jsf" target="_blank" >
+				<f:param name="idsecuencia" value="#{consultaFacturaBean.facturaSeleccionada.idsecuencia}"></f:param>
+			</h:link>
+			<h:link style="float: right;" title="Imprimir" outcome="browser_factura.jsf" target="_blank" >
+				<span class="ui-button-icon-left ui-icon ui-c ui-icon-print"></span>
+				<f:param name="idsecuencia" value="#{consultaFacturaBean.facturaSeleccionada.idsecuencia}"></f:param>
+			</h:link>
+			<br clear="all" />
+			<p:panelGrid id="pnlDatosFacturas" style="width: 100%" >
+				<p:row>
+				<p:column style="width: 20%">
+				<h:outputLabel value="No. Cuenta Cliente: " for="txtidcuenta" />
+				</p:column>
+				<p:column style="width: 30%">
+				<h:outputText id="txtidcuenta" value="#{consultaFacturaBean.facturaSeleccionada.idcuenta}" />
+				</p:column>
+				
+				<p:column style="width: 20%">
+				<h:outputLabel value="Id Generación: " for="txtgeneracion" />
+				</p:column>
+				<p:column style="width: 30%">
+				<h:outputText id="txtgeneracion" value="#{consultaFacturaBean.facturaSeleccionada.idgeneracion}" />
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column >
+				<h:outputLabel value="No Factura: " for="txtfactura" />
+				</p:column>
+				<p:column >
+				<h:outputText id="txtfactura" value="#{consultaFacturaBean.facturaSeleccionada.idfactura}" />
+				</p:column>
+				
+				<p:column>
+				<h:outputLabel value="Id Cliente: " for="txtidcliente" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtidcliente" value="#{consultaFacturaBean.facturaSeleccionada.idcliente}" />
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column>
+				<h:outputLabel value="Nombre del Cliente: " for="txtnombre" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtnombre" value="#{consultaFacturaBean.facturaSeleccionada.nombre}" />
+				</p:column>
+				
+				<p:column>
+				<h:outputLabel value="Dirección Cliente: " for="txtdireccioncliente" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtdireccioncliente" value="#{consultaFacturaBean.facturaSeleccionada.dircliente}" />
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column>
+				<h:outputLabel value="Valor Bruto: " for="txtvalorbruto" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtvalorbruto" value="#{consultaFacturaBean.facturaSeleccionada.valbruto}" >
+					<f:convertNumber pattern="0.00" />
+				</h:outputText>
+				</p:column>
+				
+				<p:column>
+				<h:outputLabel value="Valor Descuento: " for="txtvalordescuento" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtvalordescuento" value="#{consultaFacturaBean.facturaSeleccionada.valdescuentos}" >
+					<f:convertNumber pattern="0.00" />
+				</h:outputText>
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column>
+				<h:outputLabel value="Valor Créditos: " for="txtvalorcreditos" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtvalorcreditos" value="#{consultaFacturaBean.facturaSeleccionada.valcreditos}" >
+					<f:convertNumber pattern="0.00" />
+				</h:outputText>
+				</p:column>
+				
+				<p:column>
+				<h:outputLabel value="Valor Base: " for="txtvalorbase" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtvalorbase" value="#{consultaFacturaBean.facturaSeleccionada.valbase}" >
+					<f:convertNumber pattern="0.00" />
+				</h:outputText>
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column>
+				<h:outputLabel value="Valor Impuestos: " for="txtvalorimpuestos" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtvalorimpuestos" value="#{consultaFacturaBean.facturaSeleccionada.valimpuestos}" >
+					<f:convertNumber pattern="0.00" />
+				</h:outputText>
+				</p:column>
+				
+				<p:column>
+				<h:outputLabel value="Valor Total: " for="txtvalor" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtvalor" value="#{consultaFacturaBean.facturaSeleccionada.valtotal}" >
+					<f:convertNumber pattern="0.00" />
+				</h:outputText>
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column>
+				<h:outputLabel value="Valor Pendiente: " for="txtvalorpendiente" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtvalorpendiente" value="#{consultaFacturaBean.facturaSeleccionada.valpendiente}" >
+					<f:convertNumber pattern="0.00" />
+				</h:outputText>
+				</p:column>
+				
+				<p:column>
+				<h:outputLabel value="Fecha Caducidad: " for="txtfechacaducidad" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtfechacaducidad" value="#{consultaFacturaBean.facturaSeleccionada.fcaducidad}" >
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText>
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column>
+				<h:outputLabel value="Id Autorización: " for="txtautorizacion" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtautorizacion" value="#{consultaFacturaBean.facturaSeleccionada.idautorizacion}" />
+				</p:column>
+				
+				<p:column>
+				<h:outputText value="" />
+				</p:column>
+				<p:column>
+				<h:outputText value="" />
+				</p:column>
+				</p:row>
+			</p:panelGrid>
+			<br />
+			<p:dataTable id="idTablaDetalle" value="#{consultaFacturaBean.lisDetimpfacturas}" var="detalle" rowKey="#{detalle.iddetfacturas}" widgetVar="vartablaDetalle"
+			paginator="true" rows="10" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			emptyMessage="No se encontraron registros" lazy="true">
+
+				<f:facet name="header">
+					Detalle de la Factura
+				</f:facet>
+				
+				<p:column id="idProductoHeader" headerText="Producto">
+                 	<h:outputText value="#{detalle.detalle}" />
+				</p:column>
+				
+                <p:column id="idValorHeader" headerText="Valor" style="text-align: right;">
+                    <h:outputText value="#{detalle.valor}" >
+						<f:convertNumber pattern="0.00" />
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+			<br />
+			<p:commandButton value="Regresar" style="float: right;" onclick="history.back();" immediate="true" />
+		</p:panel>
+	</h:form>
+</ui:composition>

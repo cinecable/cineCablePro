@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="consultaPago" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="aedef403-5c48-4e53-86f1-74887cb71095">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P_IDPAGO" class="java.lang.Integer"/>
+	<parameter name="P_LOGO" class="java.io.InputStream"/>
+	<queryString>
+		<![CDATA[select t.*, (select f.nombre from fpago f where f.idfpago = t.idfpago ) as formapago, (select b.nombre from bancos b where b.idbanco = t.idbcoemisor ) as bcoemisor from tpagos t where t.idpago = $P{P_IDPAGO}]]>
+	</queryString>
+	<field name="idpago" class="java.lang.Integer"/>
+	<field name="idtpago" class="java.lang.Integer"/>
+	<field name="valpago" class="java.lang.Float"/>
+	<field name="idfpago" class="java.lang.Integer"/>
+	<field name="nrodocumento" class="java.lang.String"/>
+	<field name="idbcoemisor" class="java.lang.Integer"/>
+	<field name="idbcoemisortar" class="java.lang.Integer"/>
+	<field name="fcaducidad" class="java.sql.Date"/>
+	<field name="codseguridad" class="java.lang.String"/>
+	<field name="propietario" class="java.lang.String"/>
+	<field name="nrocuenta" class="java.lang.String"/>
+	<field name="idestado" class="java.lang.Integer"/>
+	<field name="idempresa" class="java.lang.Integer"/>
+	<field name="idusuario" class="java.lang.Integer"/>
+	<field name="idnexo" class="java.lang.Integer"/>
+	<field name="formapago" class="java.lang.String"/>
+	<field name="bcoemisor" class="java.lang.String"/>
+	<variable name="valpago_1" class="java.lang.Float" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{valpago}]]></variableExpression>
+	</variable>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="72">
+			<frame>
+				<reportElement uuid="d8cf532a-85fd-4360-abe0-89f84571a2b2" mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699"/>
+				<staticText>
+					<reportElement uuid="de00063f-d97c-48c3-9290-abd727b288c2" x="108" y="31" width="250" height="43" forecolor="#FFFFFF"/>
+					<textElement>
+						<font size="34" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cine Cable]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="de00063f-d97c-48c3-9290-abd727b288c2" x="413" y="43" width="162" height="31" forecolor="#FFFFFF"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="20" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Datos de Pagos]]></text>
+				</staticText>
+				<image>
+					<reportElement uuid="9dc7ca0c-b347-4f53-bafe-8974ee9c826e" x="20" y="21" width="81" height="53"/>
+					<imageExpression><![CDATA[$P{P_LOGO}]]></imageExpression>
+				</image>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="13"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="21">
+			<line>
+				<reportElement uuid="4223995f-3c41-479d-a9a3-5b1a0fdb568e" x="-20" y="20" width="595" height="1" forecolor="#666666"/>
+			</line>
+			<staticText>
+				<reportElement uuid="e52ebfe8-2b08-4ea5-9371-04940cc3740b" mode="Opaque" x="0" y="0" width="80" height="18" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Forma de pago]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="541bc149-f11b-4646-a34c-0bd0bbbc48d3" mode="Opaque" x="475" y="0" width="80" height="18" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="57aca2ba-bbfa-4b90-a174-2d63053c020e" mode="Opaque" x="81" y="0" width="80" height="18" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No.Documento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b6127082-479d-4213-b48f-4674b8d7314e" mode="Opaque" x="162" y="0" width="110" height="18" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bco.Emisor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3bf5d1ac-c717-496d-acd7-f3b7d6e0e46a" mode="Opaque" x="273" y="0" width="110" height="18" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Propietario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1024ee24-8c4c-4199-96e5-d62fde338112" mode="Opaque" x="384" y="0" width="90" height="18" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No.Cuenta]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<line>
+				<reportElement uuid="b6dc1f81-094b-4a5f-8616-b3bb9337e3d6" positionType="FixRelativeToBottom" x="0" y="19" width="555" height="1"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="2a31f25f-c39b-4ecd-8e1e-4718b4b585b4" x="0" y="0" width="80" height="18"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{formapago}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="e3a6f5cf-463b-48dc-a067-f62abf488765" x="81" y="0" width="80" height="18"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nrodocumento}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="2652fc94-5837-419f-b465-742148ccbc81" x="162" y="0" width="110" height="18"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bcoemisor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="28b3f736-2e8f-4484-a3c3-bbe84e40d4e9" x="273" y="0" width="110" height="18"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{propietario}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="e3bbeeb1-056d-4db8-ace3-d5859d4b0c40" x="384" y="0" width="90" height="18"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nrocuenta}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="fcb8839f-63d6-4c18-b1b7-0f07cccc73d5" mode="Transparent" x="475" y="0" width="80" height="18" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valpago}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="20">
+			<line>
+				<reportElement uuid="b6dc1f81-094b-4a5f-8616-b3bb9337e3d6" positionType="FixRelativeToBottom" x="0" y="0" width="555" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="541bc149-f11b-4646-a34c-0bd0bbbc48d3" mode="Transparent" x="384" y="0" width="90" height="18" forecolor="#006699"/>
+				<textElement textAlignment="Right">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="71b41481-4dd5-4428-b14d-4f64bde776ca" x="475" y="0" width="80" height="18"/>
+				<textElement textAlignment="Right">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{valpago_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="17">
+			<textField>
+				<reportElement uuid="f4e6801c-d1a3-40c3-81a5-2ae1de5d0356" mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="ce00e183-1306-40f9-8603-6ccb2ada8cf5" mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="d420b07c-aabe-40cd-ab76-9c281162fd29" x="0" y="4" width="100" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

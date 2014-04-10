@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="form-contentpage">
+		<p:growl id="mensajes" showDetail="true" />
+		<h1 class="title ui-widget-header" style="text-align: center;">Datos del Pago</h1>
+		
+		<p:panel id="pnlDatos" styleClass="hidepanel">
+			<h:link style="float: right;" value="Imprimir" outcome="browser_pago.jsf" target="_blank" >
+				<f:param name="idpago" value="#{consultaPagosBean.pagoSeleccionado.idpago}"></f:param>
+			</h:link>
+			<h:link style="float: right;" title="Imprimir" outcome="browser_pago.jsf" target="_blank" >
+				<span class="ui-button-icon-left ui-icon ui-c ui-icon-print"></span>
+				<f:param name="idpago" value="#{consultaPagosBean.pagoSeleccionado.idpago}"></f:param>
+			</h:link>
+			<br clear="all" />
+			<p:dataTable id="idTablaPagos" value="#{consultaPagosBean.lisTpagos}" var="tpago" rowKey="#{tpago.idtpago}" widgetVar="vartablaTpago"
+			paginator="true" rows="10" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			emptyMessage="No se encontraron registros" lazy="true">
+
+				<f:facet name="header">
+					Detalle de Pagos
+				</f:facet>
+				
+				<p:column id="idFormaPagoHeader" headerText="Forma de Pago">
+                 	<h:outputText value="#{tpago.fpago.nombre}" />
+				</p:column>
+				
+				<p:column id="idNoDocumentoHeader" headerText="No.Documento">
+                 	<h:outputText value="#{tpago.nrodocumento}" />
+				</p:column>
+				
+				<p:column id="idBcoEmisorHeader" headerText="Bco.Emisor">
+                	<h:outputText value="#{tpago.bancosByIdbcoemisor.nombre}" />
+				</p:column>
+				
+				<p:column id="idPropietarioHeader" headerText="Propietario">
+                	<h:outputText value="#{tpago.propietario}" />
+				</p:column>
+				
+				<p:column id="idNoCuentaHeader" headerText="No.Cuenta">
+                	<h:outputText value="#{tpago.nrocuenta}" />
+				</p:column>
+                            
+                <p:column id="idValorHeader" headerText="Valor" style="text-align: right;">
+                    <h:outputText value="#{tpago.valpago}" >
+						<f:convertNumber pattern="0.00" />
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+			
+			<br />
+			<p:commandButton value="Regresar" style="float: right;" onclick="history.back();" immediate="true" />
+		</p:panel>
+	</h:form>
+</ui:composition>

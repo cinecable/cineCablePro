@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:form id="form-contentpage">
+		<p:growl id="mensajes" showDetail="true" />
+		<h1 class="title ui-widget-header" style="text-align: center;">Datos del Excedente</h1>
+		
+		<p:panel id="pnlDatos" styleClass="hidepanel">
+			<h:link style="float: right;" value="Imprimir" outcome="browser_excedente.jsf" target="_blank" >
+				<f:param name="idexcedente" value="#{consultaExcedenteBean.excedenteSeleccionado.idexcedente}"></f:param>
+			</h:link>
+			<h:link style="float: right;" title="Imprimir" outcome="browser_excedente.jsf" target="_blank" >
+				<span class="ui-button-icon-left ui-icon ui-c ui-icon-print"></span>
+				<f:param name="idexcedente" value="#{consultaExcedenteBean.excedenteSeleccionado.idexcedente}"></f:param>
+			</h:link>
+			<br clear="all" />
+			<p:panelGrid id="pnlDatosExcedentes" style="width: 100%" >
+				<p:row>
+				<p:column style="width: 50%">
+				<h:outputLabel value="Id Cuenta Cliente: " for="txtidcuenta" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtidcuenta" value="#{consultaExcedenteBean.excedenteSeleccionado.idcuenta}" />
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column>
+				<h:outputLabel value="Id Excedente: " for="txtexcedente" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtexcedente" value="#{consultaExcedenteBean.excedenteSeleccionado.idexcedente}" />
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column>
+				<h:outputLabel value="Valor Real Excedente: " for="txtvalorpago" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtvalorpago" value="#{consultaExcedenteBean.excedenteSeleccionado.valpago}" >
+					<f:convertNumber pattern="0.00" />
+				</h:outputText>
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column>
+				<h:outputLabel value="Valor Pendiente: " for="txtvalorpendiente" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtvalorpendiente" value="#{consultaExcedenteBean.excedenteSeleccionado.valpendiente}" >
+					<f:convertNumber pattern="0.00" />
+				</h:outputText>
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column>
+				<h:outputLabel value="Forma de Pago: " for="txtformapago" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtformapago" value="#{consultaExcedenteBean.fpago.nombre}" />
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column>
+				<h:outputLabel value="No Cuenta Cliente: " for="txtnocuenta" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtnocuenta" value="#{consultaExcedenteBean.excedenteSeleccionado.nrocuenta}" />
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column>
+				<h:outputLabel value="No. Documento: " for="txtnodocumento" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtnodocumento" value="#{consultaExcedenteBean.excedenteSeleccionado.nrodocumento}" />
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column>
+				<h:outputLabel value="Banco Emisor: " for="txtbancoemisor" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtbancoemisor" value="#{consultaExcedenteBean.bancos.nombre}" />
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column>
+				<h:outputLabel value="Banco Tarjeta: " for="txtbancoemisortar" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtbancoemisortar" value="#{consultaExcedenteBean.bancosTar.nombre}" />
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column>
+				<h:outputLabel value="Propietario: " for="txtpropietario" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtpropietario" value="#{consultaExcedenteBean.excedenteSeleccionado.propietario}" />
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column>
+				<h:outputLabel value="Fecha Caducidad: " for="txtfechacaducidad" />
+				</p:column>
+				<p:column>
+				<h:outputText id="txtfechacaducidad" value="#{consultaExcedenteBean.excedenteSeleccionado.fcaducidad}" >
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText>
+				</p:column>
+				</p:row>
+
+			</p:panelGrid>
+			
+			<br />
+			<p:commandButton value="Regresar" style="float: right;" onclick="history.back();" immediate="true" />
+		</p:panel>
+	</h:form>
+</ui:composition>

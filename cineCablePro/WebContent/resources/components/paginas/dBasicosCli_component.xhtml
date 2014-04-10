@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+	<composite:interface>
+		<composite:attribute name="rutaPadre" required="true" shortDescription="Ruta completa de los id de los contenedores del componente" />
+	</composite:interface>
+
+	<composite:implementation >
+	
+			<h:form id="form-basicoscomponent">
+				<p:growl id="mensajes" showDetail="true" />  
+				<div style="border:  none;border-width: 0px;border-style: solid;"></div>
+				<p:panelGrid id="idBasico"  styleClass="gridcriterios">      
+					
+					<p:row>
+						<p:column>
+		 			 	  <p:outputLabel value="Tipo Identidad :" for="idCmbTdcli" />
+		 			   </p:column>
+		 			   <p:column>
+			      	  	 <p:selectOneMenu id="idCmbTdcli" value="#{dbasCliBean.clientes.idtipoidentificacion}" >
+		         	    	<f:selectItems value="#{dbasCliBean.lisTipoIddoc}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idTipoIdentidad}"/>            
+			         	  </p:selectOneMenu>
+			           </p:column>
+			           <p:column>
+		              	 <p:spacer width="10" />
+		               </p:column>
+		               <p:column> 
+		             	   <h:outputLabel value="# Identidad         :" for="idtxIdentidad" />
+		                </p:column>
+		                <p:column>
+		            		<h:inputText id="idtxIdentidad" size="15" value="#{dbasCliBean.clientes.idcliente}" required="true" />
+		            	</p:column>
+	            	</p:row>
+	            	   
+	            	<p:row>
+	            	   <p:column>
+	            		 <h:outputLabel value="Tipo Persona :" for="idCmbTper" />
+	            	   </p:column>
+	            	   <p:column>
+		      			   <p:selectOneMenu id="idCmbTper" value="#{dbasCliBean.clientes.idtipopersona}" >
+		         	   		   <f:selectItems value="#{dbasCliBean.lisTipoPersona}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idTipoPersona}"/>            
+			         		   <p:ajax listener="#{dbasCliBean.CmbTitEmpresa()}" update="#{cc.attrs.rutaPadre}:form-basicoscomponent:idtxTitNom" />
+		   		           </p:selectOneMenu>
+		     	      </p:column>
+		       		 <p:column>
+	         	      <p:spacer width="10" />
+	                 </p:column>
+	                 <p:column>
+	           		     <h:outputLabel  value="Nombre Empresa :" for="idtxNomEmp"/>
+	                </p:column> 
+	                <p:column>
+	           		 	<h:inputText id="idtxNomEmp" required="#{dbasCliBean.habEmpresa}" size="20" value="#{dbasCliBean.clientes.empresa_1}" />  
+	            	</p:column>   
+	           	</p:row>
+	            	
+	            <p:row>
+	           	  <p:column colspan="5">
+	            	 <h:outputText value="#{dbasCliBean.titNombres}" colspan="3" id="idtxTitNom" style=" color: red"/>
+	              </p:column>
+	            </p:row>
+	            	    
+	            <p:row>
+	              <p:column>
+	                 <h:outputLabel value="Primer Nombre :" for="idtxtnom1" />
+	              </p:column>
+	              <p:column>
+	            	 <h:inputText id="idtxtnom1" size="15" value="#{dbasCliBean.clientes.nombre1}" />
+	             </p:column>
+	             <p:column>
+	                 <p:spacer width="10" />
+	             </p:column>
+	             <p:column>
+	            	 <h:outputLabel value="Segundo Nombre :" for="idtxtnom2" />
+	             </p:column>
+	           	 <p:column>
+	           		 <h:inputText id="idtxtnom2" size="15" value="#{dbasCliBean.clientes.nombre2}"/>
+	             </p:column>
+	          </p:row>
+	           		 
+	          <p:row>
+	           <p:column>
+	           	 <h:outputLabel value="Primer Apellido :" for="idtxtape1" />
+	           </p:column>
+	           <p:column>
+	            	 <h:inputText id="idtxtape1" size="15" value="#{dbasCliBean.clientes.apellido1}" />
+	           </p:column>
+	           <p:column>
+	                 <p:spacer width="10" />
+	           </p:column>
+	           <p:column>
+	            	 <h:outputLabel value="Segundo Apellido :" for="idtxtape2" />
+	           </p:column>
+	           <p:column>
+	           		 <h:inputText id="idtxtape2" size="15" value="#{dbasCliBean.clientes.apellido2}"/>
+	          </p:column>
+	         </p:row>
+	           		 
+	       	 <p:row>
+	           <p:column>
+	          	 	<h:outputLabel value="Fecha de Nacimiento: " for="idFechaNacimiento" style="font-weight: bold;" />
+	           </p:column>
+	           <p:column>
+	          	 <p:calendar id="idFechaNacimiento" value="#{dbasCliBean.clientes.fechanacimiento}" yearRange="c-50:c" locale="es" pattern="dd/MM/yyyy" navigator="true" />
+	           </p:column>
+	           <p:column>
+	               <p:spacer width="10" />
+	           </p:column>
+		   	   <p:column >
+		   	     <h:outputLabel value="Correo Electronico :"  for="idtxtcorreo" />
+		       </p:column>
+		       <p:column>
+		         <h:inputText id="idtxtcorreo" size="15" value="#{dbasCliBean.clientes.email}"/>
+		   	   </p:column>
+		    </p:row>
+		    
+		  	<p:row>
+				<p:column>
+		 		  <p:outputLabel value="Estado civil :" for="idCmbEstCvl" />
+		 	   </p:column>
+		 	   <p:column>
+		   	  	 <p:selectOneMenu id="idCmbEstCvl" value="#{dbasCliBean.clientes.estadocivil}" >
+		           <f:selectItems value="#{dbasCliBean.lisTipoEstadoCivil}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idEstadocivil}"/>            
+			     </p:selectOneMenu>
+			   </p:column>
+			   <p:column>
+		       	 <p:spacer width="10" />
+		        </p:column>
+		        <p:column>
+		 		  <p:outputLabel value="Genero :" for="idCmbGenero" />
+		 	    </p:column>
+		 	    <p:column>
+			   	  <p:selectOneMenu id="idCmbGenero" value="#{dbasCliBean.clientes.genero}" >
+		          	<f:selectItems value="#{dbasCliBean.lisGenero}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idGenero}"/>            
+			      </p:selectOneMenu>
+			    </p:column>
+		               
+		       </p:row>
+		               
+	      </p:panelGrid>
+	      
+	     </h:form>     		 
+	</composite:implementation>
+</ui:composition>
