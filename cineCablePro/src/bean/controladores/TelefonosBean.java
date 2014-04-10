@@ -15,7 +15,7 @@ import util.MessageUtil;
 public class TelefonosBean implements Serializable {
 
 	/**
-	 * 
+	 * prueba
 	 */
 	private static final long serialVersionUID = -2948329960675459182L;
 	private String nombreTelefono;
