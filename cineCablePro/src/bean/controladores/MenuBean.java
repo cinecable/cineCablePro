@@ -147,12 +147,15 @@ public class MenuBean implements Serializable {
 											String nombreProIcono = (String) mapIconoMenu
 													.get(idProceso);
 											// rutaProBeans="clientesNuevos.jsf?faces-redirect=true";
-											PosicionParametro=(Integer) mapPosPar.get(idProceso);
+											/*PosicionParametro=(Integer) mapPosPar.get(idProceso);
 											if (PosicionParametro == 1) {
 												rutaProBeans=rutaProBeans + "?" +strParametrosUrl;
+											}*/
+											if(strParametrosUrl != null && strParametrosUrl.trim().length() > 0 && rutaProBeans != null){
+												rutaProBeans += "?" +strParametrosUrl;
 											}
 											//Se concatena parametro para opcion Consulta Facturas con IdProceso 38
-											if(strParametrosUrl != null && strParametrosUrl.trim().length() > 0 && idProceso == 38){
+											/*if(strParametrosUrl != null && strParametrosUrl.trim().length() > 0 && idProceso == 38){
 												rutaProBeans += "?" +strParametrosUrl;
 											}
 											//Se concatena parametro para opcion Consulta Pagos con IdProceso 39
@@ -166,7 +169,7 @@ public class MenuBean implements Serializable {
 											//Se concatena parametro para opcion Consulta Creditos con IdProceso 41
 											if(strParametrosUrl != null && strParametrosUrl.trim().length() > 0 && idProceso == 41){
 												rutaProBeans += "?" +strParametrosUrl;
-											}
+											}*/
 											if (cuenta2 == 0
 													&& IdMenuPrincipal != idProceso) {
 
@@ -224,6 +227,7 @@ public class MenuBean implements Serializable {
 
 		}// fin try
 		catch (Exception ex) {
+			ex.printStackTrace();
 			new MessageUtil().showFatalMessage("Informativo!",
 					"Ha ocurrido un error inesperado. Comunicar al Webmaster!");
 		}

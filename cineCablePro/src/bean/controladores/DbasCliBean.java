@@ -60,6 +60,7 @@ public class DbasCliBean  implements Serializable{
 		lisTipoIddoc.add(new TipoIdDoc(1, "Cedula"));
 		lisTipoIddoc.add(new TipoIdDoc(2, "RUC"));
 		lisTipoIddoc.add(new TipoIdDoc(3, "Pasaporte"));
+		lisTipoIddoc.add(new TipoIdDoc(4, "Otro Documento"));
 		
 		lisTipoPersona=new ArrayList<TipoPersona>();
 		lisTipoPersona.add(new TipoPersona(0, "Sel.Tipo Persona"));
@@ -72,11 +73,13 @@ public class DbasCliBean  implements Serializable{
 		lisTipoEstadoCivil.add(new TipoEstadoCivil(2,"Casado"));
 		lisTipoEstadoCivil.add(new TipoEstadoCivil(3,"Divorciado"));
 		lisTipoEstadoCivil.add(new TipoEstadoCivil(4,"Union Libre"));
+		lisTipoEstadoCivil.add(new TipoEstadoCivil(5,"Otro Estado"));
 		
 		lisGenero = new ArrayList<Genero>();
 		lisGenero.add(new Genero(0,"Sel.Genero"));
 		lisGenero.add(new Genero(1,"Masculino"));
 		lisGenero.add(new Genero(2,"Femenino"));
+		lisGenero.add(new Genero(3,"Otro Genero"));
 	}
 	
 	public void CmbTitEmpresa() {
