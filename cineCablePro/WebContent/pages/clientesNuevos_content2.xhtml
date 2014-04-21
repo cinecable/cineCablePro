@@ -14,38 +14,39 @@
 			<p:accordionPanel id="acc">
 
 				<p:tab title="Datos Basicos" titleStyleClass="tabStyle">
-					<h:panelGrid columns="1" cellpadding="10">
+					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
 						<my:dBasicosCli_component id="idcomponentedbasicos"
 							rutaPadre=":form-contentpage:acc:idcomponentedbasicos"></my:dBasicosCli_component>
 					</h:panelGrid>
 				</p:tab>
 
 				<p:tab title="Productos Cliente " titleStyleClass="tabStyle">
-					<h:outputLabel value="Nombre de Cuenta :" for="idtxncta" />
-					<h:inputText id="idtxncta" size="45"
-						value="#{clientesNuevosBean.nombreCuenta}" />
-					<h:panelGrid columns="1" cellpadding="10">
+					<br />
+					<h:outputLabel value="Nombre de Cuenta : " for="idtxncta" />
+					<p:inputText id="idtxncta" size="45"
+						value="#{clientesNuevosBean.nombreCuenta}" style="width: 250px" />
+					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
 
 						<my:productos_component id="idcomponenteproductos"
-							rutaPadre=":form-contentpage:acc:idcomponenteproductos"></my:productos_component>
+								rutaPadre=":form-contentpage:acc:idcomponenteproductos"></my:productos_component>
 
 					</h:panelGrid>
 				</p:tab>
 				<p:tab title="Direccion" titleStyleClass="tabStyle">
-					<h:panelGrid columns="1" cellpadding="10">
+					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
 						<my:direccion_component id="idcomponentedireccion"
 							rutaPadre=":form-contentpage:acc:idcomponentedireccion"></my:direccion_component>
 					</h:panelGrid>
 				</p:tab>
 				<p:tab title="Debito Bancario" titleStyleClass="tabStyle">
-					<h:panelGrid columns="1" cellpadding="10">
+					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
 
 						<my:dbancario_component id="idcomponentedbancario"
 							rutaPadre=":form-contentpage:acc:idcomponentedbancario"></my:dbancario_component>
 					</h:panelGrid>
 				</p:tab>
 				<p:tab title="Telefonos Cliente" titleStyleClass="tabStyle">
-					<h:panelGrid columns="1" cellpadding="10">
+					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
 
 						<my:telefonos_component id="idcomponentetelefono"
 							rutaPadre=":form-contentpage:acc:idcomponentetelefono"></my:telefonos_component>

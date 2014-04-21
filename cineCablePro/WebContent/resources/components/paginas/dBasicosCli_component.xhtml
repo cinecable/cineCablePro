@@ -24,7 +24,7 @@
 		 			 	  <p:outputLabel value="Tipo Identidad :" for="idCmbTdcli" />
 		 			   </p:column>
 		 			   <p:column>
-			      	  	 <p:selectOneMenu id="idCmbTdcli" value="#{dbasCliBean.clientes.idtipoidentificacion}" >
+			      	  	 <p:selectOneMenu id="idCmbTdcli" value="#{dbasCliBean.clientes.idtipoidentificacion}" style="width: 150px" >
 		         	    	<f:selectItems value="#{dbasCliBean.lisTipoIddoc}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idTipoIdentidad}"/>            
 			         	  </p:selectOneMenu>
 			           </p:column>
@@ -32,10 +32,10 @@
 		              	 <p:spacer width="10" />
 		               </p:column>
 		               <p:column> 
-		             	   <h:outputLabel value="# Identidad         :" for="idtxIdentidad" />
+		             	   <h:outputLabel value="# Identidad:" for="idtxIdentidad" />
 		                </p:column>
 		                <p:column>
-		            		<h:inputText id="idtxIdentidad" size="15" value="#{dbasCliBean.clientes.idcliente}" required="true" />
+		            		<p:inputText id="idtxIdentidad" size="15" value="#{dbasCliBean.clientes.idcliente}" required="true" style="width: 100%" />
 		            	</p:column>
 	            	</p:row>
 	            	   
@@ -44,7 +44,7 @@
 	            		 <h:outputLabel value="Tipo Persona :" for="idCmbTper" />
 	            	   </p:column>
 	            	   <p:column>
-		      			   <p:selectOneMenu id="idCmbTper" value="#{dbasCliBean.clientes.idtipopersona}" >
+		      			   <p:selectOneMenu id="idCmbTper" value="#{dbasCliBean.clientes.idtipopersona}" style="width: 150px">
 		         	   		   <f:selectItems value="#{dbasCliBean.lisTipoPersona}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idTipoPersona}"/>            
 			         		   <p:ajax listener="#{dbasCliBean.CmbTitEmpresa()}" update="#{cc.attrs.rutaPadre}:form-basicoscomponent:idtxTitNom" />
 		   		           </p:selectOneMenu>
@@ -56,7 +56,7 @@
 	           		     <h:outputLabel  value="Nombre Empresa :" for="idtxNomEmp"/>
 	                </p:column> 
 	                <p:column>
-	           		 	<h:inputText id="idtxNomEmp" required="#{dbasCliBean.habEmpresa}" size="20" value="#{dbasCliBean.clientes.empresa_1}" />  
+	           		 	<p:inputText id="idtxNomEmp" required="#{dbasCliBean.habEmpresa}" size="20" value="#{dbasCliBean.clientes.empresa_1}" style="width: 100%"/>  
 	            	</p:column>   
 	           	</p:row>
 	            	
@@ -71,7 +71,7 @@
 	                 <h:outputLabel value="Primer Nombre :" for="idtxtnom1" />
 	              </p:column>
 	              <p:column>
-	            	 <h:inputText id="idtxtnom1" size="15" value="#{dbasCliBean.clientes.nombre1}" />
+	            	 <p:inputText id="idtxtnom1" size="15" value="#{dbasCliBean.clientes.nombre1}" style="width: 100%"/>
 	             </p:column>
 	             <p:column>
 	                 <p:spacer width="10" />
@@ -80,7 +80,7 @@
 	            	 <h:outputLabel value="Segundo Nombre :" for="idtxtnom2" />
 	             </p:column>
 	           	 <p:column>
-	           		 <h:inputText id="idtxtnom2" size="15" value="#{dbasCliBean.clientes.nombre2}"/>
+	           		 <p:inputText id="idtxtnom2" size="15" value="#{dbasCliBean.clientes.nombre2}" style="width: 100%"/>
 	             </p:column>
 	          </p:row>
 	           		 
@@ -89,7 +89,7 @@
 	           	 <h:outputLabel value="Primer Apellido :" for="idtxtape1" />
 	           </p:column>
 	           <p:column>
-	            	 <h:inputText id="idtxtape1" size="15" value="#{dbasCliBean.clientes.apellido1}" />
+	            	 <p:inputText id="idtxtape1" size="15" value="#{dbasCliBean.clientes.apellido1}" style="width: 100%"/>
 	           </p:column>
 	           <p:column>
 	                 <p:spacer width="10" />
@@ -98,7 +98,7 @@
 	            	 <h:outputLabel value="Segundo Apellido :" for="idtxtape2" />
 	           </p:column>
 	           <p:column>
-	           		 <h:inputText id="idtxtape2" size="15" value="#{dbasCliBean.clientes.apellido2}"/>
+	           		 <p:inputText id="idtxtape2" size="15" value="#{dbasCliBean.clientes.apellido2}" style="width: 100%"/>
 	          </p:column>
 	         </p:row>
 	           		 
@@ -116,7 +116,7 @@
 		   	     <h:outputLabel value="Correo Electronico :"  for="idtxtcorreo" />
 		       </p:column>
 		       <p:column>
-		         <h:inputText id="idtxtcorreo" size="15" value="#{dbasCliBean.clientes.email}"/>
+		         <p:inputText id="idtxtcorreo" size="15" value="#{dbasCliBean.clientes.email}" style="width: 100%"/>
 		   	   </p:column>
 		    </p:row>
 		    
@@ -125,7 +125,7 @@
 		 		  <p:outputLabel value="Estado civil :" for="idCmbEstCvl" />
 		 	   </p:column>
 		 	   <p:column>
-		   	  	 <p:selectOneMenu id="idCmbEstCvl" value="#{dbasCliBean.clientes.estadocivil}" >
+		   	  	 <p:selectOneMenu id="idCmbEstCvl" value="#{dbasCliBean.clientes.estadocivil}" style="width: 150px">
 		           <f:selectItems value="#{dbasCliBean.lisTipoEstadoCivil}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idEstadocivil}"/>            
 			     </p:selectOneMenu>
 			   </p:column>
@@ -136,7 +136,7 @@
 		 		  <p:outputLabel value="Genero :" for="idCmbGenero" />
 		 	    </p:column>
 		 	    <p:column>
-			   	  <p:selectOneMenu id="idCmbGenero" value="#{dbasCliBean.clientes.genero}" >
+			   	  <p:selectOneMenu id="idCmbGenero" value="#{dbasCliBean.clientes.genero}" style="width: 150px">
 		          	<f:selectItems value="#{dbasCliBean.lisGenero}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idGenero}"/>            
 			      </p:selectOneMenu>
 			    </p:column>

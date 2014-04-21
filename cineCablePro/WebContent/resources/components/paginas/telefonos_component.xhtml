@@ -17,13 +17,13 @@
 				<p:panel header="Ingreso de Productos contratados por el cliente">
 				
 				<p:focus id="idfocus"></p:focus>
-				<p:panelGrid id="idPanelEditor" style="width: 100%;">
+				<p:panelGrid id="idPanelEditor" style="width: 100%;" >
 					<p:row>
-			       		<p:column >
+			       		<p:column style="width: 150px">
 							<h:outputLabel value="Nombre telefono  :" for="idtxNomTel" />
 						</p:column>	
 						<p:column>
-			                 <h:inputText id="idtxNomTel" size="15" value="#{telefonosBean.telefono.nombre}" />
+			                 <p:inputText id="idtxNomTel" size="15" value="#{telefonosBean.telefono.nombre}" style="width: 500px" />
 						</p:column>	
 					</p:row>
 					<p:row>
@@ -31,7 +31,7 @@
 						      <h:outputLabel value="Numero telefono :" for="idtxNumTel" />
 						  </p:column>
 						  <p:column>
-						       <h:inputText id="idtxNumTel" size="15" value="#{telefonosBean.telefono.numero}" />
+						       <p:inputText id="idtxNumTel" size="15" value="#{telefonosBean.telefono.numero}" style="width: 200px" />
 						  </p:column>
 					</p:row>
 					<p:row>

@@ -16,10 +16,10 @@
 	<composite:implementation>
 		<h:form id="form-dbancarioscomponent">
 			<p:growl id="mensajes" showDetail="true" />
-			<h:panelGrid id="idpDebitos" columns="5">
+			<h:panelGrid id="idpDebitos" columns="5" style="width: 100%">
 				<h:outputLabel value="Forma Cobro :" for="idComboTipodb" />
 				<p:selectOneMenu id="idComboTipodb"
-					value="#{debitosBancariosBean.tipoDebitoSelected.idtipodebito}">
+					value="#{debitosBancariosBean.tipoDebitoSelected.idtipodebito}" style="width: 150px">
 					<f:selectItems value="#{debitosBancariosBean.lisTipodebito}"
 						var="i" itemLabel="#{i.nombre}" itemValue="#{i.idtipodebito}" />
 					<p:ajax listener="#{debitosBancariosBean.cargaBcoTar()}"
@@ -31,7 +31,7 @@
 
 				<h:outputLabel value="Banco/Tarjeta :" for="idComboBcoEmi" />
 				<p:selectOneMenu id="idComboBcoEmi"
-					value="#{debitosBancariosBean.bancosSelected.idbanco}">
+					value="#{debitosBancariosBean.bancosSelected.idbanco}" style="width: 150px">
 					<f:selectItems value="#{debitosBancariosBean.lisBancos}" var="i"
 						itemLabel="#{i.nombre}" itemValue="#{i.idbanco}" />
 				</p:selectOneMenu>
@@ -39,7 +39,7 @@
 
 				<h:outputLabel value="Emisor Tarjeta :" for="idComboTarEmi" />
 				<p:selectOneMenu id="idComboTarEmi"
-					value="#{debitosBancariosBean.tarjetasSelected.idbanco}">
+					value="#{debitosBancariosBean.tarjetasSelected.idbanco}" style="width: 150px">
 					<f:selectItems value="#{debitosBancariosBean.lisTarjetas}" var="i"
 						itemLabel="#{i.nombre}" itemValue="#{i.idbanco}" />
 				</p:selectOneMenu>
@@ -48,25 +48,25 @@
 
 				<h:outputLabel value="Tipo de Cuenta :" for="idComboTcuenta" />
 				<p:selectOneMenu id="idComboTcuenta"
-					value="#{debitosBancariosBean.tipoCuentaSelected.idtipoCuenta}">
+					value="#{debitosBancariosBean.tipoCuentaSelected.idtipoCuenta}" style="width: 150px">
 					<f:selectItems value="#{debitosBancariosBean.lisTipoCuenta}"
 						var="i" itemLabel="#{i.nombre}" itemValue="#{i.idtipoCuenta}" />
 				</p:selectOneMenu>
 
 				<h:outputLabel value="Nro Doc :" for="idtxndoc" />
-				<h:inputText required="#{debitosBancariosBean.reqBanco}"
+				<p:inputText required="#{debitosBancariosBean.reqBanco}"
 					id="idtxndoc" size="15" maxlength="20"
-					value="#{debitosBancariosBean.nroDocumento}" />
+					value="#{debitosBancariosBean.nroDocumento}" style="width: 100%" />
 
 				<p:spacer width="8" />
 
 				<h:outputLabel value="Cod. Seguridad :" for="idtxtcodS" />
-				<h:inputText id="idtxtcodS" size="10"
-					value="#{debitosBancariosBean.codSeguridad}" />
+				<p:inputText id="idtxtcodS" size="10"
+					value="#{debitosBancariosBean.codSeguridad}" style="width: 100%"/>
 
 				<h:outputLabel value="Propietario :" for="idtxtPro" />
-				<h:inputText id="idtxtPro" size="30"
-					value="#{debitosBancariosBean.propietario}" />
+				<p:inputText id="idtxtPro" size="30"
+					value="#{debitosBancariosBean.propietario}" style="width: 100%"/>
 				<h:outputText value="" />
 				<h:outputText value="" />
 				<h:outputText value="" />
