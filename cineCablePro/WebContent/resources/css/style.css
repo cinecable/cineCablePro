@@ -258,6 +258,23 @@ h3 {
 	filter:alpha(opacity=70);/*For IE8 and earlier*/
 }
 
+.centrar {
+	text-align: center;
+	text-align: -webkit-center;
+	text-align: -moz-center;
+}
+
+.izquieda {
+	text-align: left;
+	text-align: -webkit-left;
+	text-align: -moz-left;
+}
+
+.derecha {
+	text-align: right;
+	text-align: -webkit-right;
+	text-align: -moz-right;
+}
 /***********PRIMEFACES***************/
 .ui-widget {
 	/*font-family:Lucida Grande, Lucida Sans, Arial, sans-serif;*/
