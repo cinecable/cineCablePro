@@ -15,7 +15,8 @@ public class UsuarioDAO {
 		.add( Restrictions.eq("nombre", nombreusuario) )
 		.add( Restrictions.eq("idestado", (Integer)1))
 		.createAlias("claves", "cla")
-		.add( Restrictions.eq("cla.clave", clave) );
+		.add( Restrictions.eq("cla.clave", clave) )
+		.createAlias("empresa", "emp");
 		
 		usuario = (Usuario) criteria.uniqueResult();
 		
