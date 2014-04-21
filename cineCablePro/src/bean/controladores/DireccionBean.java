@@ -110,7 +110,6 @@ public class DireccionBean implements Serializable{
                        
             SeteaTiposSectores(1);
             
-            new MessageUtil().showInfoMessage("Listo!", "Seleccione!");
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -431,7 +430,6 @@ public class DireccionBean implements Serializable{
             
             SeteaTiposSectores(4);
             
-            new MessageUtil().showInfoMessage("Listo!", "Seleccione!");
         }
         catch(Exception ex){
             ex.printStackTrace();

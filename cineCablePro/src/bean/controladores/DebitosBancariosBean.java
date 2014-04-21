@@ -73,7 +73,6 @@ public class DebitosBancariosBean  implements Serializable{
         	   lisTipodebito.addAll(lisTDeb);
            }
        
-           new MessageUtil().showInfoMessage("Listo!", "Seleccione!");
        }
        catch(Exception ex){
            ex.printStackTrace();
@@ -161,7 +160,6 @@ public void cargaBcoTar() {
 								lisTarjetas.add(lisTDebt2);  
 								
 					       }
-				           new MessageUtil().showInfoMessage("Listo!", "Seleccione!");						
 					} else {
 						
 						lisTDebb.setNombre(texto);					
