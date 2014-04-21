@@ -15,7 +15,7 @@
 
 	<composite:implementation>
 		<h:form id="form-dbancarioscomponent">
-			<p:growl id="mensajes" showDetail="true" />
+			<p:messages autoUpdate="true" showSummary="true" closable="true" />
 			<h:panelGrid id="idpDebitos" columns="5" style="width: 100%">
 				<h:outputLabel value="Forma Cobro :" for="idComboTipodb" />
 				<p:selectOneMenu id="idComboTipodb"
@@ -54,7 +54,7 @@
 				</p:selectOneMenu>
 
 				<h:outputLabel value="Nro Doc :" for="idtxndoc" />
-				<p:inputText required="#{debitosBancariosBean.reqBanco}"
+				<p:inputText required="#{debitosBancariosBean.reqBanco}" requiredMessage="Ingresar Nro Doc"
 					id="idtxndoc" size="15" maxlength="20"
 					value="#{debitosBancariosBean.nroDocumento}" style="width: 100%" />
 

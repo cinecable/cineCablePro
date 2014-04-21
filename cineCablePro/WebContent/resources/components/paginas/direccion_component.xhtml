@@ -8,19 +8,20 @@
 	xmlns:composite="http://java.sun.com/jsf/composite">
 	
 	<composite:interface displayName="Parametros" shortDescription="Recibe parametros para ser usados en el componente">
+		<composite:attribute name="formPadre" required="true" shortDescription="Formulario padre" />
 		<composite:attribute name="rutaPadre" required="true" shortDescription="Ruta completa de los id de los contenedores del componente" />
 	</composite:interface>
 	
 	<composite:implementation>
 	<h:form id="form-direccioncomponent" >
-		<p:growl id="mensajes" showDetail="true" />  
+		<p:messages autoUpdate="true" showSummary="true" closable="true" />
 		   <h:panelGrid id="idpanelDatosGenerales" columns="2" style="width: 100%">  
 		   
 		         <h:outputLabel value="Pais :" for="idcombopais" />  
  				   <p:selectOneMenu id="idcombopais" value="#{direccionBean.paisSelected.idpais}" style="width: 150px">
                        <f:selectItems value="#{direccionBean.lisPais}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idpais}" />
                        <p:ajax listener="#{direccionBean.llenarLisProvincia}" update="#{cc.attrs.rutaPadre}:form-direccioncomponent:idcomboprovincia, #{cc.attrs.rutaPadre}:form-direccioncomponent:idcombociudad,
-                        #{cc.attrs.rutaPadre}:form-direccioncomponent:mensajes,#{cc.attrs.rutaPadre}:form-direccioncomponent:idcombosector,
+                        #{cc.attrs.formPadre}:mensajes,#{cc.attrs.rutaPadre}:form-direccioncomponent:idcombosector,
                         ,#{cc.attrs.rutaPadre}:form-direccioncomponent:idComboTipoSector, #{cc.attrs.rutaPadre}:form-direccioncomponent:idComboEdificio,
                         #{cc.attrs.rutaPadre}:form-direccioncomponent:idComboCallePrin,#{cc.attrs.rutaPadre}:form-direccioncomponent:idComboCallesec,
                         #{cc.attrs.rutaPadre}:form-direccioncomponent:idComboUbicacion,#{cc.attrs.rutaPadre}:form-direccioncomponent:idComboNodos" />
@@ -63,7 +64,7 @@
                    <h:outputLabel value="Calle Principal  :" for="idComboCallePrin" />
                 <p:autoComplete id="idComboCallePrin" size="60" value="#{direccionBean.calleprincipalSelected}" completeMethod="#{direccionBean.CompletarCallesPrincipales}" 
 				var="i" itemLabel="#{i.nombre}" itemValue="#{i}" converter="callePrincipal" minQueryLength="1"  
-				forceSelection="true" required="true" requiredMessage="es obligatoria">
+				forceSelection="true" required="true" requiredMessage="Ingresar Calle Principal">
 					
 					<f:facet name="itemtip">  
 	                    <h:panelGrid  columns="2" cellpadding="5" width="250px">  
@@ -76,7 +77,7 @@
 	            <h:outputLabel value="Calle Secundaria :" for="idComboCallesec" />
 	            <p:autoComplete id="idComboCallesec" size="60" value="#{direccionBean.callesecundariaSelected}" completeMethod="#{direccionBean.CompletarCallesSecundarias}" 
 					var="i" itemLabel="#{i.nombre}" itemValue="#{i}" converter="calleSecundaria" minQueryLength="1"  
-					forceSelection="true" required="true" requiredMessage="es obligatoria">
+					forceSelection="true" required="true" requiredMessage="Ingresar Calle Secundaria">
 						
 					<f:facet name="itemtip">  
 	                    <h:panelGrid  columns="2" cellpadding="5" width="250px">  

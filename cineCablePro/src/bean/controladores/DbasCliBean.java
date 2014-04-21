@@ -2,6 +2,7 @@ package bean.controladores;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -48,7 +49,8 @@ public class DbasCliBean  implements Serializable{
 	 tipoIdDocSelect = new TipoIdDoc(0, null);
 	 tipoPersonaSelect=new TipoPersona(0, null);
 	 titNombres="Datos Persona";
-	 clientes = new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null);
+	 //clientes = new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null);
+	 clientes = new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null, null, null, null, 0, new Date(), null, 1, 0, 0, 1, 1);
      habEmpresa=false;		
 	 CargaTDoc();
 	 

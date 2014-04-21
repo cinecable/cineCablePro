@@ -27,14 +27,14 @@
 						value="#{clientesNuevosBean.nombreCuenta}" style="width: 250px" />
 					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
 
-						<my:productos_component id="idcomponenteproductos"
+						<my:productos_component id="idcomponenteproductos" formPadre=":form-contentpage"
 								rutaPadre=":form-contentpage:acc:idcomponenteproductos"></my:productos_component>
 
 					</h:panelGrid>
 				</p:tab>
 				<p:tab title="Direccion" titleStyleClass="tabStyle">
 					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
-						<my:direccion_component id="idcomponentedireccion"
+						<my:direccion_component id="idcomponentedireccion" formPadre=":form-contentpage"
 							rutaPadre=":form-contentpage:acc:idcomponentedireccion"></my:direccion_component>
 					</h:panelGrid>
 				</p:tab>
@@ -48,7 +48,7 @@
 				<p:tab title="Telefonos Cliente" titleStyleClass="tabStyle">
 					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
 
-						<my:telefonos_component id="idcomponentetelefono"
+						<my:telefonos_component id="idcomponentetelefono" formPadre=":form-contentpage"
 							rutaPadre=":form-contentpage:acc:idcomponentetelefono"></my:telefonos_component>
 					</h:panelGrid>
 				</p:tab>

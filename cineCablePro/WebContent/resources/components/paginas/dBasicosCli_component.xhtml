@@ -15,7 +15,7 @@
 	<composite:implementation >
 	
 			<h:form id="form-basicoscomponent">
-				<p:growl id="mensajes" showDetail="true" />  
+				<p:messages autoUpdate="true" showSummary="true" closable="true" />
 				<div style="border:  none;border-width: 0px;border-style: solid;"></div>
 				<p:panelGrid id="idBasico"  styleClass="gridcriterios">      
 					
@@ -32,16 +32,16 @@
 		              	 <p:spacer width="10" />
 		               </p:column>
 		               <p:column> 
-		             	   <h:outputLabel value="# Identidad:" for="idtxIdentidad" />
+		             	   <h:outputLabel value="# Identidad *:" for="idtxIdentidad" />
 		                </p:column>
 		                <p:column>
-		            		<p:inputText id="idtxIdentidad" size="15" value="#{dbasCliBean.clientes.idcliente}" required="true" style="width: 100%" />
+		            		<p:inputText id="idtxIdentidad" size="15" value="#{dbasCliBean.clientes.idcliente}" required="true" requiredMessage="Ingresar número de identidad" style="width: 100%" label="Identidad" />
 		            	</p:column>
 	            	</p:row>
 	            	   
 	            	<p:row>
 	            	   <p:column>
-	            		 <h:outputLabel value="Tipo Persona :" for="idCmbTper" />
+	            		 <h:outputLabel value="Tipo Persona *:" for="idCmbTper" />
 	            	   </p:column>
 	            	   <p:column>
 		      			   <p:selectOneMenu id="idCmbTper" value="#{dbasCliBean.clientes.idtipopersona}" style="width: 150px">
@@ -56,7 +56,7 @@
 	           		     <h:outputLabel  value="Nombre Empresa :" for="idtxNomEmp"/>
 	                </p:column> 
 	                <p:column>
-	           		 	<p:inputText id="idtxNomEmp" required="#{dbasCliBean.habEmpresa}" size="20" value="#{dbasCliBean.clientes.empresa_1}" style="width: 100%"/>  
+	           		 	<p:inputText id="idtxNomEmp" required="#{dbasCliBean.habEmpresa}" requiredMessage="Ingresar Nombre Empresa" size="20" value="#{dbasCliBean.clientes.empresa_1}" style="width: 100%"/>  
 	            	</p:column>   
 	           	</p:row>
 	            	
@@ -71,7 +71,7 @@
 	                 <h:outputLabel value="Primer Nombre :" for="idtxtnom1" />
 	              </p:column>
 	              <p:column>
-	            	 <p:inputText id="idtxtnom1" size="15" value="#{dbasCliBean.clientes.nombre1}" style="width: 100%"/>
+	            	 <p:inputText id="idtxtnom1" size="15" value="#{dbasCliBean.clientes.nombre1}" style="width: 100%" required="true" requiredMessage="Primer Nombre" />
 	             </p:column>
 	             <p:column>
 	                 <p:spacer width="10" />
@@ -89,7 +89,7 @@
 	           	 <h:outputLabel value="Primer Apellido :" for="idtxtape1" />
 	           </p:column>
 	           <p:column>
-	            	 <p:inputText id="idtxtape1" size="15" value="#{dbasCliBean.clientes.apellido1}" style="width: 100%"/>
+	            	 <p:inputText id="idtxtape1" size="15" value="#{dbasCliBean.clientes.apellido1}" style="width: 100%" required="true" requiredMessage="Ingresar Primer Apellido" />
 	           </p:column>
 	           <p:column>
 	                 <p:spacer width="10" />
@@ -113,16 +113,18 @@
 	               <p:spacer width="10" />
 	           </p:column>
 		   	   <p:column >
-		   	     <h:outputLabel value="Correo Electronico :"  for="idtxtcorreo" />
+		   	     <h:outputLabel value="Correo Electronico *:"  for="idtxtcorreo" />
 		       </p:column>
 		       <p:column>
-		         <p:inputText id="idtxtcorreo" size="15" value="#{dbasCliBean.clientes.email}" style="width: 100%"/>
+		         <p:inputText id="idtxtcorreo" size="15" value="#{dbasCliBean.clientes.email}" style="width: 100%" required="true" requiredMessage="Ingresar Correo Electronico" validatorMessage="Formato de Correo Electrónico incorrecto" >
+		         	<f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+		         </p:inputText>
 		   	   </p:column>
 		    </p:row>
 		    
 		  	<p:row>
 				<p:column>
-		 		  <p:outputLabel value="Estado civil :" for="idCmbEstCvl" />
+		 		  <p:outputLabel value="Estado civil *:" for="idCmbEstCvl" />
 		 	   </p:column>
 		 	   <p:column>
 		   	  	 <p:selectOneMenu id="idCmbEstCvl" value="#{dbasCliBean.clientes.estadocivil}" style="width: 150px">
@@ -133,7 +135,7 @@
 		       	 <p:spacer width="10" />
 		        </p:column>
 		        <p:column>
-		 		  <p:outputLabel value="Genero :" for="idCmbGenero" />
+		 		  <p:outputLabel value="Genero *:" for="idCmbGenero" />
 		 	    </p:column>
 		 	    <p:column>
 			   	  <p:selectOneMenu id="idCmbGenero" value="#{dbasCliBean.clientes.genero}" style="width: 150px">

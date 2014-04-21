@@ -9,13 +9,15 @@
 
 	<composite:interface displayName="Parametros"
 		shortDescription="Recibe parametros para ser usados en el componente">
+		<composite:attribute name="formPadre" required="true"
+			shortDescription="Formulario padre" />
 		<composite:attribute name="rutaPadre" required="true"
 			shortDescription="Ruta completa de los id de los contenedores del componente" />
 	</composite:interface>
 
 	<composite:implementation>
 		<h:form id="form-productoscomponent">
-			<p:growl id="mensajes" showDetail="true" />
+			<p:messages autoUpdate="true" showSummary="true" closable="true" />
 			<p:panel header="Ingreso de Productos contratados por el cliente">
 
 				<p:focus id="idfocus"></p:focus>
@@ -30,9 +32,9 @@
 								completeMethod="#{productosBean.buscarProductos}" var="i"
 								itemLabel="#{i.nombre}" itemValue="#{i}" converter="producto"
 								minQueryLength="1" forceSelection="true" required="true"
-								requiredMessage="es obligatoria" >
+								requiredMessage="Ingresar Producto" >
 								
-								<p:ajax event="itemSelect" update="#{cc.attrs.rutaPadre}:form-productoscomponent:mensajes"></p:ajax>
+								<p:ajax event="itemSelect" update="#{cc.attrs.formPadre}:mensajes"></p:ajax>
 								
 								<f:facet name="itemtip">
 									<h:panelGrid columns="2" cellpadding="5" width="250px">
@@ -64,7 +66,7 @@
 							<p:column colspan="2" style="text-align: right;">
 								<p:commandButton id="idbtnAgregarProducto" value="Insertar"
 									actionListener="#{productosBean.agregarProductos}"
-									update="#{cc.attrs.rutaPadre}:form-productoscomponent:idPanelEditor, #{cc.attrs.rutaPadre}:form-productoscomponent:idTablaProductos, #{cc.attrs.rutaPadre}:form-productoscomponent:mensajes"
+									update="#{cc.attrs.rutaPadre}:form-productoscomponent:idPanelEditor, #{cc.attrs.rutaPadre}:form-productoscomponent:idTablaProductos, #{cc.attrs.formPadre}:mensajes"
 									process="idPanelEditor, idTablaProductos">
 								</p:commandButton>
 							</p:column>
@@ -84,7 +86,7 @@
 					selection="#{productosBean.productoIdSelected}"
 					selectionMode="single" emptyMessage="No se encontraron registros" >
 
-					<p:ajax event="rowSelect" update="#{cc.attrs.rutaPadre}:form-productoscomponent:mensajes" />  
+					<p:ajax event="rowSelect" update="#{cc.attrs.formPadre}:mensajes" />  
 
 					<f:facet name="header">
 						Productos
@@ -103,7 +105,7 @@
 							id="idconfirmardelete"
 							action="#{productosBean.quitarProducto}"
 							process="idTablaProductos"
-							update="#{cc.attrs.rutaPadre}:form-productoscomponent:mensajes, 
+							update="#{cc.attrs.formPadre}:mensajes, 
 					   #{cc.attrs.rutaPadre}:form-productoscomponent:idTablaProductos, #{cc.attrs.rutaPadre}:form-productoscomponent:idPanelEditor">
 							<f:setPropertyActionListener value="#{prodid}" target="#{productosBean.productoIdSelected}" for="idconfirmardelete" />
 						</p:commandButton>
