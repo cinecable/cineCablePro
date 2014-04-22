@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import exceptions.VerificarIdException;
+import global.Parametro;
 
 import bo.negocio.CtaclienteBO;
 
@@ -110,7 +111,7 @@ public class ClientesNuevosBean implements Serializable{
 				}*/
 			} catch(Exception re) {
 				re.printStackTrace();
-				new MessageUtil().showFatalMessage("Esto es Vergonzoso!", "Ha ocurrido un error inesperado. Comunicar al Webmaster!");
+				new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", null);
 			}
 		}
 	}
@@ -122,22 +123,71 @@ public class ClientesNuevosBean implements Serializable{
 		
 			VerificarId verificarId  = new VerificarId();
 			
-			if(dbasCliBean.getClientes().getIdtipoidentificacion() == 4 || verificarId.verificarId(dbasCliBean.getClientes().getIdcliente())){
-				if(dbasCliBean.getClientes().getNombre1() != null && dbasCliBean.getClientes().getNombre1().trim().length() > 0){
-					if(dbasCliBean.getClientes().getApellido1() != null && dbasCliBean.getClientes().getApellido1().trim().length() > 0){
-						if(dbasCliBean.getClientes().getEmail() != null && dbasCliBean.getClientes().getEmail().trim().length() > 0){
-							ok = true;
+			if(dbasCliBean.getClientes().getIdtipoidentificacion() > 0){
+				if(dbasCliBean.getClientes().getIdtipoidentificacion() == Parametro.TIPO_IDENTIFICACION_OTRO || verificarId.verificarId(dbasCliBean.getClientes().getIdcliente())){
+					if(dbasCliBean.getClientes().getIdtipopersona() > 0){
+						if(dbasCliBean.getClientes().getNombre1() != null && dbasCliBean.getClientes().getNombre1().trim().length() > 0){
+							if(dbasCliBean.getClientes().getApellido1() != null && dbasCliBean.getClientes().getApellido1().trim().length() > 0){
+								if(dbasCliBean.getClientes().getEmail() != null && dbasCliBean.getClientes().getEmail().trim().length() > 0){
+									if(dbasCliBean.getClientes().getEstadocivil()  > 0){
+										if(dbasCliBean.getClientes().getGenero()  > 0){
+											ok = true;
+										}else{
+											new MessageUtil().showWarnMessage("Seleccionar Género", null);
+										}
+									}else{
+										new MessageUtil().showWarnMessage("Seleccionar Estado Civil", null);
+									}
+								}else{
+									new MessageUtil().showWarnMessage("Ingresar Correo Electrónico", null);
+								}
+							}else{
+								new MessageUtil().showWarnMessage("Ingresar Primer Apellido", null);
+							}
 						}else{
-							new MessageUtil().showWarnMessage("Aviso!", "Verificar Correo Electrónico");
+							new MessageUtil().showWarnMessage("Ingresar Primer Nombre", null);
 						}
 					}else{
-						new MessageUtil().showWarnMessage("Aviso!", "Verificar Primer Apellido");
+						new MessageUtil().showWarnMessage("Seleccionar Tipo Persona", null);
 					}
 				}else{
-					new MessageUtil().showWarnMessage("Aviso!", "Verificar Primer Nombre");
+					new MessageUtil().showWarnMessage("Ingresar # Identidad", null);
 				}
 			}else{
-				new MessageUtil().showWarnMessage("Aviso!", "Verificar # Identidad");
+				new MessageUtil().showWarnMessage("Seleccionar Tipo Identidad", null);
+			}
+			
+			if(ok){
+				if(dbasCliBean.getClientes().getEstadocivil() == Parametro.ESTADO_CIVIL_CASADO || dbasCliBean.getClientes().getEstadocivil() == Parametro.ESTADO_CIVIL_UNION_LIBRE){
+					if(dbasCliBean.getConyuge().getNombre1() == null || dbasCliBean.getConyuge().getNombre1().trim().length() == 0){
+						ok = false;
+						new MessageUtil().showWarnMessage("Ingresar el Primer Nombre del Cónyugue", null);
+					}else{
+						if(dbasCliBean.getConyuge().getApellido1() == null || dbasCliBean.getConyuge().getApellido1().trim().length() == 0){
+							ok = false;
+							new MessageUtil().showWarnMessage("Ingresar el Primer Apellido del Cónyugue", null);
+						}else{
+							if(dbasCliBean.getConyuge().getApellido1() == null && dbasCliBean.getConyuge().getApellido1().trim().length() == 0){
+								ok = false;
+								new MessageUtil().showWarnMessage("Ingresar el Primer Apellido del Cónyugue", null);
+							}else{
+								if(dbasCliBean.getConyuge().getIdentificacion() == null && dbasCliBean.getConyuge().getIdentificacion().trim().length() == 0){
+									ok = false;
+									new MessageUtil().showWarnMessage("Ingresar # Identidad del Cónyugue", null);
+								}
+							}
+						}
+					}	
+				}
+			}
+			
+			if(ok){
+				if(dbasCliBean.getClientes().getIdtipoidentificacion() == Parametro.TIPO_IDENTIFICACION_RUC &&  dbasCliBean.getClientes().getIdtipopersona() == Parametro.TIPO_PERSONA_JURIDICO){
+					if(dbasCliBean.getClientes().getEmpresa_1() == null || dbasCliBean.getClientes().getEmpresa_1().trim().length() == 0){
+						ok = false;
+						new MessageUtil().showWarnMessage("Ingresar Nombre Empresa", null);
+					}
+				}
 			}
 		
 		}catch(VerificarIdException e){
@@ -147,7 +197,7 @@ public class ClientesNuevosBean implements Serializable{
 		
 		return ok;
 	}
-
+	
 	public String getNombreCuenta() {
 		return nombreCuenta;
 	}

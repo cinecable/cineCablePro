@@ -1,5 +1,7 @@
 package bean.controladores;
 
+import global.Parametro;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,6 +11,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import pojo.annotations.Clientes;
+import pojo.annotations.Conyuge;
 import pojo.annotations.Empresa;
 import pojo.annotations.Tipocliente;
 import pojo.annotations.Usuario;
@@ -39,18 +42,17 @@ public class DbasCliBean  implements Serializable{
 	private String titNombres;
 	private String nombre1;
 	private boolean habEmpresa;
-	
-	
 
 	private Clientes clientes;
+	private Conyuge conyuge;
 	
 	public DbasCliBean() {
 	
 	 tipoIdDocSelect = new TipoIdDoc(0, null);
 	 tipoPersonaSelect=new TipoPersona(0, null);
 	 titNombres="Datos Persona";
-	 //clientes = new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null);
-	 clientes = new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null, null, null, null, 0, new Date(), null, 1, 0, 0, 1, 1);
+	 clientes = new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null, null, null, null, new Date(), null, 1, 0, 1, 1);
+	 conyuge = new Conyuge();
      habEmpresa=false;		
 	 CargaTDoc();
 	 
@@ -94,6 +96,15 @@ public class DbasCliBean  implements Serializable{
 		} else {
 			titNombres="Datos Persona";
 			habEmpresa=false;
+		}
+		
+		eventoIdentidadPersona();
+	}
+	
+	public void eventoIdentidadPersona(){
+		if(getClientes().getIdtipoidentificacion() == Parametro.TIPO_IDENTIFICACION_RUC && getClientes().getIdtipopersona() == Parametro.TIPO_PERSONA_NATURAL){
+			String NombreCliente = getClientes().getNombre1() + " " + getClientes().getNombre2() + " " + getClientes().getApellido1() + " " + getClientes().getApellido2();
+			getClientes().setEmpresa_1(NombreCliente);
 		}
 	}
 
@@ -183,6 +194,14 @@ public class DbasCliBean  implements Serializable{
 
 	public void setLisGenero(List<Genero> lisGenero) {
 		this.lisGenero = lisGenero;
+	}
+
+	public Conyuge getConyuge() {
+		return conyuge;
+	}
+
+	public void setConyuge(Conyuge conyuge) {
+		this.conyuge = conyuge;
 	}
 	
 	
