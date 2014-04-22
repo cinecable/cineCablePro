@@ -61,7 +61,7 @@ public class Clientes implements java.io.Serializable {
 
 	public Clientes(String idcliente, Tipocliente tipocliente, Usuario usuario,
 			Empresa empresa, String nombre1, String nombre2, String apellido1,
-			String apellido2, String empresa_1, Date fecha, int idusuario, Date fechanacimiento, String email, int estadocivil, int genero, int tipovip/*,
+			String apellido2, String empresa_1, Date fecha, Date fechanacimiento, String email, int estadocivil, int genero/*,
 			Set<?> conyuges, Set<?> ctaclientes*/, int idtipoidentificacion, int idtipopersona) {
 		this.idcliente = idcliente;
 		this.tipocliente = tipocliente;
@@ -73,6 +73,10 @@ public class Clientes implements java.io.Serializable {
 		this.apellido2 = apellido2;
 		this.empresa_1 = empresa_1;
 		this.fecha = fecha;
+		this.fechanacimiento = fechanacimiento;
+		this.email = email;
+		this.estadocivil = estadocivil;
+		this.genero = genero;
 		this.idtipoidentificacion = idtipoidentificacion;
 		this.idtipopersona = idtipopersona;
 		/*this.conyuges = conyuges;
