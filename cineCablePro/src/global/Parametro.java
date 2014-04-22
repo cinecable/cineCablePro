@@ -53,4 +53,21 @@ public class Parametro {
 	//Seccion de tipos de menu
 	public static final int TIPO_MENU_PRINCIPAL = 1;
 	public static final int TIPO_MENU_CLIENTE = 2;
+	
+	//Seccion de estado civil
+	public static final int ESTADO_CIVIL_SOLTERO = 1;
+	public static final int ESTADO_CIVIL_CASADO = 2;
+	public static final int ESTADO_CIVIL_DIVORCIADO = 3;
+	public static final int ESTADO_CIVIL_UNION_LIBRE = 4;
+	public static final int ESTADO_CIVIL_OTRO = 5;
+	
+	//Seccion de tipos de identificacion
+	public static final int TIPO_IDENTIFICACION_CEDULA = 1;
+	public static final int TIPO_IDENTIFICACION_RUC = 2;
+	public static final int TIPO_IDENTIFICACION_PASAPORTE = 3;
+	public static final int TIPO_IDENTIFICACION_OTRO = 4;
+	
+	//Seccion de tipos de persona
+	public static final int TIPO_PERSONA_NATURAL = 1;
+	public static final int TIPO_PERSONA_JURIDICO = 2;
 }
