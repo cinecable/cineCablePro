@@ -8,6 +8,7 @@
 
 	<h:form id="form-contentpage">
 		<p:growl id="mensajes" showDetail="true" />
+		<p:messages autoUpdate="true" showSummary="true" closable="true" />
 		<h1 class="title ui-widget-header" style="text-align: center;">Clientes	Nuevos</h1>
 		<p:panel id="panel-content" style="min-height: 300px;margin: 20px 0">
 			<br />
@@ -23,9 +24,9 @@
 				<p:tab title="Productos Cliente " titleStyleClass="tabStyle">
 					<br />
 					<h:panelGrid id="pnlcabeceraProducto" columns="2" style="width: 100%">
-						<h:outputLabel value="Nombre de Cuenta : " for="idtxncta" />
+						<h:outputLabel value="Nombre de Cuenta *: " for="idtxncta" />
 						<p:inputText id="idtxncta" size="45"
-							value="#{clientesNuevosBean.ctacliente.nombre}" style="width: 250px" />
+							value="#{clientesNuevosBean.ctacliente.nombre}" style="width: 250px" required="true" requiredMessage="Ingrese Nombre de la Cuenta" />
 							
 						<h:outputLabel value="Nombre Cobrador : " for="txtnombrecobrador" />
 						<p:autoComplete id="txtnombrecobrador" size="80" value="#{clientesNuevosBean.cobrador}" completeMethod="#{clientesNuevosBean.buscarCobrador}" 
