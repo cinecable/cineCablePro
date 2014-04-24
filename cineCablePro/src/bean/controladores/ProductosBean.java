@@ -24,6 +24,7 @@ public class ProductosBean implements Serializable{
 
 	private List<Producto> lisProductos;
 	private Producto productoSelected;
+	private Producto adicionalSelected;
 	private ProductoId productoIdSelected;
 	private ProductoId productoId;
 	private int cantidad;
@@ -33,8 +34,9 @@ public class ProductosBean implements Serializable{
 	public ProductosBean() {
 		lisProductosId = new ArrayList<ProductoId>();
 		productoSelected = new Producto();
+		adicionalSelected = new Producto();
 		productoIdSelected = new ProductoId();
-		cantidad = 0;
+		cantidad = 1;
 		
 	}
 	
@@ -61,37 +63,74 @@ public class ProductosBean implements Serializable{
 		         return lisProductos;  
 		      }
 	 
-	 public List<Producto> buscarProductos(String query) {
+	 public List<Producto> buscarProductosPrincipal(String query) {
 		List<Producto> lisProducto = new ArrayList<Producto>();
 		
-		try{
-			ProductoBO productoBO = new ProductoBO();
-			int args[] = {0};
-			lisProducto = productoBO.lisProductoByNombre(query, 10, 0, args);
-		}catch(Exception e){
-			e.printStackTrace();
-			new MessageUtil().showFatalMessage("Esto es Vergonzoso!", "Ha ocurrido un error inesperado. Comunicar al Webmaster!");
+		lisProducto = buscarProductos(query, 1, null);
+		
+		return lisProducto;
+	}
+	 
+	public List<Producto> buscarProductosAdicional(String query) {
+		List<Producto> lisProducto = new ArrayList<Producto>();
+		
+		if(productoSelected != null  && productoSelected.getTipojerarquia() != null && productoSelected.getTipojerarquia().trim().length() > 0){
+			lisProducto = buscarProductos(query, 2, productoSelected.getTipojerarquia().split(","));
+		}else{
+			new MessageUtil().showWarnMessage("Debe seleccionar el producto principal", null);
 		}
 		
 		return lisProducto;
 	}
 	 
-		public void agregarProductos(){	
+	 private List<Producto> buscarProductos(String query, int jerarquia, String[] filtroIn) {
+			List<Producto> lisProducto = new ArrayList<Producto>();
 			
-			 ProductoId productosID = new ProductoId(0,null,0);
-			 
-			  productosID.setIdProducto(productoSelected.getIdproducto());
-			  productosID.setNombreProd(productoSelected.getNombre());
-			  productosID.setCantidad(cantidad);
-			  
-			//lisProductosId = new ArrayList<ProductoId>();	
-			lisProductosId.add(productosID);
-			//lisProductosId.add(new ProductoId(productosID.getIdProducto(),productosID.getNombreProd(),productosID.getCantidad()));
+			try{
+				ProductoBO productoBO = new ProductoBO();
+				int args[] = {0};
+				lisProducto = productoBO.lisProductoByNombreJerarquia(query, jerarquia, filtroIn, 10, 0, args);
+			}catch(Exception e){
+				e.printStackTrace();
+				new MessageUtil().showFatalMessage("Esto es Vergonzoso!", "Ha ocurrido un error inesperado. Comunicar al Webmaster!");
+			}
 			
-			//inicializar
-			productoSelected = new Producto();
-			cantidad = 0;
+			return lisProducto;
 		}
+	 
+	public void agregarProductos(){	
+		
+		 ProductoId productosID = new ProductoId(0,null,0);
+		 
+		  productosID.setIdProducto(productoSelected.getIdproducto());
+		  productosID.setNombreProd(productoSelected.getNombre());
+		  productosID.setCantidad(1);
+		  
+		//lisProductosId = new ArrayList<ProductoId>();	
+		lisProductosId.add(productosID);
+		//lisProductosId.add(new ProductoId(productosID.getIdProducto(),productosID.getNombreProd(),productosID.getCantidad()));
+		
+		//inicializar
+		//productoSelected = new Producto();
+		//cantidad = 1;
+	}
+	
+	public void agregarAdicional(){	
+		
+		ProductoId productosID = new ProductoId(0,null,0);
+		 
+		productosID.setIdProducto(adicionalSelected.getIdproducto());
+		productosID.setNombreProd(adicionalSelected.getNombre());
+		productosID.setCantidad(cantidad);
+		  
+		//lisProductosId = new ArrayList<ProductoId>();	
+		lisProductosId.add(productosID);
+		//lisProductosId.add(new ProductoId(productosID.getIdProducto(),productosID.getNombreProd(),productosID.getCantidad()));
+		
+		//inicializar
+		adicionalSelected = new Producto();
+		cantidad = 1;
+	}
 		
 		public void quitarProducto(){
 			try {
@@ -147,6 +186,14 @@ public class ProductosBean implements Serializable{
 
 	public void setProductoIdSelected(ProductoId productoIdSelected) {
 		this.productoIdSelected = productoIdSelected;
+	}
+
+	public Producto getAdicionalSelected() {
+		return adicionalSelected;
+	}
+
+	public void setAdicionalSelected(Producto adicionalSelected) {
+		this.adicionalSelected = adicionalSelected;
 	}
 
 	

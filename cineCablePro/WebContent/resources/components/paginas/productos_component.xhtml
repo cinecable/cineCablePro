@@ -28,7 +28,7 @@
 						<p:column>
 							<p:autoComplete id="idCmbProd" size="60"
 								value="#{productosBean.productoSelected}"
-								completeMethod="#{productosBean.buscarProductos}" var="i"
+								completeMethod="#{productosBean.buscarProductosPrincipal}" var="i"
 								itemLabel="#{i.nombre}" itemValue="#{i}" converter="producto"
 								minQueryLength="1" forceSelection="true" required="true"
 								requiredMessage="Ingresar Producto" >
@@ -46,6 +46,32 @@
 
 					</p:row>
 					<p:row>
+						<p:column colspan="2" style="text-align: right;">
+							<p:commandButton id="idbtnAgregarProducto" value="Insertar Producto"
+								actionListener="#{productosBean.agregarProductos}"
+								update="#{cc.attrs.rutaPadre}:form-productoscomponent:idPanelEditor, #{cc.attrs.rutaPadre}:form-productoscomponent:idTablaProductos, #{cc.attrs.formPadre}:mensajes"
+								process="idPanelEditor, idTablaProductos">
+							</p:commandButton>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<h:outputLabel value="Adicional :" for="idCmbAdicional" />
+						</p:column>
+						<p:column>
+							<p:autoComplete id="idCmbAdicional" size="60"
+								value="#{productosBean.adicionalSelected}"
+								completeMethod="#{productosBean.buscarProductosAdicional}" var="i"
+								itemLabel="#{i.nombre}" itemValue="#{i}" converter="producto"
+								minQueryLength="1" forceSelection="true">
+								
+								<p:ajax event="itemSelect" update="#{cc.attrs.formPadre}:mensajes"></p:ajax>
+								
+							</p:autoComplete>
+						</p:column>
+
+					</p:row>
+					<p:row>
 						<p:column>
 							<h:outputLabel value="Cantidad :" for="idtxcan" />
 						</p:column>
@@ -55,22 +81,14 @@
 						</p:column>
 					</p:row>
 					<p:row>
-						<p:column colspan="2">
-							<p:spacer height="60px;" />
+						<p:column colspan="2" style="text-align: right;">
+							<p:commandButton id="idbtnAgregarAdicional" value="Insertar Adicional"
+								actionListener="#{productosBean.agregarAdicional}"
+								update="#{cc.attrs.rutaPadre}:form-productoscomponent:idPanelEditor, #{cc.attrs.rutaPadre}:form-productoscomponent:idTablaProductos, #{cc.attrs.formPadre}:mensajes"
+								process="idPanelEditor, idTablaProductos">
+							</p:commandButton>
 						</p:column>
 					</p:row>
-
-					<f:facet name="footer">
-						<p:row>
-							<p:column colspan="2" style="text-align: right;">
-								<p:commandButton id="idbtnAgregarProducto" value="Insertar"
-									actionListener="#{productosBean.agregarProductos}"
-									update="#{cc.attrs.rutaPadre}:form-productoscomponent:idPanelEditor, #{cc.attrs.rutaPadre}:form-productoscomponent:idTablaProductos, #{cc.attrs.formPadre}:mensajes"
-									process="idPanelEditor, idTablaProductos">
-								</p:commandButton>
-							</p:column>
-						</p:row>
-					</f:facet>
 
 				</p:panelGrid>
 				<br />
