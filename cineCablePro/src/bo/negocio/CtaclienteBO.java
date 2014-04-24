@@ -41,7 +41,23 @@ public class CtaclienteBO {
         }catch(Exception he){
             throw new Exception(he);
         }finally{
-                session.close();
+        	session.close();
+        }
+    	
+    	return ctacliente;
+    }
+    
+    public Ctacliente getCtaclienteByNombre(String nombre) throws Exception {
+		Ctacliente ctacliente = null;
+		Session session = null;
+    	
+    	try{
+            session = HibernateUtil.getSessionFactory().openSession();
+            ctacliente = ctaclienteDAO.getCtaclienteByNombre(session, nombre);
+        }catch(Exception he){
+            throw new Exception(he);
+        }finally{
+    		session.close();
         }
     	
     	return ctacliente;

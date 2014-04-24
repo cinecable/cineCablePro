@@ -3,6 +3,7 @@ package dao.datos;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -29,6 +30,20 @@ public class CtaclienteDAO {
 				.createAlias("clientes", "cli");
 		
 		ctacliente = (Ctacliente) criteria.uniqueResult();
+		
+		return ctacliente;
+	}
+	
+	public Ctacliente getCtaclienteByNombre(Session session, String nombre) throws Exception {
+		Ctacliente ctacliente;
+		
+		String hql = " from Ctacliente ";
+		hql += " where nombre = :nombre ";
+		
+		Query query = session.createQuery(hql)
+				.setString("nombre", nombre);
+		
+		ctacliente = (Ctacliente) query.uniqueResult();
 		
 		return ctacliente;
 	}
