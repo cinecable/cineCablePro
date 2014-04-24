@@ -70,4 +70,12 @@ public class Parametro {
 	//Seccion de tipos de persona
 	public static final int TIPO_PERSONA_NATURAL = 1;
 	public static final int TIPO_PERSONA_JURIDICO = 2;
+	
+	//Session de areas
+	public static final int AREA_VENTAS = 1;
+	public static final int AREA_TECNICA = 2;
+	public static final int AREA_COBRANZAS = 3;
+	public static final int AREA_COMPRAS = 4;
+	public static final int AREA_INSTALACIONES = 5;
+	public static final int AREA_ADMINISTRATIVO = 6;
 }
