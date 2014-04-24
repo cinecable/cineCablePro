@@ -97,29 +97,33 @@ public class ClientesNuevosBean implements Serializable{
 
 	public void grabarNuevoCliente(){
 		if(validacionOk()){
-			try{
-				CtaclienteBO ctaclienteBO = new CtaclienteBO();
-				
-				//Asignamos data a ctacliente
-				//Ctacliente ctacliente = new Ctacliente();
-				ctacliente.setClientes(dbasCliBean.getClientes());
-				//ctacliente.setNombre(this.nombreCuenta);
-				
-				ctaclienteBO.grabarCliente(ctacliente, dbasCliBean.getClientes(), productosBean.getLisProductosId());
-				
-				new MessageUtil().showInfoMessage("Listo!", "Grabado con exito");
-				/*if(productosBean.getLisProductosId() != null && productosBean.getLisProductosId().size() > 0){
-					String productos = "";
-					for(ProductoId productoId : productosBean.getLisProductosId()){
-						productos += productoId.getNombreProd() + "-";
-					}
-					new MessageUtil().showInfoMessage("Listo!", "Productos leidos de ProductosBean: -" + productos);
-				}else{
-					new MessageUtil().showWarnMessage("No!", "Agregue unos productos para ejemplo");
-				}*/
-			} catch(Exception re) {
-				re.printStackTrace();
-				new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", null);
+			if(!nombreCuentaExiste()){
+				try{
+					CtaclienteBO ctaclienteBO = new CtaclienteBO();
+					
+					//Asignamos data a ctacliente
+					//Ctacliente ctacliente = new Ctacliente();
+					ctacliente.setClientes(dbasCliBean.getClientes());
+					//ctacliente.setNombre(this.nombreCuenta);
+					
+					ctaclienteBO.grabarCliente(ctacliente, dbasCliBean.getClientes(), productosBean.getLisProductosId());
+					
+					new MessageUtil().showInfoMessage("Listo!", "Grabado con exito");
+					/*if(productosBean.getLisProductosId() != null && productosBean.getLisProductosId().size() > 0){
+						String productos = "";
+						for(ProductoId productoId : productosBean.getLisProductosId()){
+							productos += productoId.getNombreProd() + "-";
+						}
+						new MessageUtil().showInfoMessage("Listo!", "Productos leidos de ProductosBean: -" + productos);
+					}else{
+						new MessageUtil().showWarnMessage("No!", "Agregue unos productos para ejemplo");
+					}*/
+				} catch(Exception re) {
+					re.printStackTrace();
+					new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", null);
+				}
+			}else{
+				new MessageUtil().showWarnMessage("Nombre de cuenta ya existe", null);
 			}
 		}
 	}
@@ -241,6 +245,24 @@ public class ClientesNuevosBean implements Serializable{
 		}
 		
 		return lista;
+	}
+	
+	public boolean nombreCuentaExiste(){
+		boolean ok = false;
+		
+		try{
+			CtaclienteBO ctaclienteBO = new CtaclienteBO();
+			Ctacliente ctaclientetmp = ctaclienteBO.getCtaclienteByNombre(ctacliente.getNombre());
+			
+			if(ctaclientetmp != null && ctaclientetmp.getIdcuenta() > 0){
+				ok = true;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", null);
+		}
+		
+		return ok;
 	}
 	
 	public Ctacliente getCtacliente() {
