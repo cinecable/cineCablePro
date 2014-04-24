@@ -138,4 +138,53 @@ public class ProductoDAO {
 		return lisProducto;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<Producto> lisProductoByNombreJerarquia(Session session, int idEmpresa, String nombre, int jerarquia, String[] filtroIn, int pageSize, int pageNumber, int[] args) throws Exception {
+		List<Producto> lisProducto = null;
+		
+		Criteria criteria = session.createCriteria(Producto.class)
+				.add( Restrictions.eq("empresa.idempresa", idEmpresa))
+				.add( Restrictions.eq("estado.idestado", 1) )
+				.add( Restrictions.eq("jerarquia", jerarquia) );
+		
+		if(nombre != null && nombre.trim().length() > 0){
+			criteria.add( Restrictions.like("nombre", "%"+nombre.replaceAll(" ", "%")+"%").ignoreCase());
+		}
+		
+		if(filtroIn != null && filtroIn.length > 0){
+			criteria.add( Restrictions.in("tipojerarquia", filtroIn));
+		}
+		
+		criteria.addOrder(Order.asc("nombre"))
+		.setMaxResults(pageSize)
+		.setFirstResult(pageNumber);
+			
+		lisProducto = (List<Producto>) criteria.list();
+		
+		if(lisProducto != null && lisProducto.size() > 0)
+		{
+			Criteria criteriaCount = session.createCriteria( Producto.class)
+				.setProjection( Projections.rowCount())
+				.add( Restrictions.eq("empresa.idempresa", idEmpresa))
+				.add( Restrictions.eq("estado.idestado", 1) )
+				.add( Restrictions.eq("jerarquia", jerarquia) );
+			
+			if(nombre != null && nombre.trim().length() > 0){
+				criteriaCount.add( Restrictions.like("nombre", "%"+nombre.replaceAll(" ", "%")+"%").ignoreCase());
+			}
+			
+			if(filtroIn != null && filtroIn.length > 0){
+				criteria.add( Restrictions.in("tipojerarquia", filtroIn));
+			}
+			
+			Object object = criteriaCount.uniqueResult();
+			int count = (object==null?0:Integer.parseInt(object.toString()));
+			args[0] = count;
+		} else {
+			args[0] = 0;
+		}
+		
+		return lisProducto;
+	}
+	
 }

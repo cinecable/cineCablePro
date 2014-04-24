@@ -137,4 +137,24 @@ public class ProductoBO {
 		
 		return lisProducto;
     }
+    
+    public List<Producto> lisProductoByNombreJerarquia(String nombre, int jerarquia, String[] filtroIn, int pageSize, int pageNumber, int args[]) throws Exception {
+		List<Producto> lisProducto = null;
+		Session session = null;
+		
+		try{
+			lisProducto = new ArrayList<Producto>();
+			session = HibernateUtil.getSessionFactory().openSession();
+			UsuarioBean usuarioBean = (UsuarioBean)new FacesUtil().getSessionBean("usuarioBean");
+            int idEmpresa = usuarioBean.getUsuario().getEmpresa().getIdempresa();
+            lisProducto = productoDAO.lisProductoByNombreJerarquia(session, idEmpresa, nombre, jerarquia, filtroIn, pageSize, pageNumber, args);
+		}catch(Exception ex){
+            throw new Exception(ex);
+        }
+        finally{
+            session.close();
+        }
+		
+		return lisProducto;
+    }
 }
