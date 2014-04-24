@@ -39,6 +39,10 @@
   <converter-id>producto</converter-id>
   <converter-class>faces.converter.ProductosServConverter</converter-class>
  </converter>
+ <converter>
+  <converter-id>persona</converter-id>
+  <converter-class>faces.converter.PersonaConverter</converter-class>
+ </converter>
  <lifecycle>
   <phase-listener>faces.listeners.SecurityPhaseListener</phase-listener>
  </lifecycle>
