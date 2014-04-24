@@ -37,6 +37,8 @@ public class Producto implements java.io.Serializable {
 	private Set<?> ctasprods = new HashSet<Object>(0);*/
 	private Costoproducto costoproducto;
 	//private Set<?> promocioneses = new HashSet<Object>(0);
+	private int jerarquia;
+	private String tipojerarquia;
 
 	public Producto() {
 	}
@@ -171,6 +173,24 @@ public class Producto implements java.io.Serializable {
 
 	public void setCostoproducto(Costoproducto costoproducto) {
 		this.costoproducto = costoproducto;
+	}
+
+	@Column(name = "jerarquia")
+	public int getJerarquia() {
+		return jerarquia;
+	}
+
+	public void setJerarquia(int jerarquia) {
+		this.jerarquia = jerarquia;
+	}
+
+	@Column(name = "tipojerarquia", length = 50)
+	public String getTipojerarquia() {
+		return tipojerarquia;
+	}
+
+	public void setTipojerarquia(String tipojerarquia) {
+		this.tipojerarquia = tipojerarquia;
 	}
 
 	/*@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
