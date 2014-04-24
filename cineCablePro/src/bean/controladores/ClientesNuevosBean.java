@@ -98,29 +98,31 @@ public class ClientesNuevosBean implements Serializable{
 	public void grabarNuevoCliente(){
 		if(validacionOk()){
 			if(!nombreCuentaExiste()){
-				try{
-					CtaclienteBO ctaclienteBO = new CtaclienteBO();
-					
-					//Asignamos data a ctacliente
-					//Ctacliente ctacliente = new Ctacliente();
-					ctacliente.setClientes(dbasCliBean.getClientes());
-					//ctacliente.setNombre(this.nombreCuenta);
-					
-					ctaclienteBO.grabarCliente(ctacliente, dbasCliBean.getClientes(), productosBean.getLisProductosId());
-					
-					new MessageUtil().showInfoMessage("Listo!", "Grabado con exito");
-					/*if(productosBean.getLisProductosId() != null && productosBean.getLisProductosId().size() > 0){
-						String productos = "";
-						for(ProductoId productoId : productosBean.getLisProductosId()){
-							productos += productoId.getNombreProd() + "-";
-						}
-						new MessageUtil().showInfoMessage("Listo!", "Productos leidos de ProductosBean: -" + productos);
-					}else{
-						new MessageUtil().showWarnMessage("No!", "Agregue unos productos para ejemplo");
-					}*/
-				} catch(Exception re) {
-					re.printStackTrace();
-					new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", null);
+				if(validacionProductoOk()){
+					try{
+						CtaclienteBO ctaclienteBO = new CtaclienteBO();
+						
+						//Asignamos data a ctacliente
+						//Ctacliente ctacliente = new Ctacliente();
+						ctacliente.setClientes(dbasCliBean.getClientes());
+						//ctacliente.setNombre(this.nombreCuenta);
+						
+						ctaclienteBO.grabarCliente(ctacliente, dbasCliBean.getClientes(), productosBean.getLisProductosId());
+						
+						new MessageUtil().showInfoMessage("Listo!", "Grabado con exito");
+						/*if(productosBean.getLisProductosId() != null && productosBean.getLisProductosId().size() > 0){
+							String productos = "";
+							for(ProductoId productoId : productosBean.getLisProductosId()){
+								productos += productoId.getNombreProd() + "-";
+							}
+							new MessageUtil().showInfoMessage("Listo!", "Productos leidos de ProductosBean: -" + productos);
+						}else{
+							new MessageUtil().showWarnMessage("No!", "Agregue unos productos para ejemplo");
+						}*/
+					} catch(Exception re) {
+						re.printStackTrace();
+						new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", null);
+					}
 				}
 			}else{
 				new MessageUtil().showWarnMessage("Nombre de cuenta ya existe", null);
@@ -210,6 +212,18 @@ public class ClientesNuevosBean implements Serializable{
 		return ok;
 	}
 	
+	private boolean validacionProductoOk(){
+		boolean ok = false;
+		
+		if(productosBean.getLisProductosId() != null && productosBean.getLisProductosId().size() > 0){
+			ok = true;
+		}else{
+			new MessageUtil().showWarnMessage("Debe seleccionar al menos un producto", null);
+		}
+		
+		return ok;
+	}
+	
 	public List<Persona> buscarCobrador(String query) {
 		List<Persona> lisCobradores = new ArrayList<Persona>();
 		
@@ -226,7 +240,7 @@ public class ClientesNuevosBean implements Serializable{
 		return lisVendedores;
 	}
 	
-	public List<Persona> buscarPersona(String query, int idarea) {
+	private List<Persona> buscarPersona(String query, int idarea) {
 		List<Persona> lista = new ArrayList<Persona>();
 		
 		List<Persona> lisPersona = new ArrayList<Persona>();
