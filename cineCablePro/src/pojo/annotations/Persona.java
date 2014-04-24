@@ -166,6 +166,80 @@ public class Persona implements java.io.Serializable {
 		this.fnacimiento = fnacimiento;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((apellido1 == null) ? 0 : apellido1.hashCode());
+		result = prime * result
+				+ ((apellido2 == null) ? 0 : apellido2.hashCode());
+		result = prime * result
+				+ ((fnacimiento == null) ? 0 : fnacimiento.hashCode());
+		result = prime * result + idarea;
+		result = prime * result + idcargo;
+		result = prime * result
+				+ ((idcodigo == null) ? 0 : idcodigo.hashCode());
+		result = prime * result + idgenero;
+		result = prime * result + idpersona;
+		result = prime * result + idtipocliente;
+		result = prime * result + ((nombre1 == null) ? 0 : nombre1.hashCode());
+		result = prime * result + ((nombre2 == null) ? 0 : nombre2.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Persona other = (Persona) obj;
+		if (apellido1 == null) {
+			if (other.apellido1 != null)
+				return false;
+		} else if (!apellido1.equals(other.apellido1))
+			return false;
+		if (apellido2 == null) {
+			if (other.apellido2 != null)
+				return false;
+		} else if (!apellido2.equals(other.apellido2))
+			return false;
+		if (fnacimiento == null) {
+			if (other.fnacimiento != null)
+				return false;
+		} else if (!fnacimiento.equals(other.fnacimiento))
+			return false;
+		if (idarea != other.idarea)
+			return false;
+		if (idcargo != other.idcargo)
+			return false;
+		if (idcodigo == null) {
+			if (other.idcodigo != null)
+				return false;
+		} else if (!idcodigo.equals(other.idcodigo))
+			return false;
+		if (idgenero != other.idgenero)
+			return false;
+		if (idpersona != other.idpersona)
+			return false;
+		if (idtipocliente != other.idtipocliente)
+			return false;
+		if (nombre1 == null) {
+			if (other.nombre1 != null)
+				return false;
+		} else if (!nombre1.equals(other.nombre1))
+			return false;
+		if (nombre2 == null) {
+			if (other.nombre2 != null)
+				return false;
+		} else if (!nombre2.equals(other.nombre2))
+			return false;
+		return true;
+	}
+
 	/*@OneToMany(fetch = FetchType.LAZY, mappedBy = "persona")
 	public Set<?> getOperacioneses() {
 		return this.operacioneses;
@@ -174,5 +248,7 @@ public class Persona implements java.io.Serializable {
 	public void setOperacioneses(Set<?> operacioneses) {
 		this.operacioneses = operacioneses;
 	}*/
+	
+	
 
 }
