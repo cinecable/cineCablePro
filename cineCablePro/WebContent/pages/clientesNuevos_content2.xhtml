@@ -22,9 +22,26 @@
 
 				<p:tab title="Productos Cliente " titleStyleClass="tabStyle">
 					<br />
-					<h:outputLabel value="Nombre de Cuenta : " for="idtxncta" />
-					<p:inputText id="idtxncta" size="45"
-						value="#{clientesNuevosBean.nombreCuenta}" style="width: 250px" />
+					<h:panelGrid id="pnlcabeceraProducto" columns="2" style="width: 100%">
+						<h:outputLabel value="Nombre de Cuenta : " for="idtxncta" />
+						<p:inputText id="idtxncta" size="45"
+							value="#{clientesNuevosBean.ctacliente.nombre}" style="width: 250px" />
+							
+						<h:outputLabel value="Nombre Cobrador : " for="txtnombrecobrador" />
+						<p:autoComplete id="txtnombrecobrador" size="80" value="#{clientesNuevosBean.cobrador}" completeMethod="#{clientesNuevosBean.buscarCobrador}" 
+						var="c" itemLabel="#{c.nombre1} #{c.nombre2} #{c.apellido1} #{c.apellido2}" itemValue="#{c}" converter="persona" minQueryLength="1"  
+						forceSelection="true" >
+							<p:ajax event="itemSelect" update=":form-contentpage:mensajes"></p:ajax>
+						</p:autoComplete>
+						
+						<h:outputLabel value="Nombre Vendedor : " for="txtnombrevendedor" />
+						<p:autoComplete id="txtnombrevendedor" size="80" value="#{clientesNuevosBean.vendedor}" completeMethod="#{clientesNuevosBean.buscarVendedor}" 
+						var="v" itemLabel="#{v.nombre1} #{v.nombre2} #{v.apellido1} #{v.apellido2}" itemValue="#{v}" converter="persona" minQueryLength="1"  
+						forceSelection="true" >
+							<p:ajax event="itemSelect" update=":form-contentpage:mensajes"></p:ajax>
+						</p:autoComplete>
+					</h:panelGrid>
+					
 					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
 
 						<my:productos_component id="idcomponenteproductos" formPadre=":form-contentpage"

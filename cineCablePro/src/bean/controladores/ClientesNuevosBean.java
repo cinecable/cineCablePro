@@ -1,6 +1,8 @@
 package bean.controladores;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -10,8 +12,10 @@ import exceptions.VerificarIdException;
 import global.Parametro;
 
 import bo.negocio.CtaclienteBO;
+import bo.negocio.PersonaBO;
 
 import pojo.annotations.Ctacliente;
+import pojo.annotations.Persona;
 
 import util.MessageUtil;
 import util.VerificarId;
@@ -40,11 +44,15 @@ public class ClientesNuevosBean implements Serializable{
 	@ManagedProperty(value="#{telefonosBean}")
 	private TelefonosBean telefonosBean;
 	
-	private String nombreCuenta;
+	private Ctacliente ctacliente;
+	private Persona cobrador;
+	private Persona vendedor;
 	
 	
 	public ClientesNuevosBean() {
-		nombreCuenta = "";
+		ctacliente = new Ctacliente();
+		cobrador = new Persona();
+		vendedor = new Persona();
 	}
 
 	public ProductosBean getProductosBean() {
@@ -93,9 +101,9 @@ public class ClientesNuevosBean implements Serializable{
 				CtaclienteBO ctaclienteBO = new CtaclienteBO();
 				
 				//Asignamos data a ctacliente
-				Ctacliente ctacliente = new Ctacliente();
+				//Ctacliente ctacliente = new Ctacliente();
 				ctacliente.setClientes(dbasCliBean.getClientes());
-				ctacliente.setNombre(this.nombreCuenta);
+				//ctacliente.setNombre(this.nombreCuenta);
 				
 				ctaclienteBO.grabarCliente(ctacliente, dbasCliBean.getClientes(), productosBean.getLisProductosId());
 				
@@ -198,12 +206,65 @@ public class ClientesNuevosBean implements Serializable{
 		return ok;
 	}
 	
-	public String getNombreCuenta() {
-		return nombreCuenta;
+	public List<Persona> buscarCobrador(String query) {
+		List<Persona> lisCobradores = new ArrayList<Persona>();
+		
+		lisCobradores = buscarPersona(query, Parametro.AREA_COBRANZAS);
+		
+		return lisCobradores;
+	}
+	
+	public List<Persona> buscarVendedor(String query) {
+		List<Persona> lisVendedores = new ArrayList<Persona>();
+		
+		lisVendedores = buscarPersona(query, Parametro.AREA_VENTAS);
+		
+		return lisVendedores;
+	}
+	
+	public List<Persona> buscarPersona(String query, int idarea) {
+		List<Persona> lista = new ArrayList<Persona>();
+		
+		List<Persona> lisPersona = new ArrayList<Persona>();
+		PersonaBO personaBO = new PersonaBO();
+		int args[] = {0};
+		String[] nombres = null;
+		if(query != null && query.trim().length() > 0){
+			nombres = query.split(" ");
+		}
+		lisPersona = personaBO.lisPersonaByPage(nombres, idarea, 10, 0, args);
+		
+		if(lisPersona != null && lisPersona.size() > 0){
+			for(Persona persona : lisPersona){
+				lista.add(persona);
+			}
+		}
+		
+		return lista;
+	}
+	
+	public Ctacliente getCtacliente() {
+		return ctacliente;
 	}
 
-	public void setNombreCuenta(String nombreCuenta) {
-		this.nombreCuenta = nombreCuenta;
+	public void setCtacliente(Ctacliente ctacliente) {
+		this.ctacliente = ctacliente;
+	}
+
+	public Persona getCobrador() {
+		return cobrador;
+	}
+
+	public void setCobrador(Persona cobrador) {
+		this.cobrador = cobrador;
+	}
+
+	public Persona getVendedor() {
+		return vendedor;
+	}
+
+	public void setVendedor(Persona vendedor) {
+		this.vendedor = vendedor;
 	}
 	
 }
