@@ -121,7 +121,11 @@ public class DireccionBean implements Serializable{
 				 
 			 
 				 lisPais = new ArrayList<Pais>();
-		           // lisPais.add(pais);
+				 //agregado
+				 Pais pais = new Pais();
+				 pais.setIdpais(0);
+				 pais.setNombre("Seleccione País...");
+		         lisPais.add(pais);
 		            
 	            PaisBO paisBO = new PaisBO();
 	            List<Pais>lisTmpPais = paisBO.consultarPaises();
@@ -131,15 +135,27 @@ public class DireccionBean implements Serializable{
 	            }
 	            paisSelected.setIdpais(idpais);
 	            
-           
-	           
-              List<Provincia>lisTmpPro = provinciaBO.consultarProvinciaPorPais(idpais);
+	            //agregado
+	            Provincia provincia = new Provincia();
+	            provincia.setIdprovincia(0);
+	            provincia.setNombre("Seleccione Provincia...");
+	            lisProvincia = new ArrayList<Provincia>();
+	            lisProvincia.add(provincia);
+	            
+	            List<Provincia>lisTmpPro = provinciaBO.consultarProvinciaPorPais(idpais);
 	            
 	            if(lisTmpPro != null && lisTmpPro.size() > 0){
 	                lisProvincia.addAll(lisTmpPro);
 	            }
 	            provinciaSelected.setIdprovincia(idprovincia);
 	            
+	            
+	            //agregado
+	            Ciudad ciudad = new Ciudad();
+	            ciudad.setIdciudad((int)0);
+	            ciudad.setNombre("Seleccione Ciudad...");
+	            lisCiudad = new ArrayList<Ciudad>();
+	            lisCiudad.add(ciudad);
 	            
 	            List<Ciudad>lisTmpCiu = ciudadBO.consultarCiudadPorProvincia(idprovincia);
 	            
@@ -174,6 +190,13 @@ public class DireccionBean implements Serializable{
 		try{
 			direccion.setSector(new Sector(0,new Estado(),new Ciudad(),new Usuario(), null, null));
 			
+			//agregado
+			Sector sector = new Sector();
+	        sector.setIdsector((int)0);
+	        sector.setNombre("Seleccione Sector...");
+	        lisSector = new ArrayList<Sector>();
+	        lisSector.add(sector);
+	        
             SectorBO sectorBO = new SectorBO();
             List<Sector> lisTSec = sectorBO.SectorxCiudad(ciudadSelected.getIdciudad());
             
@@ -295,6 +318,12 @@ public class DireccionBean implements Serializable{
 				if (codigo !=3) {		
 				 // tipo de sector
 					 lisTipoSector = new ArrayList<Tiposector>();
+					 //agregado
+					 Tiposector tiposector = new Tiposector();
+					 tiposector.setIdtiposector(0);
+					 tiposector.setNombre("Seleccione Tipo Sector...");
+					 lisTipoSector.add(tiposector);
+					 
 					TipoSectorBO tiposectorBO = new TipoSectorBO();
 		            List<Tiposector> lisTpoS;
 		            
@@ -310,7 +339,7 @@ public class DireccionBean implements Serializable{
 				}//si codigo !=3
 				
 			  if (codigo==2 || codigo ==3)  {
-				  if (codigo == 2) { //entra en caso de ser sector el clickeado
+				  //if (codigo == 2) { //entra en caso de ser sector el clickeado
 				   NodosBO nodosBO = new NodosBO();
 			         List<Nodos> lisTNodos;
 					try {
@@ -339,7 +368,7 @@ public class DireccionBean implements Serializable{
 						e1.printStackTrace();
 					}
 	            					
-	            }// si codigo == 2 				  
+	            //}// si codigo == 2 				  
 			  
 				     
 				    	 UbicacionBO ubicacionBO = new UbicacionBO();
