@@ -22,6 +22,7 @@ public class Referenciadir implements java.io.Serializable, Cloneable {
 	private int idreferencia;
 	private String referencia;
 	private int idcuenta;
+	private int iddireccion;
 
 	public Referenciadir() {
 	}
@@ -66,6 +67,15 @@ public class Referenciadir implements java.io.Serializable, Cloneable {
 
 	public void setIdcuenta(int idcuenta) {
 		this.idcuenta = idcuenta;
+	}
+
+	@Column(name = "iddireccion", nullable = false)
+	public int getIddireccion() {
+		return iddireccion;
+	}
+
+	public void setIddireccion(int iddireccion) {
+		this.iddireccion = iddireccion;
 	}
 
 	@Override

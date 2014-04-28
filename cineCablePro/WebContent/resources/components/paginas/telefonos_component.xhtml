@@ -27,7 +27,9 @@
 							<p:column>
 								<p:inputText id="idtxNomTel" size="15"
 									value="#{telefonosBean.telefono.nombre}" style="width: 500px"
-									required="true" requiredMessage="Ingresar Nombre Telefono" />
+									required="true" requiredMessage="Ingresar Nombre Telefono" >
+									<p:ajax process="idtxNomTel"> </p:ajax>
+								</p:inputText>
 							</p:column>
 						</p:row>
 						<p:row>
@@ -37,7 +39,9 @@
 							<p:column>
 								<p:inputText id="idtxNumTel" size="15"
 									value="#{telefonosBean.telefono.numero}" style="width: 200px"
-									required="true" requiredMessage="Ingresar Numero Telefono" />
+									required="true" requiredMessage="Ingresar Numero Telefono" >
+									<p:ajax process="idtxNumTel"> </p:ajax>
+								</p:inputText>
 							</p:column>
 						</p:row>
 						<p:row>

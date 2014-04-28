@@ -41,6 +41,7 @@ public class Direccion implements java.io.Serializable, Cloneable {
 	private String vineta;
 	private String poste;
 	private String solar;
+	private int idestado;
 	
 	public Direccion() {
 	}
@@ -253,6 +254,15 @@ public class Direccion implements java.io.Serializable, Cloneable {
 
 	public void setReferenciadir(Referenciadir referenciadir) {
 		this.referenciadir = referenciadir;
+	}
+
+	@Column(name = "idestado")
+	public int getIdestado() {
+		return idestado;
+	}
+
+	public void setIdestado(int idestado) {
+		this.idestado = idestado;
 	}
 
 	@Override

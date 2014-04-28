@@ -36,24 +36,33 @@ public class DebitosBancariosBean  implements Serializable{
 	private List<TipoIdDoc> lisTipoIddoc;
 
 	
-	private Tipodebito tipoDebitoSelected;	
-	private Bancos bancosSelected;	
-	private Bancos tarjetasSelected;	
-	private TipoCuenta tipoCuentaSelected;
-	private String codSeguridad;
-	private String propietario;
-	private String nroDocumento;
+	//private Tipodebito tipoDebitoSelected;	
+	//private Bancos bancosSelected;	
+	//private Bancos tarjetasSelected;	
+	//private TipoCuenta tipoCuentaSelected;
+	//private String codSeguridad;
+	//private String propietario;
+	//private String nroDocumento;
 	private boolean reqBanco;
 	
 	private Debitobco debitobco;
 	
 	public DebitosBancariosBean() {
-		tipoDebitoSelected=new Tipodebito(0, null, 0, 0, null);
-		bancosSelected=new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null);
-		tarjetasSelected=new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null);
-		tipoCuentaSelected=new TipoCuenta(0, null);
+		lisTipodebito = new ArrayList<Tipodebito>();
+		lisBancos = new ArrayList<Bancos>();
+		lisTarjetas = new ArrayList<Bancos>();
+		lisTipoCuenta = new ArrayList<TipoCuenta>();
+		lisTipoIddoc = new ArrayList<TipoIdDoc>();
 		
-		debitobco = new Debitobco(0, new Bancos(), 0, null, null, null, 0, null);
+		debitobco = new Debitobco(0, new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null), 0, null, null, null, 0, null, 0, 0, null);
+		
+		//tipoDebitoSelected=new Tipodebito(0, null, 0, 0, null);
+		
+		//bancosSelected=new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null);
+		
+		//tarjetasSelected=new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null);
+		
+		//tipoCuentaSelected=new TipoCuenta(0, null);
 		
 		cargaTiposdb();
 		cargaBcoTar();
@@ -98,12 +107,16 @@ public void cargaBcoTar() {
 	
 
 	
-	if (!tipoDebitoSelected.equals(null)) {
+	/*if (!tipoDebitoSelected.equals(null)) {
 		idtipoentidad=tipoDebitoSelected.getIdtipodebito();
 		reqBanco=true;
-	}
+	}*/
+	idtipoentidad = debitobco.getIdtipodebito();
+	reqBanco=true;
+	
 	if (idtipoentidad == 1) {
-		bancosSelected=new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null);
+		//bancosSelected=new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null);
+		debitobco.setBancos(new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null));
 		continuar=true;
 		reqBanco=true;
 		
@@ -117,7 +130,8 @@ public void cargaBcoTar() {
 	
 		
 	} else if (idtipoentidad == 2) {
-		tarjetasSelected=new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null);
+		//tarjetasSelected=new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null);
+		debitobco.setIdbancotar(0);
 		continuar=true;
 		texto="Sel.Tarjeta Credito ...";
 	}
@@ -142,7 +156,8 @@ public void cargaBcoTar() {
 				           
 			        			           
 				           if (idtipoentidad == 2) {
-					       		tarjetasSelected=new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null);					       	
+					       		//tarjetasSelected=new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null);
+				        	   debitobco.setIdbancotar(0);
 					       		texto="Sel.Emisor Tarjeta ...";
 					       									
 								// Inicializando Nodos
@@ -199,12 +214,12 @@ public void cargaBcoTar() {
 	public void setLisTipodebito(List<Tipodebito> lisTipodebito) {
 		this.lisTipodebito = lisTipodebito;
 	}
-	public Tipodebito getTipoDebitoSelected() {
+	/*public Tipodebito getTipoDebitoSelected() {
 		return tipoDebitoSelected;
 	}
 	public void setTipoDebitoSelected(Tipodebito tipoDebitoSelected) {
 		this.tipoDebitoSelected = tipoDebitoSelected;
-	}
+	}*/
 	public List<Bancos> getLisBancos() {
 		return lisBancos;
 	}
@@ -217,7 +232,7 @@ public void cargaBcoTar() {
 	public void setLisTarjetas(List<Bancos> lisTarjetas) {
 		this.lisTarjetas = lisTarjetas;
 	}
-	public Bancos getBancosSelected() {
+	/*public Bancos getBancosSelected() {
 		return bancosSelected;
 	}
 	public void setBancosSelected(Bancos bancosSelected) {
@@ -228,7 +243,7 @@ public void cargaBcoTar() {
 	}
 	public void setTarjetasSelected(Bancos tarjetasSelected) {
 		this.tarjetasSelected = tarjetasSelected;
-	}
+	}*/
 
 	public List<TipoCuenta> getLisTipoCuenta() {
 		return lisTipoCuenta;
@@ -237,7 +252,7 @@ public void cargaBcoTar() {
 		this.lisTipoCuenta = lisTipoCuenta;
 	}
 	
-	public TipoCuenta getTipoCuentaSelected() {
+	/*public TipoCuenta getTipoCuentaSelected() {
 		return tipoCuentaSelected;
 	}
 	public void setTipoCuentaSelected(TipoCuenta tipoCuentaSelected) {
@@ -260,7 +275,7 @@ public void cargaBcoTar() {
 	}
 	public void setNroDocumento(String nroDocumento) {
 		this.nroDocumento = nroDocumento;
-	}
+	}*/
 	public boolean isReqBanco() {
 		return reqBanco;
 	}

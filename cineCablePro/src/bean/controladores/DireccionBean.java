@@ -64,17 +64,111 @@ public class DireccionBean implements Serializable{
     private boolean habilitaTipoSector;
    
 	public DireccionBean() {
+		lisPais = new ArrayList<Pais>();
+		lisProvincia = new ArrayList<Provincia>();
+		lisCiudad = new ArrayList<Ciudad>();
+		lisSector = new ArrayList<Sector>();
+		lisTipoSector = new ArrayList<Tiposector>();
+		lisEdificio = new ArrayList<Edificio>();
+		lisCallePrincipal = new ArrayList<Calleprincipal>();
+		lisCalleSecundaria = new ArrayList<Callesecundaria>();
+		lisNodos = new ArrayList<Nodos>();
+		lisUbicacion = new ArrayList<Ubicacion>();
+		
         paisSelected = new Pais();
         provinciaSelected = new Provincia(0, new Pais(), new Usuario(), null, (int) 0, null);
         ciudadSelected = new Ciudad((int)0, new Estado(), new Usuario(), new Provincia(0, new Pais(), new Usuario(), null, (int) 0, null), null, null);
+        direccion = new Direccion(0, new Edificio(), new Referenciadir(), new Ctacliente(), new Calleprincipal(), new Tiposector(0, new Usuario(), null, null, null), new Callesecundaria(), new Ubicacion(), new Nodos(), new Sector(), 0, 0, 0, null, null, null, null, null);
         
-        direccion = new Direccion(0, new Edificio(), new Referenciadir(), new Ctacliente(), new Calleprincipal(), new Tiposector(), new Callesecundaria(), new Ubicacion(), new Nodos(), new Sector(), 0, 0, 0, null, null, null, null, null);
-        
-        lisTipoSector = new ArrayList<Tiposector>();
         habilitaTipoSector = false;
         
         llenarxDefectoCombos();
     }
+	
+	private void llenarxDefectoCombos() {
+    	
+        UsuarioBean usuarioBean = (UsuarioBean)new FacesUtil().getSessionBean("usuarioBean");
+        int idempresa = usuarioBean.getUsuario().getEmpresa().getIdempresa();
+                 
+		try {
+					     
+				int idCiudad=0;
+				EmpresaBO EmpresaBO = new EmpresaBO();
+	            List<Empresa> lisTmp = EmpresaBO.consultarEmpresasId(idempresa);
+	            for( Empresa empresaReg : lisTmp){
+	            	 idCiudad = empresaReg.getIdciudad();
+	            }	           
+           
+	            int idprovincia=0;
+	                     
+	            lisCiudad = new ArrayList<Ciudad>();
+	          //  lisCiudad.add(ciudad);
+				 CiudadBO ciudadBO = new CiudadBO();
+				 List<Ciudad> lisciu =  ciudadBO.consultarCiudadXCiudad(idCiudad);
+				 for( Ciudad empresaReg : lisciu){
+	            	 idprovincia = empresaReg.getProvincia().getIdprovincia();
+	            }   
+			 
+			    int idpais=0;			  
+	            
+	            lisProvincia= new ArrayList<Provincia>();
+	            //lisProvincia.add(provincia);
+				 ProvinciaBO provinciaBO = new ProvinciaBO();
+				 List<Provincia> lispro =  provinciaBO.consultarProvinciaPorProvincia(idprovincia);
+				 for( Provincia empresaReg : lispro){
+	            	  idpais = empresaReg.getPais().getIdpais();
+	            }   
+				 
+			 
+				 lisPais = new ArrayList<Pais>();
+		           // lisPais.add(pais);
+		            
+	            PaisBO paisBO = new PaisBO();
+	            List<Pais>lisTmpPais = paisBO.consultarPaises();
+	            
+	            if(lisTmpPais != null && lisTmpPais.size() > 0){
+	                lisPais.addAll(lisTmpPais);
+	            }
+	            paisSelected.setIdpais(idpais);
+	            
+           
+	           
+              List<Provincia>lisTmpPro = provinciaBO.consultarProvinciaPorPais(idpais);
+	            
+	            if(lisTmpPro != null && lisTmpPro.size() > 0){
+	                lisProvincia.addAll(lisTmpPro);
+	            }
+	            provinciaSelected.setIdprovincia(idprovincia);
+	            
+	            
+	            List<Ciudad>lisTmpCiu = ciudadBO.consultarCiudadPorProvincia(idprovincia);
+	            
+	            if(lisTmpCiu != null && lisTmpCiu.size() > 0){
+	                lisCiudad.addAll(lisTmpCiu);
+	            }
+	            ciudadSelected.setIdciudad(idCiudad);
+	            	            
+	            Sector sector = new Sector();
+		        sector.setIdsector((int)0);
+		        sector.setNombre("Seleccione Sector...");
+		         
+		        lisSector = new ArrayList<Sector>();
+		        lisSector.add(sector);
+		       
+	            SectorBO sectorBO = new SectorBO();
+	            List<Sector>lisTSector = sectorBO.SectorxCiudad(idCiudad);
+	            
+	            if(lisTSector != null && lisTSector.size() > 0){
+	                lisSector.addAll(lisTSector);
+	            }	           
+	            
+	            SeteaTiposSectores(1);
+			            	            
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        
+   }
 	
 	public void llenarDependientes() {
 		try{
@@ -262,90 +356,7 @@ public class DireccionBean implements Serializable{
 				   				     
 			  } // si codigo == 2 || codigo == 3	        	        
 	}
-    private void llenarxDefectoCombos() {
-    	
-         UsuarioBean usuarioBean = (UsuarioBean)new FacesUtil().getSessionBean("usuarioBean");
-         int idempresa = usuarioBean.getUsuario().getEmpresa().getIdempresa();
-                  
-		try {
-					     
-				int idCiudad=0;
-				EmpresaBO EmpresaBO = new EmpresaBO();
-	            List<Empresa> lisTmp = EmpresaBO.consultarEmpresasId(idempresa);
-	            for( Empresa empresaReg : lisTmp){
-	            	 idCiudad = empresaReg.getIdciudad();
-	            }	           
-            
-	            int idprovincia=0;
-	                     
-	            lisCiudad = new ArrayList<Ciudad>();
-	          //  lisCiudad.add(ciudad);
-				 CiudadBO ciudadBO = new CiudadBO();
-				 List<Ciudad> lisciu =  ciudadBO.consultarCiudadXCiudad(idCiudad);
-				 for( Ciudad empresaReg : lisciu){
-	            	 idprovincia = empresaReg.getProvincia().getIdprovincia();
-	            }   
-			 
-			    int idpais=0;			  
-	            
-	            lisProvincia= new ArrayList<Provincia>();
-	            //lisProvincia.add(provincia);
-				 ProvinciaBO provinciaBO = new ProvinciaBO();
-				 List<Provincia> lispro =  provinciaBO.consultarProvinciaPorProvincia(idprovincia);
-				 for( Provincia empresaReg : lispro){
-	            	  idpais = empresaReg.getPais().getIdpais();
-	            }   
-				 
-			 
-				 lisPais = new ArrayList<Pais>();
-		           // lisPais.add(pais);
-		            
-	            PaisBO paisBO = new PaisBO();
-	            List<Pais>lisTmpPais = paisBO.consultarPaises();
-	            
-	            if(lisTmpPais != null && lisTmpPais.size() > 0){
-	                lisPais.addAll(lisTmpPais);
-	            }
-	            paisSelected.setIdpais(idpais);
-	            
-            
-	           
-               List<Provincia>lisTmpPro = provinciaBO.consultarProvinciaPorPais(idpais);
-	            
-	            if(lisTmpPro != null && lisTmpPro.size() > 0){
-	                lisProvincia.addAll(lisTmpPro);
-	            }
-	            provinciaSelected.setIdprovincia(idprovincia);
-	            
-	            
-	            List<Ciudad>lisTmpCiu = ciudadBO.consultarCiudadPorProvincia(idprovincia);
-	            
-	            if(lisTmpCiu != null && lisTmpCiu.size() > 0){
-	                lisCiudad.addAll(lisTmpCiu);
-	            }
-	            ciudadSelected.setIdciudad(idCiudad);
-	            	            
-	            Sector sector = new Sector();
-		        sector.setIdsector((int)0);
-		        sector.setNombre("Seleccione Sector...");
-		         
-		        lisSector = new ArrayList<Sector>();
-		        lisSector.add(sector);
-		       
-	            SectorBO sectorBO = new SectorBO();
-	            List<Sector>lisTSector = sectorBO.SectorxCiudad(idCiudad);
-	            
-	            if(lisTSector != null && lisTSector.size() > 0){
-	                lisSector.addAll(lisTSector);
-	            }	           
-	            
-	            SeteaTiposSectores(1);
-			            	            
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-         
-    }
+    
     
     public void llenarLisProvincia(){
         try{
@@ -490,9 +501,6 @@ public class DireccionBean implements Serializable{
     public void setCiudadSelected(Ciudad ciudadSelected) {
         this.ciudadSelected = ciudadSelected;
     }
-    
-    
-    
     
     public List<Sector> getLisSector() {
 		return lisSector;

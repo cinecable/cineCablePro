@@ -21,7 +21,7 @@
 					value="#{debitosBancariosBean.debitobco.idtipodebito}" style="width: 150px">
 					<f:selectItems value="#{debitosBancariosBean.lisTipodebito}"
 						var="i" itemLabel="#{i.nombre}" itemValue="#{i.idtipodebito}" />
-					<p:ajax listener="#{debitosBancariosBean.cargaBcoTar()}"
+					<p:ajax listener="#{debitosBancariosBean.cargaBcoTar()}" process="idComboTipodb"
 						update="idComboTipodb,idComboBcoEmi,
 		        idComboTarEmi,idComboTcuenta" />
 				</p:selectOneMenu>
@@ -33,6 +33,7 @@
 					value="#{debitosBancariosBean.debitobco.bancos.idbanco}" style="width: 150px">
 					<f:selectItems value="#{debitosBancariosBean.lisBancos}" var="i"
 						itemLabel="#{i.nombre}" itemValue="#{i.idbanco}" />
+					<p:ajax process="idComboBcoEmi"></p:ajax>
 				</p:selectOneMenu>
 
 
@@ -41,6 +42,7 @@
 					value="#{debitosBancariosBean.debitobco.idbancotar}" style="width: 150px">
 					<f:selectItems value="#{debitosBancariosBean.lisTarjetas}" var="i"
 						itemLabel="#{i.nombre}" itemValue="#{i.idbanco}" />
+					<p:ajax process="idComboTarEmi"></p:ajax>
 				</p:selectOneMenu>
 
 				<p:spacer width="8" />
@@ -50,22 +52,29 @@
 					value="#{debitosBancariosBean.debitobco.idtipocuenta}" style="width: 150px">
 					<f:selectItems value="#{debitosBancariosBean.lisTipoCuenta}"
 						var="i" itemLabel="#{i.nombre}" itemValue="#{i.idtipoCuenta}" />
+					<p:ajax process="idComboTcuenta"></p:ajax>
 				</p:selectOneMenu>
 
 				<h:outputLabel value="Nro Doc :" for="idtxndoc" />
 				<p:inputText required="#{debitosBancariosBean.reqBanco}" requiredMessage="Ingresar Nro Doc"
 					id="idtxndoc" size="15" maxlength="20"
-					value="#{debitosBancariosBean.debitobco.nrodebito}" style="width: 100%" />
+					value="#{debitosBancariosBean.debitobco.nrodebito}" style="width: 100%" >
+					<p:ajax process="idtxndoc"> </p:ajax>
+				</p:inputText>
 
 				<p:spacer width="8" />
 
 				<h:outputLabel value="Cod. Seguridad :" for="idtxtcodS" />
 				<p:inputText id="idtxtcodS" size="10"
-					value="#{debitosBancariosBean.debitobco.codigoseguridad}" style="width: 100%"/>
+					value="#{debitosBancariosBean.debitobco.codigoseguridad}" style="width: 100%">
+					<p:ajax process="idtxtcodS"> </p:ajax>
+				</p:inputText>
 
 				<h:outputLabel value="Propietario :" for="idtxtPro" />
 				<p:inputText id="idtxtPro" size="30"
-					value="#{debitosBancariosBean.debitobco.propietario}" style="width: 100%"/>
+					value="#{debitosBancariosBean.debitobco.propietario}" style="width: 100%">
+					<p:ajax process="idtxtPro"> </p:ajax>
+				</p:inputText>
 				
 				<p:spacer width="8" />
 				
@@ -75,13 +84,16 @@
 					style="width: 150px">
 					<f:selectItems value="#{debitosBancariosBean.lisTipoIddoc}" var="i"
 						itemLabel="#{i.nombre}" itemValue="#{i.idTipoIdentidad}" />
+					<p:ajax process="idCmbTdcli"> </p:ajax>
 				</p:selectOneMenu>
 				
 				<h:outputLabel value="# Identidad *:" for="idtxIdentidad" />
 				<p:inputText id="idtxIdentidad" size="15"
 							value="#{debitosBancariosBean.debitobco.identificacion}" required="true"
 							requiredMessage="Ingresar número de identidad"
-							style="width: 100%" label="Identidad" />
+							style="width: 100%" label="Identidad" >
+					<p:ajax process="idtxIdentidad"> </p:ajax>
+				</p:inputText>
 				<p:spacer width="8" />
 				<h:outputText value="" />
 				<h:outputText value="" />

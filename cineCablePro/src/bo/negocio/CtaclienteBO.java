@@ -5,19 +5,27 @@
 package bo.negocio;
 
 import dao.datos.ClienteDAO;
+import dao.datos.ConyugeDAO;
 import dao.datos.CtaclienteDAO;
 import dao.datos.CtasprodDAO;
+import dao.datos.DebitosbcoDAO;
+import dao.datos.DireccionDAO;
+import dao.datos.ReferenciadirDAO;
+import dao.datos.TelefonoDAO;
 
 import java.util.Date;
 import java.util.List;
 import org.hibernate.Session;
 
 import bean.controladores.UsuarioBean;
-import pojo.annotations.Clientes;
+import pojo.annotations.Conyuge;
 import pojo.annotations.Ctacliente;
 import pojo.annotations.Ctasprod;
+import pojo.annotations.Debitobco;
+import pojo.annotations.Direccion;
 import pojo.annotations.Estado;
 import pojo.annotations.Producto;
+import pojo.annotations.Telefono;
 import pojo.annotations.Tipocliente;
 import pojo.annotations.custom.ProductoId;
 import util.FacesUtil;
@@ -79,13 +87,18 @@ public class CtaclienteBO {
         return lisCtacliente;
     }
     
-    public boolean grabarCliente(Ctacliente ctacliente, Clientes clientes, List<ProductoId> lisProductoId) throws Exception {
+    public boolean grabarCliente(Ctacliente ctacliente, Conyuge conyuge, List<ProductoId> lisProductoId, Direccion direccionInstalacion, Direccion direccionCorrespondencia, Direccion direccionCobranza, Debitobco debitobco, List<Telefono> lisTelefonos) throws Exception {
     	boolean ok = false;
     	Session session = null;
     	
     	try{
     		ClienteDAO clientesDAO = new ClienteDAO();
+    		ConyugeDAO conyugeDAO = new ConyugeDAO();
     		CtasprodDAO ctasprodDAO = new CtasprodDAO();
+    		DireccionDAO direccionDAO = new DireccionDAO();
+    		ReferenciadirDAO referenciadirDAO = new ReferenciadirDAO();
+    		DebitosbcoDAO debitosbcoDAO = new DebitosbcoDAO();
+    		TelefonoDAO telefonoDAO = new TelefonoDAO();
     		
     		session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
@@ -96,16 +109,27 @@ public class CtaclienteBO {
 			//primero grabar cliente por fk con ctacliente
 			Tipocliente tipocliente = new Tipocliente();
 			tipocliente.setIdtipocliente(1);
-			clientes.setTipocliente(tipocliente);
-			clientes.setEmpresa(usuarioBean.getUsuario().getEmpresa());
+			ctacliente.getClientes().setTipocliente(tipocliente);
+			ctacliente.getClientes().setEmpresa(usuarioBean.getUsuario().getEmpresa());
 			
 			//Auditoria cliente
-			clientes.setFecha(fecharegistro);
-			clientes.setIp(usuarioBean.getIp());
-			clientes.setUsuario(usuarioBean.getUsuario());
+			ctacliente.getClientes().setFecha(fecharegistro);
+			ctacliente.getClientes().setHora(fecharegistro);
+			ctacliente.getClientes().setIp(usuarioBean.getIp());
+			ctacliente.getClientes().setUsuario(usuarioBean.getUsuario());
 			
 			//grabar
-			clientesDAO.saveClientes(session, clientes);
+			clientesDAO.saveClientes(session, ctacliente.getClientes());
+			
+			
+			//grabar conyuge
+			if(conyuge != null && conyuge.getNombre1() != null && conyuge.getNombre1().trim().length() > 0 && conyuge.getApellido1() != null && conyuge.getApellido1().trim().length() > 0){
+				conyuge.setIdconyuge(conyuge.getIdentificacion());
+				conyuge.setClientes(ctacliente.getClientes());
+				
+				//grabar
+				conyugeDAO.saveConyuge(session, conyuge);
+			}
 			
 			
 			//ahora si grabar ctacliente
@@ -149,6 +173,94 @@ public class CtaclienteBO {
 					//grabar
 					ctasprodDAO.saveCtasprod(session, ctasprod);
 				}
+			}
+			
+			//direccion de instalacion
+			int maxIddireccioninstalacion = direccionDAO.maxIddireccion(session) + 1;
+			direccionInstalacion.setIddireccion(maxIddireccioninstalacion);
+			direccionInstalacion.setCorrespondencia("I");
+			direccionInstalacion.setIdestado(1);
+			
+			//grabar
+			direccionDAO.saveDireccion(session, direccionInstalacion);
+			
+			//referenciadir de instalacion
+			int maxIdreferenciainstalacion = referenciadirDAO.maxIdreferencia(session) + 1;
+			
+			direccionInstalacion.getReferenciadir().setIdreferencia(maxIdreferenciainstalacion);
+			direccionInstalacion.getReferenciadir().setIddireccion(direccionInstalacion.getIddireccion());
+			direccionInstalacion.getReferenciadir().setIdcuenta(ctacliente.getIdcuenta());
+			
+			//grabar
+			referenciadirDAO.saveReferenciadir(session, direccionInstalacion.getReferenciadir());
+			
+			
+			//direccion de correspondencia
+			int maxIddireccioncorrespondencia = direccionDAO.maxIddireccion(session) + 1;
+			direccionCorrespondencia.setIddireccion(maxIddireccioncorrespondencia);
+			direccionCorrespondencia.setCorrespondencia("C");
+			direccionCorrespondencia.setIdestado(1);
+			
+			//grabar
+			direccionDAO.saveDireccion(session, direccionCorrespondencia);
+			
+			//referenciadir de correspondencia
+			int maxIdreferenciacorrespondencia = referenciadirDAO.maxIdreferencia(session) + 1;
+			direccionCorrespondencia.getReferenciadir().setIdreferencia(maxIdreferenciacorrespondencia);
+			direccionCorrespondencia.getReferenciadir().setIddireccion(direccionCorrespondencia.getIddireccion());
+			direccionCorrespondencia.getReferenciadir().setIdcuenta(ctacliente.getIdcuenta());
+			
+			//grabar
+			referenciadirDAO.saveReferenciadir(session, direccionCorrespondencia.getReferenciadir());
+			
+			
+			//direccion de cobranza
+			int maxIddireccioncobranza = direccionDAO.maxIddireccion(session) + 1;
+			direccionCobranza.setIddireccion(maxIddireccioncobranza);
+			direccionCobranza.setCorrespondencia("B");
+			direccionCobranza.setIdestado(1);
+			
+			//grabar
+			direccionDAO.saveDireccion(session, direccionCobranza);
+			
+			//referenciadir de correspondencia
+			int maxIdreferenciacobranza = referenciadirDAO.maxIdreferencia(session) + 1;
+			direccionCobranza.getReferenciadir().setIdreferencia(maxIdreferenciacobranza);
+			direccionCobranza.getReferenciadir().setIddireccion(direccionCobranza.getIddireccion());
+			direccionCobranza.getReferenciadir().setIdcuenta(ctacliente.getIdcuenta());
+			
+			//grabar
+			referenciadirDAO.saveReferenciadir(session, direccionCobranza.getReferenciadir());
+			
+			
+			//debitobco
+			int maxIddebitobco = debitosbcoDAO.maxIddebitobco(session) + 1;
+			debitobco.setIddebitobco(maxIddebitobco);
+			debitobco.setIdcuenta(ctacliente.getIdcuenta());
+			debitobco.setIdestado(1);
+			
+			//grabar
+			debitosbcoDAO.saveDebitobco(session, debitobco);
+			
+			
+			//telefono
+			for(Telefono telefono : lisTelefonos){
+				//secuencia
+				int maxIdtelefono =  telefonoDAO.maxIdtelefono(session) + 1;
+				telefono.setIdtelefono(maxIdtelefono);
+				telefono.setCtacliente(ctacliente);
+				
+				Estado estadoTelefono = new Estado();
+				estadoTelefono.setIdestado(1);
+				telefono.setEstado(estadoTelefono);
+				
+				//auditoria
+				telefono.setIdusuario(usuarioBean.getUsuario().getIdusuario());
+				fecharegistro = new Date();
+				telefono.setFecha(fecharegistro);
+					
+				//grabar
+				telefonoDAO.saveTelefono(session, telefono);
 			}
 			
 			session.getTransaction().commit();

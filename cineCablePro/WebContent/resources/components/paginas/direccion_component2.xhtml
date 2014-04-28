@@ -19,7 +19,7 @@
 		         <h:outputLabel value="Pais :" for="idcombopais" />  
  				   <p:selectOneMenu id="idcombopais" value="#{cc.attrs.bean.paisSelected.idpais}" style="width: 150px">
                        <f:selectItems value="#{cc.attrs.bean.lisPais}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idpais}" />
-                       <p:ajax listener="#{cc.attrs.bean.llenarLisProvincia}" update="idcomboprovincia, idcombociudad,
+                       <p:ajax listener="#{cc.attrs.bean.llenarLisProvincia}" process="idcombopais" update="idcomboprovincia, idcombociudad,
                         idcombosector,
                         idComboTipoSector, idComboEdificio,
                         idComboCallePrin,idComboCallesec,
@@ -29,7 +29,7 @@
                    <h:outputLabel value="Provincia :" for="idcomboprovincia" />  
                    <p:selectOneMenu id="idcomboprovincia" value="#{cc.attrs.bean.provinciaSelected.idprovincia}" style="width: 150px">
                        <f:selectItems value="#{cc.attrs.bean.lisProvincia}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idprovincia}" />
-                       <p:ajax listener="#{cc.attrs.bean.llenarLisCiudad}" update="idcombociudad,
+                       <p:ajax listener="#{cc.attrs.bean.llenarLisCiudad}" process="idcomboprovincia" update="idcombociudad,
                         idcombosector,
                    	 idComboEdificio,idComboCallePrin,
                   	 	 idComboCallesec,idComboUbicacion,
@@ -40,24 +40,22 @@
                     <h:outputLabel value="Ciudad *:" for="idcombociudad" />
                    <p:selectOneMenu id="idcombociudad" value="#{cc.attrs.bean.ciudadSelected.idciudad}" style="width: 150px">
                        <f:selectItems value="#{cc.attrs.bean.lisCiudad}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idciudad}" />
-                        <p:ajax listener="#{cc.attrs.bean.llenarDependientes}" update="idcombosector" />
+                        <p:ajax listener="#{cc.attrs.bean.llenarDependientes}" process="idcombociudad" update="idcombosector" />
                    </p:selectOneMenu>
                    
                    
                    <h:outputLabel value="Sector *:" for="idcombosector" />
                      <p:selectOneMenu id="idcombosector" value="#{cc.attrs.bean.direccion.sector.idsector}" style="width: 150px">
                        <f:selectItems value="#{cc.attrs.bean.lisSector}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idsector}" />
-                    <p:ajax listener="#{cc.attrs.bean.llenarDependientesSector()}" update="idcombosector,
-                    idComboEdificio,idComboCallePrin,
+                    <p:ajax listener="#{cc.attrs.bean.llenarDependientesSector()}" process="idcombosector" update="idComboEdificio,idComboCallePrin,
                     idComboCallesec,idComboUbicacion,
                     idComboNodos,idComboTipoSector" />
                    </p:selectOneMenu>
                    
                     <h:outputLabel value="Tipo Sector :" for="idComboTipoSector" />
-                    <p:selectOneMenu id="idComboTipoSector" disabled="#{cc.attrs.bean.habilitaTipoSector}" value="#{cc.attrs.bean.direccion.tiposector.idtiposector}" style="width: 150px">
+                    <p:selectOneMenu id="idComboTipoSector" value="#{cc.attrs.bean.direccion.tiposector.idtiposector}" style="width: 150px">
                        <f:selectItems value="#{cc.attrs.bean.lisTipoSector}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idtiposector}" />
-                   <p:ajax listener="#{cc.attrs.bean.llenarDependientesTipoSector()}" update="idComboCallesec,idComboTipoSector
-                   idComboCallePrin,idComboUbicacion" />                          
+                   		<p:ajax listener="#{cc.attrs.bean.llenarDependientesTipoSector()}" process="idComboTipoSector" update="idComboCallesec,idComboCallePrin,idComboUbicacion" />                          
                    </p:selectOneMenu>
                    
                    <h:outputLabel value="Calle Principal  :" for="idComboCallePrin" />

@@ -35,6 +35,8 @@ public class Debitobco implements java.io.Serializable {
 	private String propietario;
 	private Integer idbancotar;
 	private String nrodebito;
+	private int idcuenta;
+	private int idestado;
 	//private Set<?> ctaclientes = new HashSet<Object>(0);
 
 	public Debitobco() {
@@ -47,7 +49,8 @@ public class Debitobco implements java.io.Serializable {
 
 	public Debitobco(int iddebitobco, Bancos bancos, int idtipodebito,
 			Date fcaducidad, String codigoseguridad, String propietario,
-			Integer idbancotar, String nrodebito/*, Set<?> ctaclientes*/) {
+			Integer idbancotar, String nrodebito, int idtipoidentificacion,
+			int idtipocuenta, String identificacion/*, Set<?> ctaclientes*/) {
 		this.iddebitobco = iddebitobco;
 		this.bancos = bancos;
 		this.idtipodebito = idtipodebito;
@@ -56,6 +59,9 @@ public class Debitobco implements java.io.Serializable {
 		this.propietario = propietario;
 		this.idbancotar = idbancotar;
 		this.nrodebito = nrodebito;
+		this.idtipoidentificacion = idtipoidentificacion;
+		this.idtipocuenta = idtipocuenta;
+		this.identificacion = identificacion;
 		//this.ctaclientes = ctaclientes;
 	}
 
@@ -159,6 +165,24 @@ public class Debitobco implements java.io.Serializable {
 
 	public void setIdentificacion(String identificacion) {
 		this.identificacion = identificacion;
+	}
+
+	@Column(name = "idcuenta")
+	public int getIdcuenta() {
+		return idcuenta;
+	}
+
+	public void setIdcuenta(int idcuenta) {
+		this.idcuenta = idcuenta;
+	}
+
+	@Column(name = "idestado")
+	public int getIdestado() {
+		return idestado;
+	}
+
+	public void setIdestado(int idestado) {
+		this.idestado = idestado;
 	}
 
 	

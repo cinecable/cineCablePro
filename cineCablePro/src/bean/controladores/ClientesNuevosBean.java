@@ -103,8 +103,10 @@ public class ClientesNuevosBean implements Serializable{
 									
 									//Asignamos data a ctacliente
 									ctacliente.setClientes(dbasCliBean.getClientes());
+									ctacliente.setIdcobrador(cobrador.getIdpersona());
+									ctacliente.setIdvendedor(vendedor.getIdpersona());
 									
-									ctaclienteBO.grabarCliente(ctacliente, dbasCliBean.getClientes(), productosBean.getLisProductosId());
+									ctaclienteBO.grabarCliente(ctacliente, dbasCliBean.getConyuge(), productosBean.getLisProductosId(), direccionInstalacionBean.getDireccion(), direccionCorrespondenciaBean.getDireccion(), direccionConbranzaBean.getDireccion(), debitosBancariosBean.getDebitobco(), telefonosBean.getLisTelefonos());
 									
 									new MessageUtil().showInfoMessage("Listo!", "Grabado con exito");
 								} catch(Exception re) {
@@ -585,7 +587,7 @@ public class ClientesNuevosBean implements Serializable{
 			CtaclienteBO ctaclienteBO = new CtaclienteBO();
 			Ctacliente ctaclientetmp = ctaclienteBO.getCtaclienteByNombre(ctacliente.getNombre());
 			
-			if(ctaclientetmp != null && ctaclientetmp.getIdcuenta() > 0){
+			if(ctaclientetmp == null || ctaclientetmp.getIdcuenta() == 0){
 				ok = true;
 			}
 		}catch(Exception e){

@@ -51,7 +51,7 @@ public class DbasCliBean  implements Serializable{
 	 tipoIdDocSelect = new TipoIdDoc(0, null);
 	 tipoPersonaSelect=new TipoPersona(0, null);
 	 titNombres="Datos Persona";
-	 clientes = new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null, null, null, null, new Date(), null, 1, 0, 1, 1);
+	 clientes = new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null, null, null, null, new Date(), null, 1, 0, 1, 1, new Date(), null);
 	 conyuge = new Conyuge();
      habEmpresa=false;		
 	 CargaTDoc();

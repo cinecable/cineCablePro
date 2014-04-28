@@ -9,6 +9,15 @@ import pojo.annotations.Direccion;
 
 public class DireccionDAO {
 
+	public int maxIddireccion(Session session) throws Exception {
+		int max=0;
+		
+		Object object = session.createQuery("select max(iddireccion) as max from Direccion ").uniqueResult();
+		max = (object==null?0:Integer.parseInt(object.toString()));
+		
+		return max;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Direccion> lisDireccionByIdcuenta(Session session, int idcuenta) throws Exception {
 		List<Direccion> lisDireccion = null;
@@ -41,5 +50,13 @@ public class DireccionDAO {
 		direccion = (Direccion) query.uniqueResult();
 		
 		return direccion;
+	}
+	
+	public void saveDireccion(Session session, Direccion direccion) throws Exception {
+		session.save(direccion);
+	}
+	
+	public void updateDireccion(Session session, Direccion direccion) throws Exception {
+		session.update(direccion);
 	}
 }

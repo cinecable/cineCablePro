@@ -34,6 +34,7 @@ public class Clientes implements java.io.Serializable {
 	private String apellido2;
 	private String empresa_1;
 	private Date fecha;
+	private Date hora;
 	private Date fechanacimiento;
 	private String email;
 	private String identificacion;
@@ -62,7 +63,7 @@ public class Clientes implements java.io.Serializable {
 	public Clientes(String idcliente, Tipocliente tipocliente, Usuario usuario,
 			Empresa empresa, String nombre1, String nombre2, String apellido1,
 			String apellido2, String empresa_1, Date fecha, Date fechanacimiento, String email, int estadocivil, int genero/*,
-			Set<?> conyuges, Set<?> ctaclientes*/, int idtipoidentificacion, int idtipopersona) {
+			Set<?> conyuges, Set<?> ctaclientes*/, int idtipoidentificacion, int idtipopersona, Date hora, String identificacion) {
 		this.idcliente = idcliente;
 		this.tipocliente = tipocliente;
 		this.usuario = usuario;
@@ -79,6 +80,8 @@ public class Clientes implements java.io.Serializable {
 		this.genero = genero;
 		this.idtipoidentificacion = idtipoidentificacion;
 		this.idtipopersona = idtipopersona;
+		this.hora = hora;
+		this.identificacion = identificacion;
 		/*this.conyuges = conyuges;
 		this.ctaclientes = ctaclientes;*/
 	}
@@ -176,6 +179,16 @@ public class Clientes implements java.io.Serializable {
 
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "hora", length = 29, nullable = false)
+	public Date getHora() {
+		return hora;
+	}
+
+	public void setHora(Date hora) {
+		this.hora = hora;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)

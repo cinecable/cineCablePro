@@ -18,6 +18,15 @@ import pojo.annotations.Clientes;
  */
 public class ClienteDAO {
 	
+	public int maxIdcliente(Session session) throws Exception {
+		int max=0;
+		
+		Object object = session.createQuery("select max(idcliente) as max from Clientes ").uniqueResult();
+		max = (object==null?0:Integer.parseInt(object.toString()));
+		
+		return max;
+	}
+	
 	public Clientes getClientesById(Session session, String idcliente) throws Exception {
 		Clientes clientes = null;
 		
