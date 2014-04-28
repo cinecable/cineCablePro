@@ -1,81 +1,100 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:composite="http://java.sun.com/jsf/composite"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
 
-	<composite:interface displayName="Parametros" shortDescription="Recibe parametros para ser usados en el componente">
-		<composite:attribute name="formPadre" required="true" shortDescription="Formulario padre" />
-		<composite:attribute name="rutaPadre" required="true" shortDescription="Ruta completa de los id de los contenedores del componente" />
+	<composite:interface displayName="Parametros"
+		shortDescription="Recibe parametros para ser usados en el componente">
+			<composite:attribute name="formPadre" required="true"
+				shortDescription="Formulario padre" />
+			<composite:attribute name="rutaPadre" required="true"
+			shortDescription="Ruta completa de los id de los contenedores del componente" />
 	</composite:interface>
 
 	<composite:implementation>
-		<h:form id="form-telefonoscomponent">
-				<p:panel header="Ingreso de Productos contratados por el cliente">
-				
-				<p:focus id="idfocus"></p:focus>
-				<p:panelGrid id="idPanelEditor" style="width: 100%;" >
-					<p:row>
-			       		<p:column style="width: 150px">
-							<h:outputLabel value="Nombre telefono  :" for="idtxNomTel" />
-						</p:column>	
-						<p:column>
-			                 <p:inputText id="idtxNomTel" size="15" value="#{telefonosBean.telefono.nombre}" style="width: 500px" />
-						</p:column>	
-					</p:row>
-					<p:row>
-						  <p:column>
-						      <h:outputLabel value="Numero telefono :" for="idtxNumTel" />
-						  </p:column>
-						  <p:column>
-						       <p:inputText id="idtxNumTel" size="15" value="#{telefonosBean.telefono.numero}" style="width: 200px" />
-						  </p:column>
-					</p:row>
-					<p:row>
-							<p:column colspan="2" >
-								<p:spacer height="60px;"/>
-							</p:column>	
-					</p:row>
-						
-						<f:facet name="footer">    
-				   <p:row>
-				        		<p:column colspan="2" style="text-align: right;">
-									<p:commandButton value="Insertar" action="#{telefonosBean.agregarTelefonos()}"  update="#{cc.attrs.rutaPadre}:form-telefonoscomponent:idTablaTelefonos,
-									 #{cc.attrs.formPadre}:mensajes,#{cc.attrs.rutaPadre}:form-telefonoscomponent:idfocus"/>
-								</p:column>
-				  </p:row>
-						</f:facet>
-				
-				</p:panelGrid>	
-				
-				<p:dataTable id="idTablaTelefonos" value="#{telefonosBean.lisTelefonos}" var="telefon" rowKey="#{telefon.numero}" widgetVar="vartablajProd"
-				paginator="true" rows="10" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-				selection="#{telefonosBean.telefonoSelected}" selectionMode="single" emptyMessage="No se encontraron registros">
+			<h:form id="form-telefonoscomponent">
+				<p:panel id="pnlTelefonos" header="Telefonos del cliente">
 
-					<f:facet name="header">
+					<p:panelGrid id="idPanelEditor" style="width: 100%;">
+						<p:row>
+							<p:column style="width: 150px">
+								<h:outputLabel value="Nombre telefono *:" for="idtxNomTel" />
+							</p:column>
+							<p:column>
+								<p:inputText id="idtxNomTel" size="15"
+									value="#{telefonosBean.telefono.nombre}" style="width: 500px"
+									required="true" requiredMessage="Ingresar Nombre Telefono" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:outputLabel value="Numero telefono *:" for="idtxNumTel" />
+							</p:column>
+							<p:column>
+								<p:inputText id="idtxNumTel" size="15"
+									value="#{telefonosBean.telefono.numero}" style="width: 200px"
+									required="true" requiredMessage="Ingresar Numero Telefono" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column colspan="2">
+								<p:spacer height="60px;" />
+							</p:column>
+						</p:row>
+
+						<f:facet name="footer">
+							<p:row>
+								<p:column colspan="2" style="text-align: right;">
+									<p:commandButton id="btnagregartelefono" value="Insertar"
+										actionListener="#{telefonosBean.agregarTelefonos}"
+										update="#{cc.attrs.rutaPadre}:form-telefonoscomponent:idPanelEditor, #{cc.attrs.rutaPadre}:form-telefonoscomponent:idTablaTelefonos"
+										process="idPanelEditor, idTablaTelefonos" />
+								</p:column>
+							</p:row>
+						</f:facet>
+
+					</p:panelGrid>
+
+					<p:dataTable id="idTablaTelefonos"
+						value="#{telefonosBean.lisTelefonos}" var="telefon"
+						rowKey="#{telefon.numero}" widgetVar="vartablajProd"
+						paginator="true" rows="10"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						selection="#{telefonosBean.telefonoSelected}"
+						selectionMode="single" emptyMessage="No se encontraron registros">
+
+						<p:ajax event="rowSelect" update="#{cc.attrs.formPadre}:mensajes" />
+
+						<f:facet name="header">
 						Productos
 					</f:facet>
-					
-					<p:column id="idNombreHeader" headerText="Nombre Telefono" >
-	                 	<h:outputText value="#{telefon.nombre}"  />
-					</p:column>
-					
-					<p:column id="idNumeroHeader" headerText="Numero Telefono" >
-	                 	<h:outputText value="#{telefon.numero}"  />
-					</p:column>
-					
-					<p:column id="idQuitarHeader" headerText="Quitar" >
-					<p:commandButton icon="ui-icon ui-icon-trash" id="iddelete"						
-					   actionListener="#{telefonosBean.quitarTelefono()}"  update="#{cc.attrs.formPadre}:mensajes, 
-					   #{cc.attrs.rutaPadre}:form-telefonoscomponent:idTablaTelefonos, #{cc.attrs.rutaPadre}:form-telefonoscomponent:idPanelEditor" >
-					</p:commandButton>
-				</p:column>
-				</p:dataTable>
-				
+
+						<p:column id="idNombreHeader" headerText="Nombre Telefono">
+							<h:outputText value="#{telefon.nombre}" />
+						</p:column>
+
+						<p:column id="idNumeroHeader" headerText="Numero Telefono">
+							<h:outputText value="#{telefon.numero}" />
+						</p:column>
+
+						<p:column id="idQuitarHeader" headerText="Quitar">
+							<p:commandButton icon="ui-icon ui-icon-trash"
+								id="idconfirmardelete" 
+								action="#{telefonosBean.quitarTelefono}"
+								process="idTablaTelefonos"
+								update="#{cc.attrs.rutaPadre}:form-telefonoscomponent:idTablaTelefonos, #{cc.attrs.rutaPadre}:form-telefonoscomponent:idPanelEditor">
+								<f:setPropertyActionListener value="#{telefon}"
+									target="#{telefonosBean.telefonoSelected}"
+									for="idconfirmardelete" />
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+
 				</p:panel>
-		</h:form>		
+			</h:form>
 	</composite:implementation>
 </ui:composition>

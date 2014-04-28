@@ -17,7 +17,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "direccion", schema = "public")
-public class Direccion implements java.io.Serializable {
+public class Direccion implements java.io.Serializable, Cloneable {
 
 	/**
 	 * 
@@ -57,7 +57,7 @@ public class Direccion implements java.io.Serializable {
 		this.vineta = vineta;
 	}
 
-	public Direccion(int iddireccion, Edificio edificio, Ctacliente ctacliente,
+	public Direccion(int iddireccion, Edificio edificio, Referenciadir referenciadir,Ctacliente ctacliente,
 			Calleprincipal calleprincipal, Tiposector tiposector,
 			Callesecundaria callesecundaria, Ubicacion ubicacion, Nodos nodos,
 			Sector sector, Integer numero, Integer piso, Integer departamento,
@@ -65,6 +65,7 @@ public class Direccion implements java.io.Serializable {
 			String solar) {
 		this.iddireccion = iddireccion;
 		this.edificio = edificio;
+		this.referenciadir = referenciadir;
 		this.ctacliente = ctacliente;
 		this.calleprincipal = calleprincipal;
 		this.tiposector = tiposector;
@@ -254,5 +255,51 @@ public class Direccion implements java.io.Serializable {
 		this.referenciadir = referenciadir;
 	}
 
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		Direccion direccion = (Direccion) super.clone();
+		
+		if(direccion.getCalleprincipal() != null){
+			direccion.setCalleprincipal((Calleprincipal)direccion.getCalleprincipal().clone());
+		}
+		
+		if(direccion.getCallesecundaria() != null){
+			direccion.setCallesecundaria((Callesecundaria)direccion.getCallesecundaria().clone());
+		}
+		
+		if(direccion.getCtacliente() != null){
+			direccion.setCtacliente((Ctacliente)direccion.getCtacliente().clone());
+		}
+		
+		if(direccion.getEdificio() != null){
+			direccion.setEdificio((Edificio)direccion.getEdificio().clone());
+		}
+		
+		if(direccion.getNodos() != null){
+			direccion.setNodos((Nodos)direccion.getNodos().clone());
+		}
+		
+		if(direccion.getReferenciadir() != null){
+			direccion.setReferenciadir((Referenciadir)direccion.getReferenciadir().clone());
+		}
+		
+		if(direccion.getSector() != null){
+			direccion.setSector((Sector)direccion.getSector().clone());
+		}
+		
+		if(direccion.getTiposector() != null){
+			direccion.setTiposector((Tiposector)direccion.getTiposector().clone());
+		}
+		
+		if(direccion.getUbicacion() != null){
+			direccion.setUbicacion((Ubicacion)direccion.getUbicacion().clone());
+		}
+		
+		return direccion;
+	}
+	
+	public Direccion clonar() throws Exception {
+		return (Direccion)this.clone();
+	}
 
 }

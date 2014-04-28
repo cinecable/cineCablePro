@@ -11,13 +11,13 @@ import bo.negocio.BancosBO;
 import bo.negocio.TiposDebitoBO;
 
 import pojo.annotations.Bancos;
+import pojo.annotations.Debitobco;
 import pojo.annotations.Empresa;
 import pojo.annotations.Estado;
 import pojo.annotations.Tipodebito;
 import pojo.annotations.Tipoentidad;
 import pojo.annotations.custom.TipoCuenta;
-
-import util.MessageUtil;
+import pojo.annotations.custom.TipoIdDoc;
 
 
 @ManagedBean
@@ -33,6 +33,7 @@ public class DebitosBancariosBean  implements Serializable{
 	private List<Bancos> lisBancos;	
 	private List<Bancos> lisTarjetas;	
 	private List<TipoCuenta> lisTipoCuenta;
+	private List<TipoIdDoc> lisTipoIddoc;
 
 	
 	private Tipodebito tipoDebitoSelected;	
@@ -44,14 +45,19 @@ public class DebitosBancariosBean  implements Serializable{
 	private String nroDocumento;
 	private boolean reqBanco;
 	
+	private Debitobco debitobco;
+	
 	public DebitosBancariosBean() {
 		tipoDebitoSelected=new Tipodebito(0, null, 0, 0, null);
 		bancosSelected=new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null);
 		tarjetasSelected=new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null);
 		tipoCuentaSelected=new TipoCuenta(0, null);
 		
+		debitobco = new Debitobco(0, new Bancos(), 0, null, null, null, 0, null);
+		
 		cargaTiposdb();
 		cargaBcoTar();
+		CargaTDoc();
 	}
 	public void cargaTiposdb() {
 		
@@ -178,7 +184,14 @@ public void cargaBcoTar() {
        }
 	}	
 	
-	
+	private void CargaTDoc() {
+		lisTipoIddoc=new ArrayList<TipoIdDoc>();
+		lisTipoIddoc.add(new TipoIdDoc(0, "Sel.Tipo Identidad"));
+		lisTipoIddoc.add(new TipoIdDoc(1, "Cedula"));
+		lisTipoIddoc.add(new TipoIdDoc(2, "RUC"));
+		lisTipoIddoc.add(new TipoIdDoc(3, "Pasaporte"));
+		lisTipoIddoc.add(new TipoIdDoc(4, "Otro Documento"));
+	}
 	
 	public List<Tipodebito> getLisTipodebito() {
 		return lisTipodebito;
@@ -253,5 +266,17 @@ public void cargaBcoTar() {
 	}
 	public void setReqBanco(boolean reqBanco) {
 		this.reqBanco = reqBanco;
+	}
+	public List<TipoIdDoc> getLisTipoIddoc() {
+		return lisTipoIddoc;
+	}
+	public void setLisTipoIddoc(List<TipoIdDoc> lisTipoIddoc) {
+		this.lisTipoIddoc = lisTipoIddoc;
+	}
+	public Debitobco getDebitobco() {
+		return debitobco;
+	}
+	public void setDebitobco(Debitobco debitobco) {
+		this.debitobco = debitobco;
 	}	
 }

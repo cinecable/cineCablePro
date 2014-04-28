@@ -21,7 +21,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "nodos", schema = "public")
-public class Nodos implements java.io.Serializable {
+public class Nodos implements java.io.Serializable, Cloneable {
 
 	/**
 	 * 
@@ -134,6 +134,11 @@ public class Nodos implements java.io.Serializable {
 
 	public void setDireccions(Set<?> direccions) {
 		this.direccions = direccions;
+	}
+	
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 
 }

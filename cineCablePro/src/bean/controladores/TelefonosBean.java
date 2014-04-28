@@ -1,11 +1,11 @@
 package bean.controladores;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.event.ActionEvent;
 
 import pojo.annotations.Telefono;
 import util.MessageUtil;
@@ -18,51 +18,32 @@ public class TelefonosBean implements Serializable {
 	 * prueba
 	 */
 	private static final long serialVersionUID = -2948329960675459182L;
-	private String nombreTelefono;
-	private String numeroTelefono;
 	private List<Telefono> lisTelefonos;
 	
 	private Telefono telefonoSelected;
 	private Telefono telefono;
 	
 	public TelefonosBean() {
-	}
-	
-	public TelefonosBean(String nombreTelefono, String numeroTelefono) {
-		this.nombreTelefono = nombreTelefono;
-		this.numeroTelefono = numeroTelefono;
+		telefono = new Telefono();
+		telefonoSelected = new Telefono();
+		lisTelefonos = new ArrayList<Telefono>();
 	}
 	
 	public void agregarTelefonos(){
 				
-		lisTelefonos.add(telefonoSelected);
+		lisTelefonos.add(telefono);
 								
+		//inicializar
+		telefono = new Telefono();
 	}
 	
-	public void quitarTelefono(ActionEvent actionEvent){
+	public void quitarTelefono(){
 		try {
 			lisTelefonos.remove(telefonoSelected);			
-			
-			new MessageUtil().showInfoMessage("Listo!", "Forma de pago excluida!");
+			new MessageUtil().showInfoMessage("Telefono excluido!", null);
 		} catch(Exception re) {
 			new MessageUtil().showFatalMessage("Esto es Vergonzoso!", "Ha ocurrido un error inesperado. Comunicar al Webmaster!");
 		}
-	}
-
-	public String getNombreTelefono() {
-		return nombreTelefono;
-	}
-
-	public void setNombreTelefono(String nombreTelefono) {
-		this.nombreTelefono = nombreTelefono;
-	}
-
-	public String getNumeroTelefono() {
-		return numeroTelefono;
-	}
-
-	public void setNumeroTelefono(String numeroTelefono) {
-		this.numeroTelefono = numeroTelefono;
 	}
 
 	public List<Telefono> getLisTelefonos() {

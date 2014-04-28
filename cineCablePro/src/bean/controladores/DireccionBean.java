@@ -10,18 +10,20 @@ import javax.faces.bean.ViewScoped;
 import pojo.annotations.Calleprincipal;
 import pojo.annotations.Callesecundaria;
 import pojo.annotations.Ciudad;
+import pojo.annotations.Ctacliente;
+import pojo.annotations.Direccion;
 import pojo.annotations.Edificio;
 import pojo.annotations.Empresa;
 import pojo.annotations.Estado;
 import pojo.annotations.Nodos;
 import pojo.annotations.Pais;
 import pojo.annotations.Provincia;
+import pojo.annotations.Referenciadir;
 import pojo.annotations.Sector;
 import pojo.annotations.Tiposector;
 import pojo.annotations.Ubicacion;
 import pojo.annotations.Usuario;
 import util.FacesUtil;
-import util.MessageUtil;
 import bo.negocio.CallePrincipalBO;
 import bo.negocio.CallesecundariaBO;
 import bo.negocio.CiudadBO;
@@ -57,49 +59,26 @@ public class DireccionBean implements Serializable{
     private Pais paisSelected;
     private Provincia provinciaSelected;
     private Ciudad ciudadSelected;
-    private Sector sectorSelected;
-    private Tiposector tiposectorSelected;
-    private Edificio edificioSelected;
-    private Nodos nodosSelected;
-    private Calleprincipal calleprincipalSelected;   
-	private Callesecundaria callesecundariaSelected;
-    private Ubicacion ubicacionSelected;
-    
-    private String numeroUbicacion;
-    private String idSolar;
-    private String idPiso;
-    private String idDepartamento;
-    private String rutaPadre;
-    
+    private Direccion direccion;
+     
     private boolean habilitaTipoSector;
    
 	public DireccionBean() {
-       // llenarLisPais();
-        
         paisSelected = new Pais();
         provinciaSelected = new Provincia(0, new Pais(), new Usuario(), null, (int) 0, null);
         ciudadSelected = new Ciudad((int)0, new Estado(), new Usuario(), new Provincia(0, new Pais(), new Usuario(), null, (int) 0, null), null, null);
-        sectorSelected = new Sector(0,new Estado(),new Ciudad(),new Usuario(), null, null);
-        tiposectorSelected = new Tiposector(0, new Usuario(), null,null);
-        edificioSelected = new Edificio(0,new Estado(),new Sector(), new Usuario(), null,null);
-        nodosSelected = new Nodos(0,null, 0,new Sector(), 0, null);
-        calleprincipalSelected = new Calleprincipal(0, new Estado(),new Usuario(), new Sector(), null, null);
-        callesecundariaSelected = new Callesecundaria(0,new  Estado(), new Usuario(), new Empresa(),null, null, null, new Sector());
-        ubicacionSelected = new Ubicacion(0, null,0, new Sector(),0,null);
+        
+        direccion = new Direccion(0, new Edificio(), new Referenciadir(), new Ctacliente(), new Calleprincipal(), new Tiposector(), new Callesecundaria(), new Ubicacion(), new Nodos(), new Sector(), 0, 0, 0, null, null, null, null, null);
+        
         lisTipoSector = new ArrayList<Tiposector>();
         habilitaTipoSector = false;
         
         llenarxDefectoCombos();
     }
-    
-	public void cargaDepSector() {
-		 calleprincipalSelected = new Calleprincipal(0, new Estado(),new Usuario(), new Sector(), null, null);
-	     callesecundariaSelected = new Callesecundaria(0,new  Estado(), new Usuario(), new Empresa(),null, null, null, new Sector());
-	     SeteaTiposSectores(2);
-	}
+	
 	public void llenarDependientes() {
 		try{
-			 sectorSelected = new Sector(0,new Estado(),new Ciudad(),new Usuario(), null, null);
+			direccion.setSector(new Sector(0,new Estado(),new Ciudad(),new Usuario(), null, null));
 			
             SectorBO sectorBO = new SectorBO();
             List<Sector> lisTSec = sectorBO.SectorxCiudad(ciudadSelected.getIdciudad());
@@ -135,14 +114,13 @@ public class DireccionBean implements Serializable{
 			try {				
 						            
 						         
-				lisCallP = calleprincipalBO.ConsultarCPxQuery(sectorSelected.getIdsector(),query);
+				lisCallP = calleprincipalBO.ConsultarCPxQuery(direccion.getSector().getIdsector(),query);
 				
 				   if(lisCallP != null && lisCallP.size() > 0){
 		            	lisCallePrincipal.addAll(lisCallP);
 		            }
 		            
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -159,14 +137,13 @@ public class DireccionBean implements Serializable{
 			try {				
 						            
 						         
-				lisCallP = CallesecundariaBO.ConsultarCSxQuery(sectorSelected.getIdsector(),query);
+				lisCallP = CallesecundariaBO.ConsultarCSxQuery(direccion.getSector().getIdsector(),query);
 				
 				   if(lisCallP != null && lisCallP.size() > 0){
 		            	lisCalleSecundaria.addAll(lisCallP);
 		            }
 		            
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -176,11 +153,16 @@ public class DireccionBean implements Serializable{
  
 	  
 	private void SeteaTiposSectores(int codigo) {
-		 calleprincipalSelected = new Calleprincipal(0, new Estado(),new Usuario(), new Sector(), null, null);
-	     callesecundariaSelected = new Callesecundaria(0,new  Estado(), new Usuario(), new Empresa(),null, null, null, new Sector());
-	     ubicacionSelected = new Ubicacion(0, null,0, new Sector(),0,null);
-	     edificioSelected = new Edificio(0,new Estado(),new Sector(), new Usuario(), null,null);
-	     nodosSelected = new Nodos(0,null, 0,new Sector(), 0, null);
+		 //calleprincipalSelected = new Calleprincipal(0, new Estado(),new Usuario(), new Sector(), null, null);
+		direccion.setCalleprincipal(new Calleprincipal(0, new Estado(),new Usuario(), new Sector(), null, null));
+	     //callesecundariaSelected = new Callesecundaria(0,new  Estado(), new Usuario(), new Empresa(),null, null, null, new Sector());
+		direccion.setCallesecundaria(new Callesecundaria(0,new  Estado(), new Usuario(), new Empresa(),null, null, null, new Sector()));
+	     //ubicacionSelected = new Ubicacion(0, null,0, new Sector(),0,null);
+		direccion.setUbicacion(new Ubicacion(0, null,0, new Sector(),0,null));
+	     //edificioSelected = new Edificio(0,new Estado(),new Sector(), new Usuario(), null,null);
+		direccion.setEdificio(new Edificio(0,new Estado(),new Sector(), new Usuario(), null,null));
+	     //nodosSelected = new Nodos(0,null, 0,new Sector(), 0, null);
+		direccion.setNodos(new Nodos(0,null, 0,new Sector(), 0, null));
 	     
 	   
 			  // Inicializando Nodos
@@ -228,7 +210,6 @@ public class DireccionBean implements Serializable{
 							 lisTipoSector.addAll(lisTpoS);
 				            }
 					} catch (Exception e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 		          // tiposectorSelected.setIdtiposector(1);		           		     
@@ -239,13 +220,13 @@ public class DireccionBean implements Serializable{
 				   NodosBO nodosBO = new NodosBO();
 			         List<Nodos> lisTNodos;
 					try {
-						lisTNodos = nodosBO.ConsultaNodosxSector(sectorSelected.getIdsector());
+						//lisTNodos = nodosBO.ConsultaNodosxSector(sectorSelected.getIdsector());
+						lisTNodos = nodosBO.ConsultaNodosxSector(direccion.getSector().getIdsector());
 						
 						if(lisTNodos != null && lisTNodos.size() > 0){
 							lisNodos.addAll(lisTNodos);
 			            }
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					
@@ -255,12 +236,12 @@ public class DireccionBean implements Serializable{
 		            
 		          
 					try {
-						lisTmp = edificiosBO.EdificioxSector(sectorSelected.getIdsector());
+						//lisTmp = edificiosBO.EdificioxSector(sectorSelected.getIdsector());
+						lisTmp = edificiosBO.EdificioxSector(direccion.getSector().getIdsector());
 						 if(lisTmp != null && lisTmp.size() > 0){
 				                lisEdificio.addAll(lisTmp);
 				            }
 					} catch (Exception e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 	            					
@@ -270,13 +251,12 @@ public class DireccionBean implements Serializable{
 				    	 UbicacionBO ubicacionBO = new UbicacionBO();
 				            List<Ubicacion> lisTUbicacion;
 							try {
-								lisTUbicacion = ubicacionBO.ConsultarUbicacionxSector(sectorSelected.getIdsector());
+								lisTUbicacion = ubicacionBO.ConsultarUbicacionxSector(direccion.getSector().getIdsector());
 								
 								if(lisTUbicacion != null && lisTUbicacion.size() > 0){
 									lisUbicacion.addAll(lisTUbicacion);
 					            }
 							} catch (Exception e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 				   				     
@@ -327,6 +307,7 @@ public class DireccionBean implements Serializable{
 	                lisPais.addAll(lisTmpPais);
 	            }
 	            paisSelected.setIdpais(idpais);
+	            
             
 	           
                List<Provincia>lisTmpPro = provinciaBO.consultarProvinciaPorPais(idpais);
@@ -361,47 +342,9 @@ public class DireccionBean implements Serializable{
 	            SeteaTiposSectores(1);
 			            	            
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
          
-    }
-    @SuppressWarnings("unused")
-	private void llenarLisPais(){
-        try{
-            paisSelected = new Pais();
-            provinciaSelected = new Provincia(0, new Pais(), new Usuario(), null, (int) 0, null);
-            ciudadSelected = new Ciudad((int)0, new Estado(), new Usuario(), new Provincia(0, new Pais(), new Usuario(), null, (int) 0, null), null, null);
-            
-            Provincia provincia = new Provincia();
-            provincia.setIdprovincia(0);
-            provincia.setNombre("Seleccione Provincia...");
-            lisProvincia = new ArrayList<Provincia>();
-            lisProvincia.add(provincia);
-            
-            Ciudad ciudad = new Ciudad();
-            ciudad.setIdciudad((int)0);
-            ciudad.setNombre("Seleccione Ciudad...");
-            lisCiudad = new ArrayList<Ciudad>();
-            lisCiudad.add(ciudad);
-            
-            Pais pais = new Pais();
-            pais.setIdpais(0);
-            pais.setNombre("Seleccione Pais...");
-            
-            lisPais = new ArrayList<Pais>();
-            lisPais.add(pais);
-            
-            PaisBO paisBO = new PaisBO();
-            List<Pais> lisTmp = paisBO.consultarPaises();
-            
-            if(lisTmp != null && lisTmp.size() > 0){
-                lisPais.addAll(lisTmp);
-            }
-        }
-        catch(Exception ex){
-            ex.printStackTrace();
-        }
     }
     
     public void llenarLisProvincia(){
@@ -606,70 +549,6 @@ public class DireccionBean implements Serializable{
 	public void setLisUbicacion(List<Ubicacion> lisUbicacion) {
 		this.lisUbicacion = lisUbicacion;
 	}
-
-	public Sector getSectorSelected() {
-		return sectorSelected;
-	}
-
-	public void setSectorSelected(Sector sectorSelected) {
-		this.sectorSelected = sectorSelected;
-	}
-
-	public Tiposector getTiposectorSelected() {
-		return tiposectorSelected;
-	}
-
-	public void setTiposectorSelected(Tiposector tiposectorSelected) {
-		this.tiposectorSelected = tiposectorSelected;
-	}
-
-	public Edificio getEdificioSelected() {
-		return edificioSelected;
-	}
-
-	public void setEdificioSelected(Edificio edificioSelected) {
-		this.edificioSelected = edificioSelected;
-	}
-
-	public Nodos getNodosSelected() {
-		return nodosSelected;
-	}
-
-	public void setNodosSelected(Nodos nodosSelected) {
-		this.nodosSelected = nodosSelected;
-	}
-
-	public Calleprincipal getCalleprincipalSelected() {
-		return calleprincipalSelected;
-	}
-
-	public void setCalleprincipalSelected(Calleprincipal calleprincipalSelected) {
-		this.calleprincipalSelected = calleprincipalSelected;
-	}
-
-	public Callesecundaria getCallesecundariaSelected() {
-		return callesecundariaSelected;
-	}
-
-	public void setCallesecundariaSelected(Callesecundaria callesecundariaSelected) {
-		this.callesecundariaSelected = callesecundariaSelected;
-	}
-
-	public Ubicacion getUbicacionSelected() {
-		return ubicacionSelected;
-	}
-
-	public void setUbicacionSelected(Ubicacion ubicacionSelected) {
-		this.ubicacionSelected = ubicacionSelected;
-	}
-
-	public String getNumeroUbicacion() {
-		return numeroUbicacion;
-	}
-
-	public void setNumeroUbicacion(String numeroUbicacion) {
-		this.numeroUbicacion = numeroUbicacion;
-	}
 	
 	public boolean isHabilitaTipoSector() {
 		return habilitaTipoSector;
@@ -679,40 +558,12 @@ public class DireccionBean implements Serializable{
 		this.habilitaTipoSector = habilitaTipoSector;
 	}
 
-	
-	public String getRutaPadre() {
-		return rutaPadre;
+	public Direccion getDireccion() {
+		return direccion;
 	}
 
-	public void setRutaPadre(String rutaPadre) {
-		this.rutaPadre = rutaPadre;
-		System.out.println(rutaPadre);
-		MessageUtil h = new MessageUtil();
-		h.showInfoMessage("hola", rutaPadre);
-	}
-
-	public String getIdSolar() {
-		return idSolar;
-	}
-
-	public void setIdSolar(String idSolar) {
-		this.idSolar = idSolar;
-	}
-
-	public String getIdPiso() {
-		return idPiso;
-	}
-
-	public void setIdPiso(String idPiso) {
-		this.idPiso = idPiso;
-	}
-
-	public String getIdDepartamento() {
-		return idDepartamento;
-	}
-
-	public void setIdDepartamento(String idDepartamento) {
-		this.idDepartamento = idDepartamento;
+	public void setDireccion(Direccion direccion) {
+		this.direccion = direccion;
 	}
 
 }

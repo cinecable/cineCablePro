@@ -22,7 +22,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "callesecundaria", schema = "public")
-public class Callesecundaria implements java.io.Serializable {
+public class Callesecundaria implements java.io.Serializable, Cloneable {
 
 	/**
 	 * 
@@ -160,4 +160,8 @@ public class Callesecundaria implements java.io.Serializable {
 		this.direccions = direccions;
 	}
 
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 }

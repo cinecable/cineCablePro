@@ -18,7 +18,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "tiposector", schema = "public")
-public class Tiposector implements java.io.Serializable {
+public class Tiposector implements java.io.Serializable, Cloneable {
 
 	/**
 	 * 
@@ -108,5 +108,10 @@ public class Tiposector implements java.io.Serializable {
 	public void setDireccions(Set<?> direccions) {
 		this.direccions = direccions;
 	}*/
+	
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 
 }

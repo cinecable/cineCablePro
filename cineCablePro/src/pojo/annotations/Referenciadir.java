@@ -13,7 +13,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "referenciadir", schema = "public")
-public class Referenciadir implements java.io.Serializable {
+public class Referenciadir implements java.io.Serializable, Cloneable {
 
 	/**
 	 * 
@@ -68,5 +68,9 @@ public class Referenciadir implements java.io.Serializable {
 		this.idcuenta = idcuenta;
 	}
 
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 	
 }

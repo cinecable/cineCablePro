@@ -4,6 +4,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:my="http://java.sun.com/jsf/composite/components/paginas">
 
 	<h:form id="form-contentpage">
@@ -52,22 +53,33 @@
 				</p:tab>
 				<p:tab title="Direccion" titleStyleClass="tabStyle">
 					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
-						<my:direccion_component id="idcomponentedireccion" formPadre=":form-contentpage"
-							rutaPadre=":form-contentpage:acc:idcomponentedireccion"></my:direccion_component>
+						<p:fieldset id="idmarcoinstalacion" legend="Dirección de Instalación"> 
+							<my:direccion_component2 id="idcomponentedireccioninstalacion" bean="#{clientesNuevosBean.direccionInstalacionBean}" ></my:direccion_component2>
+						</p:fieldset>
+						
+						<p:fieldset id="idmarcocorrespondencia" legend="Dirección de Correspondencia" toggleable="true" toggleSpeed="500" collapsed="true">
+							<br />
+							<p:commandButton value="Hacer Dirección igual que Instalación" action="#{clientesNuevosBean.direccionCorrespondenciaIgual()}" update=":form-contentpage:mensajes, idcomponentedireccioncorrespondencia:form-direccioncomponent" immediate="true" ></p:commandButton>
+							<my:direccion_component2 id="idcomponentedireccioncorrespondencia" bean="#{clientesNuevosBean.direccionCorrespondenciaBean}"></my:direccion_component2>
+						</p:fieldset>
+						
+						<p:fieldset id="idmarcocobranza" legend="Dirección de Cobranza" toggleable="true" toggleSpeed="500" collapsed="true">
+							<br />
+							<p:commandButton value="Hacer Dirección igual que Instalación" action="#{clientesNuevosBean.direccionCobranzaIgual()}" update=":form-contentpage:mensajes, idcomponentedireccioncobranza:form-direccioncomponent" immediate="true" ></p:commandButton>
+							<my:direccion_component2 id="idcomponentedireccioncobranza" bean="#{clientesNuevosBean.direccionConbranzaBean}"></my:direccion_component2>
+						</p:fieldset>
 					</h:panelGrid>
 				</p:tab>
 				<p:tab title="Debito Bancario" titleStyleClass="tabStyle">
 					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
 
-						<my:dbancario_component id="idcomponentedbancario"
-							rutaPadre=":form-contentpage:acc:idcomponentedbancario"></my:dbancario_component>
+						<my:dbancario_component id="idcomponentedbancario" ></my:dbancario_component>
 					</h:panelGrid>
 				</p:tab>
 				<p:tab title="Telefonos Cliente" titleStyleClass="tabStyle">
 					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
 
-						<my:telefonos_component id="idcomponentetelefono" formPadre=":form-contentpage"
-							rutaPadre=":form-contentpage:acc:idcomponentetelefono"></my:telefonos_component>
+						<my:telefonos_component id="idcomponentetelefono" formPadre=":form-contentpage" rutaPadre=":form-contentpage:acc:idcomponentetelefono"></my:telefonos_component>
 					</h:panelGrid>
 				</p:tab>
 

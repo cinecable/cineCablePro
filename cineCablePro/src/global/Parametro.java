@@ -8,20 +8,6 @@ import javax.faces.bean.SessionScoped;
 public class Parametro {
 	public static final String FILE_SEPARATOR = "/";//File.separator;
 	public static final long DAY_IN_MILLISECONDS = (24*60*60*1000);
-	/*public static final String WAR_PATH;
-	static{
-		String war_path = null;
-		try{
-			war_path = new FacesUtil().getRealPath("");
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
-		WAR_PATH = war_path;
-	}*/
-	//public static final String DEPLOYMENTS_PATH = WAR_PATH.substring(0, WAR_PATH.lastIndexOf("\\"));
-	//public static final String PARAMETROS_PROPERTIES_PATH = WAR_PATH+FILE_SEPARATOR+"resources"+FILE_SEPARATOR+"parametros.properties";
-	//public static final String RUTA_REPORTES = WAR_PATH+FILE_SEPARATOR+"reportes"+FILE_SEPARATOR;
 	public static final String PROPERTIES_FILE_NAME = "parametros.properties";
 	
 	//Seccion de rangos de los cargos
@@ -78,4 +64,13 @@ public class Parametro {
 	public static final int AREA_COMPRAS = 4;
 	public static final int AREA_INSTALACIONES = 5;
 	public static final int AREA_ADMINISTRATIVO = 6;
+	
+	//Seccion tipo sector
+	public static final int TIPO_SECTOR_ENTRECALLES = 1;
+	public static final int TIPO_SECTOR_URBANIZACION = 2;
+	
+	//Seccion tipo debito
+	public static final int TIPO_DEBITO_BANCARIO = 1;
+	public static final int TIPO_DEBITO_TARJETA = 2;
+	public static final int TIPO_DEBITO_OFICINA = 3;
 }

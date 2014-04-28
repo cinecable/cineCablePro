@@ -9,28 +9,28 @@
 
 	<composite:interface displayName="Parametros"
 		shortDescription="Recibe parametros para ser usados en el componente">
-		<composite:attribute name="rutaPadre" required="true"
-			shortDescription="Ruta completa de los id de los contenedores del componente" />
+		
 	</composite:interface>
 
 	<composite:implementation>
+	<div id="#{cc.clientId}">
 		<h:form id="form-dbancarioscomponent">
 			<h:panelGrid id="idpDebitos" columns="5" style="width: 100%">
 				<h:outputLabel value="Forma Cobro :" for="idComboTipodb" />
 				<p:selectOneMenu id="idComboTipodb"
-					value="#{debitosBancariosBean.tipoDebitoSelected.idtipodebito}" style="width: 150px">
+					value="#{debitosBancariosBean.debitobco.idtipodebito}" style="width: 150px">
 					<f:selectItems value="#{debitosBancariosBean.lisTipodebito}"
 						var="i" itemLabel="#{i.nombre}" itemValue="#{i.idtipodebito}" />
 					<p:ajax listener="#{debitosBancariosBean.cargaBcoTar()}"
-						update="#{cc.attrs.rutaPadre}:form-dbancarioscomponent:idComboTipodb,#{cc.attrs.rutaPadre}:form-dbancarioscomponent:idComboBcoEmi,
-		        #{cc.attrs.rutaPadre}:form-dbancarioscomponent:idComboTarEmi,#{cc.attrs.rutaPadre}:form-dbancarioscomponent:idComboTcuenta" />
+						update="idComboTipodb,idComboBcoEmi,
+		        idComboTarEmi,idComboTcuenta" />
 				</p:selectOneMenu>
 
 				<p:spacer width="8" />
 
 				<h:outputLabel value="Banco/Tarjeta :" for="idComboBcoEmi" />
 				<p:selectOneMenu id="idComboBcoEmi"
-					value="#{debitosBancariosBean.bancosSelected.idbanco}" style="width: 150px">
+					value="#{debitosBancariosBean.debitobco.bancos.idbanco}" style="width: 150px">
 					<f:selectItems value="#{debitosBancariosBean.lisBancos}" var="i"
 						itemLabel="#{i.nombre}" itemValue="#{i.idbanco}" />
 				</p:selectOneMenu>
@@ -38,7 +38,7 @@
 
 				<h:outputLabel value="Emisor Tarjeta :" for="idComboTarEmi" />
 				<p:selectOneMenu id="idComboTarEmi"
-					value="#{debitosBancariosBean.tarjetasSelected.idbanco}" style="width: 150px">
+					value="#{debitosBancariosBean.debitobco.idbancotar}" style="width: 150px">
 					<f:selectItems value="#{debitosBancariosBean.lisTarjetas}" var="i"
 						itemLabel="#{i.nombre}" itemValue="#{i.idbanco}" />
 				</p:selectOneMenu>
@@ -47,7 +47,7 @@
 
 				<h:outputLabel value="Tipo de Cuenta :" for="idComboTcuenta" />
 				<p:selectOneMenu id="idComboTcuenta"
-					value="#{debitosBancariosBean.tipoCuentaSelected.idtipoCuenta}" style="width: 150px">
+					value="#{debitosBancariosBean.debitobco.idtipocuenta}" style="width: 150px">
 					<f:selectItems value="#{debitosBancariosBean.lisTipoCuenta}"
 						var="i" itemLabel="#{i.nombre}" itemValue="#{i.idtipoCuenta}" />
 				</p:selectOneMenu>
@@ -55,21 +55,39 @@
 				<h:outputLabel value="Nro Doc :" for="idtxndoc" />
 				<p:inputText required="#{debitosBancariosBean.reqBanco}" requiredMessage="Ingresar Nro Doc"
 					id="idtxndoc" size="15" maxlength="20"
-					value="#{debitosBancariosBean.nroDocumento}" style="width: 100%" />
+					value="#{debitosBancariosBean.debitobco.nrodebito}" style="width: 100%" />
 
 				<p:spacer width="8" />
 
 				<h:outputLabel value="Cod. Seguridad :" for="idtxtcodS" />
 				<p:inputText id="idtxtcodS" size="10"
-					value="#{debitosBancariosBean.codSeguridad}" style="width: 100%"/>
+					value="#{debitosBancariosBean.debitobco.codigoseguridad}" style="width: 100%"/>
 
 				<h:outputLabel value="Propietario :" for="idtxtPro" />
 				<p:inputText id="idtxtPro" size="30"
-					value="#{debitosBancariosBean.propietario}" style="width: 100%"/>
+					value="#{debitosBancariosBean.debitobco.propietario}" style="width: 100%"/>
+				
+				<p:spacer width="8" />
+				
+				<p:outputLabel value="Tipo Identidad *:" for="idCmbTdcli" />
+				<p:selectOneMenu id="idCmbTdcli"
+					value="#{debitosBancariosBean.debitobco.idtipoidentificacion}"
+					style="width: 150px">
+					<f:selectItems value="#{debitosBancariosBean.lisTipoIddoc}" var="i"
+						itemLabel="#{i.nombre}" itemValue="#{i.idTipoIdentidad}" />
+				</p:selectOneMenu>
+				
+				<h:outputLabel value="# Identidad *:" for="idtxIdentidad" />
+				<p:inputText id="idtxIdentidad" size="15"
+							value="#{debitosBancariosBean.debitobco.identificacion}" required="true"
+							requiredMessage="Ingresar número de identidad"
+							style="width: 100%" label="Identidad" />
+				<p:spacer width="8" />
 				<h:outputText value="" />
 				<h:outputText value="" />
-				<h:outputText value="" />
+				
 			</h:panelGrid>
 		</h:form>
+	</div>
 	</composite:implementation>
 </ui:composition>

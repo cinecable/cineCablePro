@@ -15,7 +15,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "pais", schema = "public")
-public class Pais implements java.io.Serializable {
+public class Pais implements java.io.Serializable, Cloneable {
 
 	/**
 	 * 
@@ -117,4 +117,12 @@ public class Pais implements java.io.Serializable {
 		this.provincias = provincias;
 	}*/
 
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+	
+	public Pais clonar() throws Exception {
+		return (Pais)this.clone();
+	}
 }
