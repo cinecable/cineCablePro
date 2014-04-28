@@ -179,6 +179,7 @@ public class CtaclienteBO {
 			int maxIddireccioninstalacion = direccionDAO.maxIddireccion(session) + 1;
 			direccionInstalacion.setIddireccion(maxIddireccioninstalacion);
 			direccionInstalacion.setCorrespondencia("I");
+			direccionInstalacion.setCtacliente(ctacliente);
 			direccionInstalacion.setIdestado(1);
 			
 			//grabar
@@ -199,6 +200,7 @@ public class CtaclienteBO {
 			int maxIddireccioncorrespondencia = direccionDAO.maxIddireccion(session) + 1;
 			direccionCorrespondencia.setIddireccion(maxIddireccioncorrespondencia);
 			direccionCorrespondencia.setCorrespondencia("C");
+			direccionCorrespondencia.setCtacliente(ctacliente);
 			direccionCorrespondencia.setIdestado(1);
 			
 			//grabar
@@ -218,6 +220,7 @@ public class CtaclienteBO {
 			int maxIddireccioncobranza = direccionDAO.maxIddireccion(session) + 1;
 			direccionCobranza.setIddireccion(maxIddireccioncobranza);
 			direccionCobranza.setCorrespondencia("B");
+			direccionCobranza.setCtacliente(ctacliente);
 			direccionCobranza.setIdestado(1);
 			
 			//grabar

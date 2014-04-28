@@ -20,10 +20,7 @@
  				   <p:selectOneMenu id="idcombopais" value="#{cc.attrs.bean.paisSelected.idpais}" style="width: 150px">
                        <f:selectItems value="#{cc.attrs.bean.lisPais}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idpais}" />
                        <p:ajax listener="#{cc.attrs.bean.llenarLisProvincia}" process="idcombopais" update="idcomboprovincia, idcombociudad,
-                        idcombosector,
-                        idComboTipoSector, idComboEdificio,
-                        idComboCallePrin,idComboCallesec,
-                        idComboUbicacion,idComboNodos" />
+                        idcombosector,idComboTipoSector, idComboEdificio, idComboCallePrin,idComboCallesec, idComboUbicacion,idComboNodos" />
                    </p:selectOneMenu>
                    
                    <h:outputLabel value="Provincia :" for="idcomboprovincia" />  
@@ -40,7 +37,8 @@
                     <h:outputLabel value="Ciudad *:" for="idcombociudad" />
                    <p:selectOneMenu id="idcombociudad" value="#{cc.attrs.bean.ciudadSelected.idciudad}" style="width: 150px">
                        <f:selectItems value="#{cc.attrs.bean.lisCiudad}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idciudad}" />
-                        <p:ajax listener="#{cc.attrs.bean.llenarDependientes}" process="idcombociudad" update="idcombosector" />
+                        <p:ajax listener="#{cc.attrs.bean.llenarDependientes}" process="idcombociudad" update="idcombosector,idComboTipoSector,idComboCallePrin,idComboCallesec,
+                        idComboUbicacion, idComboEdificio, idComboNodos" />
                    </p:selectOneMenu>
                    
                    
@@ -48,14 +46,13 @@
                      <p:selectOneMenu id="idcombosector" value="#{cc.attrs.bean.direccion.sector.idsector}" style="width: 150px">
                        <f:selectItems value="#{cc.attrs.bean.lisSector}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idsector}" />
                     <p:ajax listener="#{cc.attrs.bean.llenarDependientesSector()}" process="idcombosector" update="idComboEdificio,idComboCallePrin,
-                    idComboCallesec,idComboUbicacion,
-                    idComboNodos,idComboTipoSector" />
+                    idComboCallesec,idComboUbicacion, idComboNodos,idComboTipoSector" />
                    </p:selectOneMenu>
                    
                     <h:outputLabel value="Tipo Sector :" for="idComboTipoSector" />
                     <p:selectOneMenu id="idComboTipoSector" value="#{cc.attrs.bean.direccion.tiposector.idtiposector}" style="width: 150px">
                        <f:selectItems value="#{cc.attrs.bean.lisTipoSector}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idtiposector}" />
-                   		<p:ajax listener="#{cc.attrs.bean.llenarDependientesTipoSector()}" process="idComboTipoSector" update="idComboCallesec,idComboCallePrin,idComboUbicacion" />                          
+                   		<p:ajax listener="#{cc.attrs.bean.llenarDependientesTipoSector()}" process="idComboTipoSector" update="idComboCallesec,idComboCallePrin,idComboUbicacion,idComboEdificio,idComboNodos,idComboTipoSector" />                          
                    </p:selectOneMenu>
                    
                    <h:outputLabel value="Calle Principal  :" for="idComboCallePrin" />
