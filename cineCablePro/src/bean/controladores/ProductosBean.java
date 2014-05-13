@@ -4,18 +4,22 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import bo.negocio.CtasprodBO;
 import bo.negocio.ProductoBO;
 
+import pojo.annotations.Ctasprod;
 import pojo.annotations.Producto;
 import pojo.annotations.custom.ProductoId;
+import util.FacesUtil;
 import util.MessageUtil;
 
 @ManagedBean
 @ViewScoped
-public class ProductosBean implements Serializable{
+public class ProductosBean implements Serializable {
 
 	/**
 	 * 
@@ -26,142 +30,175 @@ public class ProductosBean implements Serializable{
 	private Producto productoSelected;
 	private Producto adicionalSelected;
 	private ProductoId productoIdSelected;
-	private ProductoId productoId;
 	private int cantidad;
 	private List<ProductoId> lisProductosId;
-	
-	
+	private List<ProductoId> lisProductosIdClon;
+	private int idcuenta;
+
 	public ProductosBean() {
 		lisProductosId = new ArrayList<ProductoId>();
+		lisProductosIdClon = new ArrayList<ProductoId>();
 		productoSelected = new Producto();
 		adicionalSelected = new Producto();
 		productoIdSelected = new ProductoId();
 		cantidad = 1;
-		
+		idcuenta = 0;
 	}
-	
-	 public List<Producto> CompletarProductos(String query) {  
-		 
-		  lisProductos = new ArrayList<Producto>();	   
-		
-		  ProductoBO productoBO = new ProductoBO();
-          List<Producto> listProdcutoT;
-			try {				
-						            
-						         
-				listProdcutoT = productoBO.ConsultarCPxQuery(query);
-				
-				   if(listProdcutoT != null && listProdcutoT.size() > 0){
-					   lisProductos.addAll(listProdcutoT);
-		            }
-		            
+
+	@PostConstruct
+	public void initProductosBean() {
+		FacesUtil facesUtil = new FacesUtil();
+		idcuenta = Integer
+				.parseInt(facesUtil.getParametroUrl("idcuenta") != null ? facesUtil
+						.getParametroUrl("idcuenta").toString() : "0");
+
+		if (idcuenta > 0) {
+			//consultarProductos();
+		}
+	}
+
+	private void consultarProductos() {
+		if (idcuenta > 0) {
+			try {
+				CtasprodBO ctasprodBO = new CtasprodBO();
+				List<Ctasprod> lisCtasprod = ctasprodBO.lisCtasprod(idcuenta);
+
+				for (Ctasprod ctasprod : lisCtasprod) {
+					ProductoId productosID = new ProductoId(0, null, 0, 0);
+
+					productosID.setIdprodcuenta(ctasprod.getIdprodcuentas());
+					productosID.setIdProducto(ctasprod.getProducto()
+							.getIdproducto());
+					productosID.setNombreProd(ctasprod.getProducto()
+							.getNombre());
+					productosID.setCantidad(1);
+
+					lisProductosId.add(productosID);
+					lisProductosIdClon.add(productosID.clonar());
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
+				new MessageUtil()
+						.showFatalMessage("Error!",
+								"Ha ocurrido un error inesperado. Comunicar al Webmaster!");
 			}
-			
-		       
-		         return lisProductos;  
-		      }
-	 
-	 public List<Producto> buscarProductosPrincipal(String query) {
+		}
+	}
+
+	public List<Producto> CompletarProductos(String query) {
+
+		lisProductos = new ArrayList<Producto>();
+
+		ProductoBO productoBO = new ProductoBO();
+		List<Producto> listProdcutoT;
+		try {
+
+			listProdcutoT = productoBO.ConsultarCPxQuery(query);
+
+			if (listProdcutoT != null && listProdcutoT.size() > 0) {
+				lisProductos.addAll(listProdcutoT);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return lisProductos;
+	}
+
+	public List<Producto> buscarProductosPrincipal(String query) {
 		List<Producto> lisProducto = new ArrayList<Producto>();
-		
+
 		lisProducto = buscarProductos(query, 1, null);
-		
+
 		return lisProducto;
 	}
-	 
+
 	public List<Producto> buscarProductosAdicional(String query) {
 		List<Producto> lisProducto = new ArrayList<Producto>();
-		
-		if(productoSelected != null  && productoSelected.getTipojerarquia() != null && productoSelected.getTipojerarquia().trim().length() > 0){
-			lisProducto = buscarProductos(query, 2, productoSelected.getTipojerarquia().split(","));
-		}else{
-			new MessageUtil().showWarnMessage("Debe seleccionar el producto principal", null);
+
+		if (productoSelected != null
+				&& productoSelected.getTipojerarquia() != null
+				&& productoSelected.getTipojerarquia().trim().length() > 0) {
+			lisProducto = buscarProductos(query, 2, productoSelected
+					.getTipojerarquia().split(","));
+		} else {
+			new MessageUtil().showWarnMessage(
+					"Debe seleccionar el producto principal", null);
 		}
-		
+
 		return lisProducto;
 	}
-	 
-	 private List<Producto> buscarProductos(String query, int jerarquia, String[] filtroIn) {
-			List<Producto> lisProducto = new ArrayList<Producto>();
-			
-			try{
-				ProductoBO productoBO = new ProductoBO();
-				int args[] = {0};
-				lisProducto = productoBO.lisProductoByNombreJerarquia(query, jerarquia, filtroIn, 10, 0, args);
-			}catch(Exception e){
-				e.printStackTrace();
-				new MessageUtil().showFatalMessage("Esto es Vergonzoso!", "Ha ocurrido un error inesperado. Comunicar al Webmaster!");
-			}
-			
-			return lisProducto;
+
+	private List<Producto> buscarProductos(String query, int jerarquia,
+			String[] filtroIn) {
+		List<Producto> lisProducto = new ArrayList<Producto>();
+
+		try {
+			ProductoBO productoBO = new ProductoBO();
+			int args[] = { 0 };
+			lisProducto = productoBO.lisProductoByNombreJerarquia(query,
+					jerarquia, filtroIn, 10, 0, args);
+		} catch (Exception e) {
+			e.printStackTrace();
+			new MessageUtil().showFatalMessage("Esto es Vergonzoso!",
+					"Ha ocurrido un error inesperado. Comunicar al Webmaster!");
 		}
-	 
-	public void agregarProductos(){	
-		
-		 ProductoId productosID = new ProductoId(0,null,0);
-		 
-		  productosID.setIdProducto(productoSelected.getIdproducto());
-		  productosID.setNombreProd(productoSelected.getNombre());
-		  productosID.setCantidad(1);
-		  
-		//lisProductosId = new ArrayList<ProductoId>();	
-		lisProductosId.add(productosID);
-		//lisProductosId.add(new ProductoId(productosID.getIdProducto(),productosID.getNombreProd(),productosID.getCantidad()));
-		
-		//inicializar
-		//productoSelected = new Producto();
-		//cantidad = 1;
+
+		return lisProducto;
 	}
-	
-	public void agregarAdicional(){	
-		
-		ProductoId productosID = new ProductoId(0,null,0);
-		 
+
+	public void agregarProductos() {
+
+		ProductoId productosID = new ProductoId(0, null, 0, 0);
+
+		productosID.setIdProducto(productoSelected.getIdproducto());
+		productosID.setNombreProd(productoSelected.getNombre());
+		productosID.setCantidad(1);
+
+		lisProductosId.add(productosID);
+	}
+
+	public void agregarAdicional() {
+
+		ProductoId productosID = new ProductoId(0, null, 0, 0);
+
 		productosID.setIdProducto(adicionalSelected.getIdproducto());
 		productosID.setNombreProd(adicionalSelected.getNombre());
 		productosID.setCantidad(cantidad);
-		  
-		//lisProductosId = new ArrayList<ProductoId>();	
+
 		lisProductosId.add(productosID);
-		//lisProductosId.add(new ProductoId(productosID.getIdProducto(),productosID.getNombreProd(),productosID.getCantidad()));
-		
-		//inicializar
+
+		// inicializar
 		adicionalSelected = new Producto();
 		cantidad = 1;
 	}
-		
-		public void quitarProducto(){
-			try {
-				lisProductosId.remove(productoIdSelected);
-				
-				new MessageUtil().showInfoMessage("Listo!", "Producto excluida!");
-			} catch(Exception re) {
-				new MessageUtil().showFatalMessage("Esto es Vergonzoso!", "Ha ocurrido un error inesperado. Comunicar al Webmaster!");
-			}
+
+	public void quitarProducto() {
+		try {
+			lisProductosId.remove(productoIdSelected);
+
+			new MessageUtil().showInfoMessage("Listo!", "Producto excluida!");
+		} catch (Exception re) {
+			new MessageUtil().showFatalMessage("Esto es Vergonzoso!",
+					"Ha ocurrido un error inesperado. Comunicar al Webmaster!");
 		}
-	 
+	}
+	
 	public List<Producto> getLisProductos() {
 		return lisProductos;
 	}
+
 	public void setLisProductos(List<Producto> lisProductos) {
 		this.lisProductos = lisProductos;
 	}
+
 	public Producto getProductoSelected() {
 		return productoSelected;
 	}
+
 	public void setProductoSelected(Producto productoSelected) {
 		this.productoSelected = productoSelected;
-	}
-
-
-	public ProductoId getProductoId() {
-		return productoId;
-	}
-
-	public void setProductoId(ProductoId productoId) {
-		this.productoId = productoId;
 	}
 
 	public List<ProductoId> getLisProductosId() {
@@ -196,5 +233,20 @@ public class ProductosBean implements Serializable{
 		this.adicionalSelected = adicionalSelected;
 	}
 
-	
+	public List<ProductoId> getLisProductosIdClon() {
+		return lisProductosIdClon;
+	}
+
+	public void setLisProductosIdClon(List<ProductoId> lisProductosIdClon) {
+		this.lisProductosIdClon = lisProductosIdClon;
+	}
+
+	public int getIdcuenta() {
+		return idcuenta;
+	}
+
+	public void setIdcuenta(int idcuenta) {
+		this.idcuenta = idcuenta;
+	}
+
 }

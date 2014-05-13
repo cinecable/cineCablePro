@@ -7,44 +7,79 @@
 	xmlns:my="http://java.sun.com/jsf/composite/components/paginas">
 
 	<h:form id="form-contentpage">
-	<p:growl id="mensajes" showDetail="true" />
-	
-	<p:accordionPanel id="acc">
+		<p:growl id="mensajes" autoUpdate="true" showDetail="true" />
+		<p:messages autoUpdate="true" showSummary="true" closable="true" />
 
-		<p:tab title="Productos Cliente ">
-			<h:panelGrid columns="1" cellpadding="10">
+		<h1 class="title ui-widget-header" style="text-align: center;">Cuentas
+			Nuevos</h1>
+		<p:panel id="panel-content" style="min-height: 300px;margin: 20px 0">
+			<br />
+			<p:accordionPanel id="acc">
 
-				<my:productos_component id="idcomponenteproductos"
-					rutaPadre=":form-principal:form-contentpage:acc:idcomponenteproductos"></my:productos_component>
+				<p:tab title="Productos Cliente ">
+					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
 
-			</h:panelGrid>
-		</p:tab>
-		<p:tab title="Direccion">
-			<h:panelGrid columns="1">
-				 <my:direccion_component id="idcomponentedireccion"
-					rutaPadre=":form-principal:form-contentpage:acc:idcomponentedireccion"></my:direccion_component> 
-			</h:panelGrid>
-		</p:tab>
-		<p:tab title="Debito Bancario">
-			<h:panelGrid columns="1" cellpadding="10">
+						<my:productos_component id="idcomponenteproductos"
+							formPadre=":form-contentpage"
+							rutaPadre=":form-contentpage:acc:idcomponenteproductos"></my:productos_component>
 
-				 <my:dbancario_component id="idcomponentedbancario"
-					rutaPadre=":form-principal:form-contentpage:acc:idcomponentedbancario"></my:dbancario_component>
-			</h:panelGrid>
-		</p:tab>
-		<p:tab title="Telefonos Cliente">
-			<h:panelGrid columns="1" cellpadding="10">
+					</h:panelGrid>
+				</p:tab>
+				<p:tab title="Direccion">
+					<h:panelGrid columns="1" style="width: 100%">
+						<p:fieldset id="idmarcoinstalacion"
+							legend="Dirección de Instalación">
+							<my:direccion_component2 id="idcomponentedireccioninstalacion"
+								bean="#{cuentasNuevasBean.direccionInstalacionBean}"></my:direccion_component2>
+						</p:fieldset>
 
-				 <my:telefonos_component id="idcomponentetelefono"
-					rutaPadre=":form-principal:form-contentpage:acc:idcomponentetelefono"></my:telefonos_component> 
-			</h:panelGrid>
-		</p:tab>
+						<p:fieldset id="idmarcocorrespondencia"
+							legend="Dirección de Correspondencia" toggleable="true"
+							toggleSpeed="500" collapsed="true">
+							<br />
+							<p:commandButton value="Hacer Dirección igual que Instalación"
+								action="#{cuentasNuevasBean.direccionCorrespondenciaIgual()}"
+								update=":form-contentpage:mensajes, idcomponentedireccioncorrespondencia:form-direccioncomponent"
+								immediate="true"></p:commandButton>
+							<my:direccion_component2
+								id="idcomponentedireccioncorrespondencia"
+								bean="#{cuentasNuevasBean.direccionCorrespondenciaBean}"></my:direccion_component2>
+						</p:fieldset>
+
+						<p:fieldset id="idmarcocobranza" legend="Dirección de Cobranza"
+							toggleable="true" toggleSpeed="500" collapsed="true">
+							<br />
+							<p:commandButton value="Hacer Dirección igual que Instalación"
+								action="#{cuentasNuevasBean.direccionCobranzaIgual()}"
+								update=":form-contentpage:mensajes, idcomponentedireccioncobranza:form-direccioncomponent"
+								immediate="true"></p:commandButton>
+							<my:direccion_component2 id="idcomponentedireccioncobranza"
+								bean="#{cuentasNuevasBean.direccionConbranzaBean}"></my:direccion_component2>
+						</p:fieldset>
+					</h:panelGrid>
+				</p:tab>
+				<p:tab title="Debito Bancario">
+					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
+
+						<my:dbancario_component id="idcomponentedbancario"></my:dbancario_component>
+					</h:panelGrid>
+				</p:tab>
+				<p:tab title="Telefonos Cliente">
+					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
+
+						<my:telefonos_component id="idcomponentetelefono"
+							formPadre=":form-contentpage"
+							rutaPadre=":form-contentpage:acc:idcomponentetelefono"></my:telefonos_component>
+					</h:panelGrid>
+				</p:tab>
 
 
-	</p:accordionPanel>
-	<p:spacer height="50px"></p:spacer>
-	<center>
-	<p:commandButton value="Grabar Todo" actionListener="#{clientesNuevosBean.grabarNuevoCliente()}" update=":form-principal:form-contentpage:mensajes" />
-	</center>
+			</p:accordionPanel>
+			<p:spacer height="50px"></p:spacer>
+			<center>
+				<p:commandButton value="Grabar Todo"
+					update=":form-contentpage:mensajes" />
+			</center>
+		</p:panel>
 	</h:form>
 </ui:composition>

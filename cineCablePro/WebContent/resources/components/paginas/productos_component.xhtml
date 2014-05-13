@@ -30,8 +30,7 @@
 								value="#{productosBean.productoSelected}"
 								completeMethod="#{productosBean.buscarProductosPrincipal}" var="i"
 								itemLabel="#{i.nombre}" itemValue="#{i}" converter="producto"
-								minQueryLength="1" forceSelection="true" required="true"
-								requiredMessage="Ingresar Producto" >
+								minQueryLength="1" forceSelection="true">
 								
 								<p:ajax event="itemSelect" update="#{cc.attrs.formPadre}:mensajes"></p:ajax>
 								

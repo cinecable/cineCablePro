@@ -2,12 +2,13 @@ package pojo.annotations.custom;
 
 import java.io.Serializable;
 
-public class ProductoId  implements Serializable{
+public class ProductoId  implements Serializable, Cloneable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1832334524878886445L;
+	private int idprodcuenta;
 	private int idProducto;
 	private String nombreProd;
 	private int cantidad;
@@ -18,11 +19,12 @@ public class ProductoId  implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 	
-	public ProductoId(int idProducto, String nombreProd, int cantidad) {
+	public ProductoId(int idProducto, String nombreProd, int cantidad, int idprodcuenta) {
 
 		this.idProducto = idProducto;
 		this.nombreProd = nombreProd;
 		this.cantidad = cantidad;
+		this.idprodcuenta = idprodcuenta;
 	}
 
 	public int getIdProducto() {
@@ -44,6 +46,23 @@ public class ProductoId  implements Serializable{
 		this.cantidad = cantidad;
 	}
 	
+	public int getIdprodcuenta() {
+		return idprodcuenta;
+	}
+
+	public void setIdprodcuenta(int idprodcuenta) {
+		this.idprodcuenta = idprodcuenta;
+	}
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 	
+	public ProductoId clonar() throws Exception {
+		ProductoId productoId = (ProductoId) this.clone();
+		
+		return productoId;
+	}
 
 }

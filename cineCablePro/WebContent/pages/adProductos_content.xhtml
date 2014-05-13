@@ -3,25 +3,34 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:my="http://java.sun.com/jsf/composite/components/paginas">
 
 	<h:form id="form-contentpage">
-	<p:growl id="mensajes" showDetail="true" />
-	
-	<p:accordionPanel id="acc">
+		<p:growl id="mensajes" autoUpdate="true" showDetail="true" />
+		<p:messages autoUpdate="true" showSummary="true" closable="true" />
+		<h1 class="title ui-widget-header" style="text-align: center;">Adicionar Productos</h1>
+		<p:panel id="panel-content" style="min-height: 300px;margin: 20px 0">
+			<h:link value="Regresar" style="float: right;" outcome="cliente?faces-redirect=true" >
+				<f:param name="idcuenta" value="#{adicionarProductosBean.productosBean.idcuenta}"></f:param>
+			</h:link>
+			<br /><br />
+			<p:accordionPanel id="acc">
 
-		<p:tab title="Productos Cliente ">
-			<h:panelGrid columns="1" cellpadding="10">
-				<my:productos_component id="idcomponenteproductos"
-					rutaPadre=":form-principal:form-contentpage:acc:idcomponenteproductos"></my:productos_component>
-			</h:panelGrid>
-		</p:tab>
+				<p:tab title="Productos Cliente ">
+					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
+						<my:productos_component id="idcomponenteproductos"
+							formPadre=":form-contentpage"
+							rutaPadre=":form-contentpage:acc:idcomponenteproductos"></my:productos_component>
+					</h:panelGrid>
+				</p:tab>
 
-	</p:accordionPanel>
-	<p:spacer height="50px"></p:spacer>
-	<center>
-	<p:commandButton value="Grabar Todo" actionListener="#{clientesNuevosBean.grabarNuevoCliente()}" update=":form-principal:form-contentpage:mensajes" />
-	</center>
+			</p:accordionPanel>
+			<p:spacer height="50px"></p:spacer>
+			<center>
+				<p:commandButton id="btnGrabar" value="Grabar" actionListener="#{adicionarProductosBean.grabar()}" update=":form-contentpage:mensajes" />
+			</center>
+		</p:panel>
 	</h:form>
 </ui:composition>

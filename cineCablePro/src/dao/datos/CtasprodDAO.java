@@ -2,8 +2,10 @@ package dao.datos;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 
 import pojo.annotations.Ctasprod;
 
@@ -18,11 +20,23 @@ public class CtasprodDAO {
 		return max;
 	}
 	
+	public Ctasprod getCtasprodById(Session session, int idprodcuentas) throws Exception {
+		Ctasprod ctasprod;
+		
+		Criteria criteria = session.createCriteria(Ctasprod.class)
+				.add( Restrictions.eq("idprodcuentas", idprodcuentas))
+				.createAlias("estado", "est");
+		
+		ctasprod = (Ctasprod) criteria.uniqueResult();
+		
+		return ctasprod;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Ctasprod> lisCtasprod(Session session, int idcuenta, int idempresa) throws Exception {
 		List<Ctasprod> lisCtasprod = null;
 		
-		String hql = " select  from Ctasprod as c join c.producto as p ";
+		String hql = " from Ctasprod as c left join fetch c.producto as p ";
 		hql += " where c.ctacliente.idcuenta = :idcuenta ";
 		hql += " and c.estado.idestado = :idestado ";
 		hql += " and c.empresa.idempresa = :idempresa ";
