@@ -2,10 +2,12 @@ package bean.controladores;
 
 import java.io.Serializable;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
+import util.FacesUtil;
 import util.MessageUtil;
 import bo.negocio.CtasprodBO;
 
@@ -21,7 +23,22 @@ public class AdicionarProductosBean implements Serializable{
 	@ManagedProperty(value="#{productosBean}") 
 	private ProductosBean productosBean;
 	
+	private int idcuenta;
+	
 	public AdicionarProductosBean() {
+		idcuenta = 0;
+	}
+	
+	@PostConstruct
+	public void initAdicionarProductosBean() {
+		FacesUtil facesUtil = new FacesUtil();
+		idcuenta = Integer
+				.parseInt(facesUtil.getParametroUrl("idcuenta") != null ? facesUtil
+						.getParametroUrl("idcuenta").toString() : "0");
+
+		if (idcuenta > 0) {
+			//consultarProductos();
+		}
 	}
 
 	public void grabar(){
@@ -48,5 +65,13 @@ public class AdicionarProductosBean implements Serializable{
 
 	public void setProductosBean(ProductosBean productosBean) {
 		this.productosBean = productosBean;
+	}
+
+	public int getIdcuenta() {
+		return idcuenta;
+	}
+
+	public void setIdcuenta(int idcuenta) {
+		this.idcuenta = idcuenta;
 	}
 }
