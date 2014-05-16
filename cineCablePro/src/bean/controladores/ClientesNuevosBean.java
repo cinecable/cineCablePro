@@ -106,6 +106,25 @@ public class ClientesNuevosBean implements Serializable{
 									ctacliente.setIdcobrador(cobrador.getIdpersona());
 									ctacliente.setIdvendedor(vendedor.getIdpersona());
 									
+									if(direccionInstalacionBean.getDireccion().getCalleprincipal() != null && direccionInstalacionBean.getDireccion().getCalleprincipal().getIdcalleprincipal() == 0){
+										direccionInstalacionBean.getDireccion().setCalleprincipal(null);
+									}
+									if(direccionInstalacionBean.getDireccion().getCallesecundaria() != null && direccionInstalacionBean.getDireccion().getCallesecundaria().getIdcallesecundaria() == 0){
+										direccionInstalacionBean.getDireccion().setCallesecundaria(null);
+									}
+									if(direccionCorrespondenciaBean.getDireccion().getCalleprincipal() != null && direccionCorrespondenciaBean.getDireccion().getCalleprincipal().getIdcalleprincipal() == 0){
+										direccionCorrespondenciaBean.getDireccion().setCalleprincipal(null);
+									}
+									if(direccionCorrespondenciaBean.getDireccion().getCallesecundaria() != null && direccionCorrespondenciaBean.getDireccion().getCallesecundaria().getIdcallesecundaria() == 0){
+										direccionCorrespondenciaBean.getDireccion().setCallesecundaria(null);
+									}
+									if(direccionConbranzaBean.getDireccion().getCalleprincipal() != null && direccionConbranzaBean.getDireccion().getCalleprincipal().getIdcalleprincipal() == 0){
+										direccionConbranzaBean.getDireccion().setCalleprincipal(null);
+									}
+									if(direccionConbranzaBean.getDireccion().getCallesecundaria() != null && direccionConbranzaBean.getDireccion().getCallesecundaria().getIdcallesecundaria() == 0){
+										direccionConbranzaBean.getDireccion().setCallesecundaria(null);
+									}
+									
 									ctaclienteBO.grabarCliente(ctacliente, dbasCliBean.getConyuge(), productosBean.getLisProductosId(), direccionInstalacionBean.getDireccion(), direccionCorrespondenciaBean.getDireccion(), direccionConbranzaBean.getDireccion(), debitosBancariosBean.getDebitobco(), telefonosBean.getLisTelefonos());
 									
 									new MessageUtil().showInfoMessage("Listo!", "Grabado con exito");
