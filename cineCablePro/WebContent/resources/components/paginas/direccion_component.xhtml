@@ -45,7 +45,7 @@
                    
                    
                    <h:outputLabel value="Sector :" for="idcombosector" />
-                     <p:selectOneMenu id="idcombosector" value="#{direccionBean.sectorSelected.idsector}" style="width: 150px">
+                     <p:selectOneMenu id="idcombosector" value="#{direccionBean.direccion.sector.idsector}" style="width: 150px">
                        <f:selectItems value="#{direccionBean.lisSector}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idsector}" />
                     <p:ajax listener="#{direccionBean.llenarDependientesSector()}" update="#{cc.attrs.rutaPadre}:form-direccioncomponent:idcombosector,
                     #{cc.attrs.rutaPadre}:form-direccioncomponent:idComboEdificio,#{cc.attrs.rutaPadre}:form-direccioncomponent:idComboCallePrin,
@@ -54,14 +54,14 @@
                    </p:selectOneMenu>
                    
                     <h:outputLabel value="Tipo Sector :" for="idComboTipoSector" />
-                    <p:selectOneMenu id="idComboTipoSector" disabled="#{direccionBean.habilitaTipoSector}" value="#{direccionBean.tiposectorSelected.idtiposector}" style="width: 150px">
+                    <p:selectOneMenu id="idComboTipoSector" disabled="#{direccionBean.habilitaTipoSector}" value="#{direccionBean.direccion.tiposector.idtiposector}" style="width: 150px">
                        <f:selectItems value="#{direccionBean.lisTipoSector}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idtiposector}" />
                    <p:ajax listener="#{direccionBean.llenarDependientesTipoSector()}" update="#{cc.attrs.rutaPadre}:form-direccioncomponent:idComboCallesec,
                    #{cc.attrs.rutaPadre}:form-direccioncomponent:idComboCallePrin,#{cc.attrs.rutaPadre}:form-direccioncomponent:idComboUbicacion" />                          
                    </p:selectOneMenu>
                    
                    <h:outputLabel value="Calle Principal  :" for="idComboCallePrin" />
-                <p:autoComplete id="idComboCallePrin" size="60" value="#{direccionBean.calleprincipalSelected}" completeMethod="#{direccionBean.CompletarCallesPrincipales}" 
+                <p:autoComplete id="idComboCallePrin" size="60" value="#{direccionBean.direccion.calleprincipal}" completeMethod="#{direccionBean.CompletarCallesPrincipales}" 
 				var="i" itemLabel="#{i.nombre}" itemValue="#{i}" converter="callePrincipal" minQueryLength="1"  
 				forceSelection="true" required="true" requiredMessage="Ingresar Calle Principal">
 					
@@ -74,7 +74,7 @@
 				</p:autoComplete>
 				
 	            <h:outputLabel value="Calle Secundaria :" for="idComboCallesec" />
-	            <p:autoComplete id="idComboCallesec" size="60" value="#{direccionBean.callesecundariaSelected}" completeMethod="#{direccionBean.CompletarCallesSecundarias}" 
+	            <p:autoComplete id="idComboCallesec" size="60" value="#{direccionBean.direccion.callesecundaria}" completeMethod="#{direccionBean.CompletarCallesSecundarias}" 
 					var="i" itemLabel="#{i.nombre}" itemValue="#{i}" converter="calleSecundaria" minQueryLength="1"  
 					forceSelection="true" required="true" requiredMessage="Ingresar Calle Secundaria">
 						
@@ -87,28 +87,28 @@
 				</p:autoComplete>                  
                   
                     <h:outputLabel value="Ubicacion :" for="idComboUbicacion" />
-                    <p:selectOneMenu id="idComboUbicacion" value="#{direccionBean.ubicacionSelected.idubicacion}" style="width: 150px">
+                    <p:selectOneMenu id="idComboUbicacion" value="#{direccionBean.direccion.ubicacion.idubicacion}" style="width: 150px">
                        <f:selectItems value="#{direccionBean.lisUbicacion}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idubicacion}" />
                    </p:selectOneMenu>
                    
                     <h:outputLabel value="Edificio :" for="idComboEdificio" />
-                     <p:selectOneMenu id="idComboEdificio" value="#{direccionBean.edificioSelected.idedificio}" style="width: 150px">
+                     <p:selectOneMenu id="idComboEdificio" value="#{direccionBean.direccion.edificio.idedificio}" style="width: 150px">
                        <f:selectItems value="#{direccionBean.lisEdificio}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idedificio}" />
                    </p:selectOneMenu>
                    
                    <h:outputLabel value="Nodo :" for="idComboNodos" />
-                    <p:selectOneMenu id="idComboNodos" value="#{direccionBean.nodosSelected.idnodo}" style="width: 150px">
+                    <p:selectOneMenu id="idComboNodos" value="#{direccionBean.direccion.nodos.idnodo}" style="width: 150px">
                        <f:selectItems value="#{direccionBean.lisNodos}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idnodo}" />
                    </p:selectOneMenu>
                  
                   <h:outputLabel value="Numero :" for="idtxtnub" />               
-                  <p:inputText id="idtxtnub" size="10" maxlength="20" value="#{direccionBean.numeroUbicacion}"/>
+                  <p:inputText id="idtxtnub" size="10" maxlength="20" value="#{direccionBean.direccion.numero}"/>
                   
                   <h:outputLabel value="Piso :" for="idtxtpiso" />
-                  <p:inputText id="idtxtpiso" size="10" value="#{direccionBean.idPiso}" />
+                  <p:inputText id="idtxtpiso" size="10" value="#{direccionBean.direccion.piso}" />
                   
                   <h:outputLabel value="Departamento/Oficina :" for="idtxtDO" />
-                  <p:inputText id="idtxtDO" size="10" value="#{direccionBean.idDepartamento}"/>
+                  <p:inputText id="idtxtDO" size="10" value="#{direccionBean.direccion.departamento}"/>
                                 
                    <h:outputLabel value="Referencia :" for="idReferencia" />
                   <p:inputTextarea id ="idReferencia" rows="6" cols="33" style="width: 100%" />                

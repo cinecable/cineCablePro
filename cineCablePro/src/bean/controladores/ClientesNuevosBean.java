@@ -237,10 +237,10 @@ public class ClientesNuevosBean implements Serializable{
 			if(direccionInstalacionBean.getDireccion().getSector() != null && direccionInstalacionBean.getDireccion().getSector().getIdsector() > 0){
 				ok = true;
 			}else{
-				new MessageUtil().showWarnMessage("Debe seleccionar el sector de Instalación en seccion Direccion", null);
+				new MessageUtil().showWarnMessage("Debe seleccionar el sector en la seccion Direccion de Instalacion", null);
 			}
 		}else{
-			new MessageUtil().showWarnMessage("Debe seleccionar la ciudad de Instalación en seccion Direccion", null);
+			new MessageUtil().showWarnMessage("Debe seleccionar la ciudad en la seccion Direccion de Instalacion", null);
 		}
 		
 		if(ok){
@@ -251,11 +251,11 @@ public class ClientesNuevosBean implements Serializable{
 							ok = true;
 						}else{
 							ok = false;
-							new MessageUtil().showWarnMessage("Debe seleccionar calle secundaria en seccion Direccion", null);
+							new MessageUtil().showWarnMessage("Debe seleccionar calle secundaria en la seccion Direccion de Instalacion", null);
 						}
 					}else{
 						ok = false;
-						new MessageUtil().showWarnMessage("Debe seleccionar calle principal en seccion Direccion", null);
+						new MessageUtil().showWarnMessage("Debe seleccionar calle principal en la seccion Direccion de Instalacion", null);
 					}
 				}else{
 					if(direccionInstalacionBean.getDireccion().getTiposector().getIdtiposector() == Parametro.TIPO_SECTOR_URBANIZACION){
@@ -264,11 +264,11 @@ public class ClientesNuevosBean implements Serializable{
 								ok = true;
 							}else{
 								ok = false;
-								new MessageUtil().showWarnMessage("Debe seleccionar solar en seccion Direccion", null);
+								new MessageUtil().showWarnMessage("Debe seleccionar solar en la seccion Direccion de Instalacion", null);
 							}
 						}else{
 							ok = false;
-							new MessageUtil().showWarnMessage("Debe seleccionar ubicacion en seccion Direccion", null);
+							new MessageUtil().showWarnMessage("Debe seleccionar ubicacion en la seccion Direccion de Instalacion", null);
 						}
 					}
 				}
@@ -282,15 +282,15 @@ public class ClientesNuevosBean implements Serializable{
 						ok = true;
 					}else{
 						ok = false;
-						new MessageUtil().showWarnMessage("Debe ingresar una viñeta en seccion Direccion", null);
+						new MessageUtil().showWarnMessage("Debe ingresar una viñeta en la seccion Direccion de Instalacion", null);
 					}
 				}else{
 					ok = false;
-					new MessageUtil().showWarnMessage("Debe ingresar un numero en seccion Direccion", null);
+					new MessageUtil().showWarnMessage("Debe ingresar un numero en la seccion Direccion de Instalacion", null);
 				}
 			}else{
 				ok = false;
-				new MessageUtil().showWarnMessage("Debe seleccionar nodo en seccion Direccion", null);
+				new MessageUtil().showWarnMessage("Debe seleccionar nodo en la seccion Direccion de Instalacion", null);
 			}
 		}
 		
@@ -301,26 +301,28 @@ public class ClientesNuevosBean implements Serializable{
 						ok = true;
 					}else{
 						ok = false;
-						new MessageUtil().showWarnMessage("Debe ingresar un numero de departamento en seccion Direccion", null);
+						new MessageUtil().showWarnMessage("Debe ingresar un numero de departamento en la seccion Direccion de Instalacion", null);
 					}
 				}else{
 					ok = false;
-					new MessageUtil().showWarnMessage("Debe ingresar un numero de piso en seccion Direccion", null);
+					new MessageUtil().showWarnMessage("Debe ingresar un numero de piso en la seccion Direccion de Instalacion", null);
 				}
 			}
 		}
 		
 		//validaciones de direccion de correspondencia
-		if(direccionCorrespondenciaBean.getCiudadSelected() != null && direccionCorrespondenciaBean.getCiudadSelected().getIdciudad() > 0){
-			if(direccionCorrespondenciaBean.getDireccion().getSector() != null && direccionCorrespondenciaBean.getDireccion().getSector().getIdsector() > 0){
-				ok = true;
+		if(ok){
+			if(direccionCorrespondenciaBean.getCiudadSelected() != null && direccionCorrespondenciaBean.getCiudadSelected().getIdciudad() > 0){
+				if(direccionCorrespondenciaBean.getDireccion().getSector() != null && direccionCorrespondenciaBean.getDireccion().getSector().getIdsector() > 0){
+					ok = true;
+				}else{
+					ok = false;
+					new MessageUtil().showWarnMessage("Debe seleccionar el sector en la seccion Direccion de Correspondencia", null);
+				}
 			}else{
 				ok = false;
-				new MessageUtil().showWarnMessage("Debe seleccionar el sector de Instalación en seccion Direccion", null);
+				new MessageUtil().showWarnMessage("Debe seleccionar la ciudad de Instalación en la seccion Direccion de Correspondencia", null);
 			}
-		}else{
-			ok = false;
-			new MessageUtil().showWarnMessage("Debe seleccionar la ciudad de Instalación en seccion Direccion", null);
 		}
 		
 		if(ok){
@@ -331,11 +333,11 @@ public class ClientesNuevosBean implements Serializable{
 							ok = true;
 						}else{
 							ok = false;
-							new MessageUtil().showWarnMessage("Debe seleccionar calle secundaria en seccion Direccion", null);
+							new MessageUtil().showWarnMessage("Debe seleccionar calle secundaria en la seccion Direccion de Correspondencia", null);
 						}
 					}else{
 						ok = false;
-						new MessageUtil().showWarnMessage("Debe seleccionar calle principal en seccion Direccion", null);
+						new MessageUtil().showWarnMessage("Debe seleccionar calle principal en la seccion Direccion de Correspondencia", null);
 					}
 				}else{
 					if(direccionCorrespondenciaBean.getDireccion().getTiposector().getIdtiposector() == Parametro.TIPO_SECTOR_URBANIZACION){
@@ -344,11 +346,11 @@ public class ClientesNuevosBean implements Serializable{
 								ok = true;
 							}else{
 								ok = false;
-								new MessageUtil().showWarnMessage("Debe seleccionar solar en seccion Direccion", null);
+								new MessageUtil().showWarnMessage("Debe seleccionar solar en la seccion Direccion de Correspondencia", null);
 							}
 						}else{
 							ok = false;
-							new MessageUtil().showWarnMessage("Debe seleccionar ubicacion en seccion Direccion", null);
+							new MessageUtil().showWarnMessage("Debe seleccionar ubicacion en la seccion Direccion de Correspondencia", null);
 						}
 					}
 				}
@@ -362,15 +364,15 @@ public class ClientesNuevosBean implements Serializable{
 						ok = true;
 					}else{
 						ok = false;
-						new MessageUtil().showWarnMessage("Debe ingresar una viñeta en seccion Direccion", null);
+						new MessageUtil().showWarnMessage("Debe ingresar una viñeta en la seccion Direccion de Correspondencia", null);
 					}
 				}else{
 					ok = false;
-					new MessageUtil().showWarnMessage("Debe ingresar un numero en seccion Direccion", null);
+					new MessageUtil().showWarnMessage("Debe ingresar un numero en la seccion Direccion de Correspondencia", null);
 				}
 			}else{
 				ok = false;
-				new MessageUtil().showWarnMessage("Debe seleccionar nodo en seccion Direccion", null);
+				new MessageUtil().showWarnMessage("Debe seleccionar nodo en la seccion Direccion de Correspondencia", null);
 			}
 		}
 		
@@ -381,26 +383,28 @@ public class ClientesNuevosBean implements Serializable{
 						ok = true;
 					}else{
 						ok = false;
-						new MessageUtil().showWarnMessage("Debe ingresar un numero de departamento en seccion Direccion", null);
+						new MessageUtil().showWarnMessage("Debe ingresar un numero de departamento en la seccion Direccion de Correspondencia", null);
 					}
 				}else{
 					ok = false;
-					new MessageUtil().showWarnMessage("Debe ingresar un numero de piso en seccion Direccion", null);
+					new MessageUtil().showWarnMessage("Debe ingresar un numero de piso en la seccion Direccion de Correspondencia", null);
 				}
 			}
 		}
 		
 		//validaciones de direccion de cobranza
-		if(direccionConbranzaBean.getCiudadSelected() != null && direccionConbranzaBean.getCiudadSelected().getIdciudad() > 0){
-			if(direccionConbranzaBean.getDireccion().getSector() != null && direccionConbranzaBean.getDireccion().getSector().getIdsector() > 0){
-				ok = true;
+		if(ok){
+			if(direccionConbranzaBean.getCiudadSelected() != null && direccionConbranzaBean.getCiudadSelected().getIdciudad() > 0){
+				if(direccionConbranzaBean.getDireccion().getSector() != null && direccionConbranzaBean.getDireccion().getSector().getIdsector() > 0){
+					ok = true;
+				}else{
+					ok = false;
+					new MessageUtil().showWarnMessage("Debe seleccionar el sector en la seccion Direccion de Cobranza", null);
+				}
 			}else{
 				ok = false;
-				new MessageUtil().showWarnMessage("Debe seleccionar el sector de Instalación en seccion Direccion", null);
+				new MessageUtil().showWarnMessage("Debe seleccionar la ciudad en la seccion Direccion de Cobranza", null);
 			}
-		}else{
-			ok = false;
-			new MessageUtil().showWarnMessage("Debe seleccionar la ciudad de Instalación en seccion Direccion", null);
 		}
 		
 		if(ok){
@@ -411,11 +415,11 @@ public class ClientesNuevosBean implements Serializable{
 							ok = true;
 						}else{
 							ok = false;
-							new MessageUtil().showWarnMessage("Debe seleccionar calle secundaria en seccion Direccion", null);
+							new MessageUtil().showWarnMessage("Debe seleccionar calle secundaria en la seccion Direccion de Cobranza", null);
 						}
 					}else{
 						ok = false;
-						new MessageUtil().showWarnMessage("Debe seleccionar calle principal en seccion Direccion", null);
+						new MessageUtil().showWarnMessage("Debe seleccionar calle principal en la seccion Direccion de Cobranza", null);
 					}
 				}else{
 					if(direccionConbranzaBean.getDireccion().getTiposector().getIdtiposector() == Parametro.TIPO_SECTOR_URBANIZACION){
@@ -424,11 +428,11 @@ public class ClientesNuevosBean implements Serializable{
 								ok = true;
 							}else{
 								ok = false;
-								new MessageUtil().showWarnMessage("Debe seleccionar solar en seccion Direccion", null);
+								new MessageUtil().showWarnMessage("Debe seleccionar solar en la seccion Direccion de Cobranza", null);
 							}
 						}else{
 							ok = false;
-							new MessageUtil().showWarnMessage("Debe seleccionar ubicacion en seccion Direccion", null);
+							new MessageUtil().showWarnMessage("Debe seleccionar ubicacion en la seccion Direccion de Cobranza", null);
 						}
 					}
 				}
@@ -442,15 +446,15 @@ public class ClientesNuevosBean implements Serializable{
 						ok = true;
 					}else{
 						ok = false;
-						new MessageUtil().showWarnMessage("Debe ingresar una viñeta en seccion Direccion", null);
+						new MessageUtil().showWarnMessage("Debe ingresar una viñeta en la seccion Direccion de Cobranza", null);
 					}
 				}else{
 					ok = false;
-					new MessageUtil().showWarnMessage("Debe ingresar un numero en seccion Direccion", null);
+					new MessageUtil().showWarnMessage("Debe ingresar un numero en la seccion Direccion de Cobranza", null);
 				}
 			}else{
 				ok = false;
-				new MessageUtil().showWarnMessage("Debe seleccionar nodo en seccion Direccion", null);
+				new MessageUtil().showWarnMessage("Debe seleccionar nodo en la seccion Direccion de Cobranza", null);
 			}
 		}
 		
@@ -461,11 +465,11 @@ public class ClientesNuevosBean implements Serializable{
 						ok = true;
 					}else{
 						ok = false;
-						new MessageUtil().showWarnMessage("Debe ingresar un numero de departamento en seccion Direccion", null);
+						new MessageUtil().showWarnMessage("Debe ingresar un numero de departamento en la seccion Direccion de Cobranza", null);
 					}
 				}else{
 					ok = false;
-					new MessageUtil().showWarnMessage("Debe ingresar un numero de piso en seccion Direccion", null);
+					new MessageUtil().showWarnMessage("Debe ingresar un numero de piso en la seccion Direccion de Cobranza", null);
 				}
 			}
 		}

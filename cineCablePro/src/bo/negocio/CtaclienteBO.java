@@ -283,7 +283,6 @@ public class CtaclienteBO {
     	Session session = null;
     	
     	try{
-    		ClienteDAO clientesDAO = new ClienteDAO();
     		CtasprodDAO ctasprodDAO = new CtasprodDAO();
     		DireccionDAO direccionDAO = new DireccionDAO();
     		ReferenciadirDAO referenciadirDAO = new ReferenciadirDAO();
@@ -296,20 +295,9 @@ public class CtaclienteBO {
 			Date fecharegistro = new Date();
 			UsuarioBean usuarioBean = (UsuarioBean)new FacesUtil().getSessionBean("usuarioBean");
 			
-			//primero grabar cliente por fk con ctacliente
-			Tipocliente tipocliente = new Tipocliente();
-			tipocliente.setIdtipocliente(1);
-			ctacliente.getClientes().setTipocliente(tipocliente);
-			ctacliente.getClientes().setEmpresa(usuarioBean.getUsuario().getEmpresa());
-			
-			//Auditoria cliente
-			ctacliente.getClientes().setFecha(fecharegistro);
-			ctacliente.getClientes().setHora(fecharegistro);
-			ctacliente.getClientes().setIp(usuarioBean.getIp());
-			ctacliente.getClientes().setUsuario(usuarioBean.getUsuario());
-			
-			//grabar
-			clientesDAO.saveClientes(session, ctacliente.getClientes());
+			//primero consultar el cliente
+			Ctacliente tmp = ctaclienteDAO.getCtaclienteById(session, ctacliente.getIdcuenta());
+			ctacliente.setClientes(tmp.getClientes());
 			
 			//ahora si grabar ctacliente
 			//codigo secuencial
