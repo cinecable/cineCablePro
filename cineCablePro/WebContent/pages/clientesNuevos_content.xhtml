@@ -1,13 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:my="http://java.sun.com/jsf/composite/components/paginas">
 
-	<p:growl id="mensajes" showDetail="true" />
-	<h1 class="title ui-widget-header ui-corner-all">Clientes Nuevos</h1>
-	<my:direccion_component id="idcomponentedireccion" rutaPadre=":form-principal:form-contentpage:idcomponentedireccion"></my:direccion_component>
+	<h:form id="form-contentpage">
+		<p:growl id="mensajes" autoUpdate="true" showDetail="true" />
+		<p:messages autoUpdate="true" showSummary="true" closable="true" />
+		<h1 class="title ui-widget-header" style="text-align: center;">Clientes	Nuevos</h1>
+		<p:panel id="panel-content" style="min-height: 300px;margin: 20px 0">
+			<br />
+			<p:accordionPanel id="acc">
+
+				<p:tab title="Datos Basicos" titleStyleClass="tabStyle">
+					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
+						<my:dBasicosCli_component id="idcomponentedbasicos"
+							rutaPadre=":form-contentpage:acc:idcomponentedbasicos"></my:dBasicosCli_component>
+					</h:panelGrid>
+				</p:tab>
+
+				<p:tab title="Productos Cliente " titleStyleClass="tabStyle">
+					<br />
+					<h:panelGrid id="pnlcabeceraProducto" columns="2" style="width: 100%">
+						<h:outputLabel value="Nombre de Cuenta *: " for="idtxncta" />
+						<p:inputText id="idtxncta" size="45"
+							value="#{clientesNuevosBean.ctacliente.nombre}" style="width: 250px" required="true" requiredMessage="Ingrese Nombre de la Cuenta" />
+							
+						<h:outputLabel value="Nombre Cobrador : " for="txtnombrecobrador" />
+						<p:autoComplete id="txtnombrecobrador" size="80" value="#{clientesNuevosBean.cobrador}" completeMethod="#{clientesNuevosBean.buscarCobrador}" 
+						var="c" itemLabel="#{c.nombre1} #{c.nombre2} #{c.apellido1} #{c.apellido2}" itemValue="#{c}" converter="persona" minQueryLength="1"  
+						forceSelection="true" >
+							<p:ajax event="itemSelect" update=":form-contentpage:mensajes"></p:ajax>
+						</p:autoComplete>
+						
+						<h:outputLabel value="Nombre Vendedor : " for="txtnombrevendedor" />
+						<p:autoComplete id="txtnombrevendedor" size="80" value="#{clientesNuevosBean.vendedor}" completeMethod="#{clientesNuevosBean.buscarVendedor}" 
+						var="v" itemLabel="#{v.nombre1} #{v.nombre2} #{v.apellido1} #{v.apellido2}" itemValue="#{v}" converter="persona" minQueryLength="1"  
+						forceSelection="true" >
+							<p:ajax event="itemSelect" update=":form-contentpage:mensajes"></p:ajax>
+						</p:autoComplete>
+					</h:panelGrid>
+					
+					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
+
+						<my:productos_component id="idcomponenteproductos" formPadre=":form-contentpage"
+								rutaPadre=":form-contentpage:acc:idcomponenteproductos"></my:productos_component>
+
+					</h:panelGrid>
+				</p:tab>
+				<p:tab title="Direccion" titleStyleClass="tabStyle">
+					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
+						<p:fieldset id="idmarcoinstalacion" legend="Dirección de Instalación"> 
+							<my:direccion_component2 id="idcomponentedireccioninstalacion" bean="#{clientesNuevosBean.direccionInstalacionBean}" ></my:direccion_component2>
+						</p:fieldset>
+						
+						<p:fieldset id="idmarcocorrespondencia" legend="Dirección de Correspondencia" toggleable="true" toggleSpeed="500" collapsed="true">
+							<br />
+							<p:commandButton value="Hacer Dirección igual que Instalación" action="#{clientesNuevosBean.direccionCorrespondenciaIgual()}" update=":form-contentpage:mensajes, idcomponentedireccioncorrespondencia:form-direccioncomponent" immediate="true" ></p:commandButton>
+							<my:direccion_component2 id="idcomponentedireccioncorrespondencia" bean="#{clientesNuevosBean.direccionCorrespondenciaBean}"></my:direccion_component2>
+						</p:fieldset>
+						
+						<p:fieldset id="idmarcocobranza" legend="Dirección de Cobranza" toggleable="true" toggleSpeed="500" collapsed="true">
+							<br />
+							<p:commandButton value="Hacer Dirección igual que Instalación" action="#{clientesNuevosBean.direccionCobranzaIgual()}" update=":form-contentpage:mensajes, idcomponentedireccioncobranza:form-direccioncomponent" immediate="true" ></p:commandButton>
+							<my:direccion_component2 id="idcomponentedireccioncobranza" bean="#{clientesNuevosBean.direccionConbranzaBean}"></my:direccion_component2>
+						</p:fieldset>
+					</h:panelGrid>
+				</p:tab>
+				<p:tab title="Debito Bancario" titleStyleClass="tabStyle">
+					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
+
+						<my:dbancario_component id="idcomponentedbancario" ></my:dbancario_component>
+					</h:panelGrid>
+				</p:tab>
+				<p:tab title="Telefonos Cliente" titleStyleClass="tabStyle">
+					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
+
+						<my:telefonos_component id="idcomponentetelefono" formPadre=":form-contentpage" rutaPadre=":form-contentpage:acc:idcomponentetelefono"></my:telefonos_component>
+					</h:panelGrid>
+				</p:tab>
+
+
+			</p:accordionPanel>
+			<p:spacer height="50px"></p:spacer>
+			<center>
+				<p:commandButton value="Grabar Todo" style="float: right;"
+					actionListener="#{clientesNuevosBean.grabarNuevoCliente()}"
+					update=":form-contentpage:mensajes" />
+				<p:commandButton value="Regresar" style="float: left;"
+					onclick="history.back();" immediate="true" />
+			</center>
+		</p:panel>
+	</h:form>
 </ui:composition>
