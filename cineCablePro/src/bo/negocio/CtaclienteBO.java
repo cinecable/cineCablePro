@@ -119,7 +119,7 @@ public class CtaclienteBO {
 			ctacliente.getClientes().setUsuario(usuarioBean.getUsuario());
 			
 			//grabar
-			clientesDAO.saveClientes(session, ctacliente.getClientes());
+			clientesDAO.ingresarClientes(session, ctacliente.getClientes());
 			
 			
 			//grabar conyuge

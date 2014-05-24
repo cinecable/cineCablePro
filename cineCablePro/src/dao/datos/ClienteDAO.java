@@ -96,7 +96,11 @@ public class ClienteDAO {
             return lisClientes;
 	}
     
-    public void saveClientes(Session session, Clientes clientes) throws Exception {
+    public void ingresarClientes(Session session, Clientes clientes) throws Exception {
     	session.save(clientes);
+    }
+    
+    public void actualizarClientes(Session session, Clientes clientes) throws Exception {
+    	session.update(clientes);
     }
 }

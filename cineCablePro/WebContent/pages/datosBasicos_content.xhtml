@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:my="http://java.sun.com/jsf/composite/components/paginas">
+
+	<h:form id="form-contentpage">
+		<p:growl id="mensajes" autoUpdate="true" showDetail="true" />
+		<p:messages autoUpdate="true" showSummary="true" closable="true" />
+		<h1 class="title ui-widget-header" style="text-align: center;">Modificación Datos Básicos</h1>
+		<p:panel id="panel-content" style="min-height: 300px;margin: 20px 0">
+			<br />
+			<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
+				<my:dBasicosCli_component id="idcomponentedbasicos"
+					rutaPadre=":form-contentpage:idcomponentedbasicos"></my:dBasicosCli_component>
+			</h:panelGrid>
+			<p:spacer height="50px"></p:spacer>
+			<center>
+				<p:commandButton value="Grabar" style="float: right;"
+					actionListener="#{datosBasicosMantBean.grabarNuevoCliente()}"
+					update=":form-contentpage:mensajes" />
+				<p:commandButton value="Regresar" style="float: left;"
+					onclick="history.back();" immediate="true" />
+			</center>
+		</p:panel>
+	</h:form>
+</ui:composition>

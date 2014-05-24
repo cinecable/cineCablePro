@@ -15,7 +15,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "conyuge", schema = "public")
-public class Conyuge implements java.io.Serializable {
+public class Conyuge implements java.io.Serializable, Cloneable {
 
 	/**
 	 * 
@@ -112,4 +112,78 @@ public class Conyuge implements java.io.Serializable {
 		this.identificacion = identificacion;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((apellido1 == null) ? 0 : apellido1.hashCode());
+		result = prime * result
+				+ ((apellido2 == null) ? 0 : apellido2.hashCode());
+		result = prime * result
+				+ ((clientes == null) ? 0 : clientes.hashCode());
+		result = prime * result
+				+ ((idconyuge == null) ? 0 : idconyuge.hashCode());
+		result = prime * result
+				+ ((identificacion == null) ? 0 : identificacion.hashCode());
+		result = prime * result + ((nombre1 == null) ? 0 : nombre1.hashCode());
+		result = prime * result + ((nombre2 == null) ? 0 : nombre2.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Conyuge other = (Conyuge) obj;
+		if (apellido1 == null) {
+			if (other.apellido1 != null)
+				return false;
+		} else if (!apellido1.equals(other.apellido1))
+			return false;
+		if (apellido2 == null) {
+			if (other.apellido2 != null)
+				return false;
+		} else if (!apellido2.equals(other.apellido2))
+			return false;
+		if (clientes == null) {
+			if (other.clientes != null)
+				return false;
+		} else if (!clientes.equals(other.clientes))
+			return false;
+		if (idconyuge == null) {
+			if (other.idconyuge != null)
+				return false;
+		} else if (!idconyuge.equals(other.idconyuge))
+			return false;
+		if (identificacion == null) {
+			if (other.identificacion != null)
+				return false;
+		} else if (!identificacion.equals(other.identificacion))
+			return false;
+		if (nombre1 == null) {
+			if (other.nombre1 != null)
+				return false;
+		} else if (!nombre1.equals(other.nombre1))
+			return false;
+		if (nombre2 == null) {
+			if (other.nombre2 != null)
+				return false;
+		} else if (!nombre2.equals(other.nombre2))
+			return false;
+		return true;
+	}
+	
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
+	public Conyuge clonar() throws Exception {
+		return (Conyuge)this.clone();
+	}
 }

@@ -193,14 +193,13 @@ public class ClientesNuevosBean implements Serializable{
 							ok = false;
 							new MessageUtil().showWarnMessage("Ingresar el Primer Apellido del Cónyugue en seccion Datos Basicos", null);
 						}else{
-							if(dbasCliBean.getConyuge().getApellido1() == null && dbasCliBean.getConyuge().getApellido1().trim().length() == 0){
+							if(dbasCliBean.getConyuge().getIdentificacion() == null || dbasCliBean.getConyuge().getIdentificacion().trim().length() == 0){
 								ok = false;
-								new MessageUtil().showWarnMessage("Ingresar el Primer Apellido del Cónyugue en seccion Datos Basicos", null);
+								new MessageUtil().showWarnMessage("Ingresar # Identidad del Cónyugue en seccion Datos Basicos", null);
 							}else{
-								if(dbasCliBean.getConyuge().getIdentificacion() == null && dbasCliBean.getConyuge().getIdentificacion().trim().length() == 0){
-									ok = false;
-									new MessageUtil().showWarnMessage("Ingresar # Identidad del Cónyugue en seccion Datos Basicos", null);
-								}
+								 if(!verificarId.verificarId(dbasCliBean.getConyuge().getIdentificacion())){
+									 ok = false;
+								 }
 							}
 						}
 					}	
@@ -229,8 +228,9 @@ public class ClientesNuevosBean implements Serializable{
 			}
 		
 		}catch(VerificarIdException e){
+			ok = false;
 			e.printStackTrace();
-			new MessageUtil().showWarnMessage("Aviso!", e.getMessage());
+			new MessageUtil().showWarnMessage(e.getMessage(), e.getMessage());
 		}
 		
 		return ok;

@@ -18,7 +18,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "clientes", schema = "public")
-public class Clientes implements java.io.Serializable {
+public class Clientes implements java.io.Serializable, Cloneable {
 
 	/**
 	 * 
@@ -264,6 +264,125 @@ public class Clientes implements java.io.Serializable {
 		this.identificacion = identificacion;
 	}
 
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((apellido1 == null) ? 0 : apellido1.hashCode());
+		result = prime * result
+				+ ((apellido2 == null) ? 0 : apellido2.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result
+				+ ((empresa_1 == null) ? 0 : empresa_1.hashCode());
+		result = prime * result + estadocivil;
+		result = prime * result + ((fecha == null) ? 0 : fecha.hashCode());
+		result = prime * result
+				+ ((fechanacimiento == null) ? 0 : fechanacimiento.hashCode());
+		result = prime * result + genero;
+		result = prime * result + ((hora == null) ? 0 : hora.hashCode());
+		result = prime * result
+				+ ((idcliente == null) ? 0 : idcliente.hashCode());
+		result = prime * result
+				+ ((identificacion == null) ? 0 : identificacion.hashCode());
+		result = prime * result + idtipoidentificacion;
+		result = prime * result + idtipopersona;
+		result = prime * result + ((ip == null) ? 0 : ip.hashCode());
+		result = prime * result + ((nombre1 == null) ? 0 : nombre1.hashCode());
+		result = prime * result + ((nombre2 == null) ? 0 : nombre2.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Clientes other = (Clientes) obj;
+		if (apellido1 == null) {
+			if (other.apellido1 != null)
+				return false;
+		} else if (!apellido1.equals(other.apellido1))
+			return false;
+		if (apellido2 == null) {
+			if (other.apellido2 != null)
+				return false;
+		} else if (!apellido2.equals(other.apellido2))
+			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (empresa_1 == null) {
+			if (other.empresa_1 != null)
+				return false;
+		} else if (!empresa_1.equals(other.empresa_1))
+			return false;
+		if (estadocivil != other.estadocivil)
+			return false;
+		if (fecha == null) {
+			if (other.fecha != null)
+				return false;
+		} else if (!fecha.equals(other.fecha))
+			return false;
+		if (fechanacimiento == null) {
+			if (other.fechanacimiento != null)
+				return false;
+		} else if (!fechanacimiento.equals(other.fechanacimiento))
+			return false;
+		if (genero != other.genero)
+			return false;
+		if (hora == null) {
+			if (other.hora != null)
+				return false;
+		} else if (!hora.equals(other.hora))
+			return false;
+		if (idcliente == null) {
+			if (other.idcliente != null)
+				return false;
+		} else if (!idcliente.equals(other.idcliente))
+			return false;
+		if (identificacion == null) {
+			if (other.identificacion != null)
+				return false;
+		} else if (!identificacion.equals(other.identificacion))
+			return false;
+		if (idtipoidentificacion != other.idtipoidentificacion)
+			return false;
+		if (idtipopersona != other.idtipopersona)
+			return false;
+		if (ip == null) {
+			if (other.ip != null)
+				return false;
+		} else if (!ip.equals(other.ip))
+			return false;
+		if (nombre1 == null) {
+			if (other.nombre1 != null)
+				return false;
+		} else if (!nombre1.equals(other.nombre1))
+			return false;
+		if (nombre2 == null) {
+			if (other.nombre2 != null)
+				return false;
+		} else if (!nombre2.equals(other.nombre2))
+			return false;
+		return true;
+	}
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+	
+	public Clientes clonar() throws Exception {
+		return (Clientes)this.clone();
+	}
+	
 	/*@OneToMany(fetch = FetchType.LAZY, mappedBy = "clientes")
 	public Set<?> getConyuges() {
 		return this.conyuges;

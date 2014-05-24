@@ -7,11 +7,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import bo.negocio.ConyugeBO;
+import bo.negocio.CtaclienteBO;
+
 import pojo.annotations.Clientes;
 import pojo.annotations.Conyuge;
+import pojo.annotations.Ctacliente;
 import pojo.annotations.Empresa;
 import pojo.annotations.Tipocliente;
 import pojo.annotations.Usuario;
@@ -19,6 +24,8 @@ import pojo.annotations.custom.Genero;
 import pojo.annotations.custom.TipoEstadoCivil;
 import pojo.annotations.custom.TipoIdDoc;
 import pojo.annotations.custom.TipoPersona;
+import util.FacesUtil;
+import util.MessageUtil;
 
 
 @ManagedBean
@@ -44,7 +51,11 @@ public class DbasCliBean  implements Serializable{
 	private boolean habEmpresa;
 
 	private Clientes clientes;
+	private Clientes clientesClon;
 	private Conyuge conyuge;
+	private Conyuge conyugeClon;
+	
+	private int idcuenta;
 	
 	public DbasCliBean() {
 	
@@ -52,12 +63,51 @@ public class DbasCliBean  implements Serializable{
 	 tipoPersonaSelect=new TipoPersona(0, null);
 	 titNombres="Datos Persona";
 	 clientes = new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null, null, null, null, new Date(), null, 1, 0, 1, 1, new Date(), null);
+	 clientesClon = new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null, null, null, null, new Date(), null, 1, 0, 1, 1, new Date(), null);
 	 conyuge = new Conyuge();
+	 conyugeClon = new Conyuge();
      habEmpresa=false;		
 	 CargaTDoc();
 	 
 	}
+	
+	@PostConstruct
+	public void initDbasCliBean() {
+		FacesUtil facesUtil = new FacesUtil();
+		idcuenta = Integer
+				.parseInt(facesUtil.getParametroUrl("idcuenta") != null ? facesUtil
+						.getParametroUrl("idcuenta").toString() : "0");
 
+		if (idcuenta > 0) {
+			consultarDatosBasicos();
+		}
+	}
+
+	public void consultarDatosBasicos(){
+		if(this.idcuenta > 0){
+			try {
+				CtaclienteBO ctaclienteBO = new CtaclienteBO();
+				Ctacliente ctacliente = ctaclienteBO.getCtaclienteById(idcuenta);
+				
+				if(ctacliente != null && ctacliente.getClientes() != null && ctacliente.getClientes().getIdcliente() != null && ctacliente.getClientes().getIdcliente().trim().length() > 0){
+					clientes = ctacliente.getClientes();
+					clientesClon = clientes.clonar();
+					
+					//consultar conyuge
+					ConyugeBO conyugeBO = new ConyugeBO();
+					conyuge = conyugeBO.getConyugeByIdcliente(clientes.getIdcliente());
+					if(conyuge == null){
+						conyuge = new Conyuge();
+					}
+					conyugeClon = conyuge.clonar();
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
+				new MessageUtil().showFatalMessage("Error!", "Ha ocurrido un error inesperado. Comunicar al Webmaster!");
+			}
+		}
+	}
+	
 	private void CargaTDoc() {
 		lisTipoIddoc=new ArrayList<TipoIdDoc>();
 		lisTipoIddoc.add(new TipoIdDoc(0, "Sel.Tipo Identidad"));
@@ -172,6 +222,22 @@ public class DbasCliBean  implements Serializable{
 		this.clientes = clientes;
 	}
 
+	public Clientes getClientesClon() {
+		return clientesClon;
+	}
+
+	public void setClientesClon(Clientes clientesClon) {
+		this.clientesClon = clientesClon;
+	}
+
+	public Conyuge getConyugeClon() {
+		return conyugeClon;
+	}
+
+	public void setConyugeClon(Conyuge conyugeClon) {
+		this.conyugeClon = conyugeClon;
+	}
+
 	public boolean isHabEmpresa() {
 		return habEmpresa;
 	}
@@ -202,6 +268,14 @@ public class DbasCliBean  implements Serializable{
 
 	public void setConyuge(Conyuge conyuge) {
 		this.conyuge = conyuge;
+	}
+
+	public int getIdcuenta() {
+		return idcuenta;
+	}
+
+	public void setIdcuenta(int idcuenta) {
+		this.idcuenta = idcuenta;
 	}
 	
 	

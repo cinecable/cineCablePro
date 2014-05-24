@@ -1,6 +1,8 @@
 package dao.datos;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 
 import pojo.annotations.Conyuge;
 
@@ -13,6 +15,17 @@ public class ConyugeDAO {
 		max = (object==null?0:Integer.parseInt(object.toString()));
 		
 		return max;
+	}
+	
+	public Conyuge getConyugeByIdcliente(Session session, String idcliente) throws Exception {
+		Conyuge conyuge = null;
+		
+		Criteria criteria = session.createCriteria(Conyuge.class)
+				.add( Restrictions.eq("clientes.idcliente",idcliente));
+		
+		conyuge = (Conyuge) criteria.uniqueResult();
+		
+		return conyuge;
 	}
 	
 	public void saveConyuge(Session session, Conyuge conyuge) throws Exception {
