@@ -22,7 +22,7 @@ public class Direccion implements java.io.Serializable, Cloneable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 21333028665661038L;
 	private int iddireccion;
 	private Edificio edificio;
 	private Referenciadir referenciadir;
@@ -269,7 +269,7 @@ public class Direccion implements java.io.Serializable, Cloneable {
 	protected Object clone() throws CloneNotSupportedException {
 		Direccion direccion = (Direccion) super.clone();
 		
-		if(direccion.getCalleprincipal() != null){
+		/*if(direccion.getCalleprincipal() != null){
 			direccion.setCalleprincipal((Calleprincipal)direccion.getCalleprincipal().clone());
 		}
 		
@@ -303,7 +303,7 @@ public class Direccion implements java.io.Serializable, Cloneable {
 		
 		if(direccion.getUbicacion() != null){
 			direccion.setUbicacion((Ubicacion)direccion.getUbicacion().clone());
-		}
+		}*/
 		
 		return direccion;
 	}

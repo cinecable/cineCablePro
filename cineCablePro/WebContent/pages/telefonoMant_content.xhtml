@@ -8,23 +8,23 @@
 	xmlns:my="http://java.sun.com/jsf/composite/components/paginas">
 
 	<h:form id="form-contentpage">
+		#{telefonosMantBean.vacio}
 		<p:growl id="mensajes" autoUpdate="true" showDetail="true" />
 		<p:messages autoUpdate="true" showSummary="true" closable="true" />
-		<h1 class="title ui-widget-header" style="text-align: center;">Modificación Datos Básicos</h1>
-		<h1 class="title ui-widget-header" style="text-align: center;">#{datosBasicosMantBean.ctacliente.clientes.nombre1} #{datosBasicosMantBean.ctacliente.clientes.apellido1} Cta ##{datosBasicosMantBean.ctacliente.idcuenta}</h1>
+		<h1 class="title ui-widget-header" style="text-align: center;">Modificacion Telefono</h1>
+		<h1 class="title ui-widget-header" style="text-align: center;">#{telefonosMantBean.ctacliente.clientes.nombre1} #{telefonosMantBean.ctacliente.clientes.apellido1} Cta ##{telefonosMantBean.ctacliente.idcuenta}</h1>
 		<p:panel id="panel-content" style="min-height: 300px;margin: 20px 0">
 			<h:link value="Regresar" style="float: right;" outcome="cliente?faces-redirect=true" >
-				<f:param name="idcuenta" value="#{datosBasicosMantBean.idcuenta}"></f:param>
+				<f:param name="idcuenta" value="#{telefonosMantBean.idcuenta}"></f:param>
 			</h:link>
 			<br />
 			<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
-				<my:dBasicosCli_component id="idcomponentedbasicos"
-					rutaPadre=":form-contentpage:idcomponentedbasicos"></my:dBasicosCli_component>
+				<my:telefonos_component id="idcomponentetelefono" formPadre=":form-contentpage" rutaPadre=":form-contentpage:idcomponentetelefono"></my:telefonos_component>
 			</h:panelGrid>
 			<p:spacer height="50px"></p:spacer>
 			<center>
-				<p:commandButton value="Grabar" rendered="#{datosBasicosMantBean.modificable}"
-					actionListener="#{datosBasicosMantBean.grabar()}"
+				<p:commandButton value="Grabar" rendered="#{telefonosMantBean.modificable}"
+					action="#{telefonosMantBean.grabar()}"
 					update=":form-contentpage:mensajes" />
 			</center>
 		</p:panel>

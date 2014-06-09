@@ -12,6 +12,8 @@
 		<p:messages autoUpdate="true" showSummary="true" closable="true" />
 		<h1 class="title ui-widget-header" style="text-align: center;">Clientes	Nuevos</h1>
 		<p:panel id="panel-content" style="min-height: 300px;margin: 20px 0">
+			<h:link value="Regresar" style="float: right;" outcome="gridclientes?faces-redirect=true" >
+			</h:link>
 			<br />
 			<p:accordionPanel id="acc">
 
@@ -87,11 +89,9 @@
 			</p:accordionPanel>
 			<p:spacer height="50px"></p:spacer>
 			<center>
-				<p:commandButton value="Grabar Todo" style="float: right;"
+				<p:commandButton value="Grabar Todo" 
 					actionListener="#{clientesNuevosBean.grabarNuevoCliente()}"
 					update=":form-contentpage:mensajes" />
-				<p:commandButton value="Regresar" style="float: left;"
-					onclick="history.back();" immediate="true" />
 			</center>
 		</p:panel>
 	</h:form>

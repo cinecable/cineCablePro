@@ -10,6 +10,18 @@ import org.hibernate.criterion.Restrictions;
 import pojo.annotations.Provincia;
 
 public class ProvinciaDAO {
+	
+	public Provincia provinciaById(Session session, int idProvincia) throws Exception {
+        Provincia provincia = null;
+
+        Criteria criteria = session.createCriteria(Provincia.class)
+                .add( Restrictions.eq("idprovincia", idProvincia));
+
+        provincia = (Provincia)criteria.uniqueResult();
+
+        return provincia;
+    }
+	
 	@SuppressWarnings("unchecked")
 	public List<Provincia> lisProvinciaByPais(Session session, int idpais) throws Exception {
         List<Provincia> lisProvincia;

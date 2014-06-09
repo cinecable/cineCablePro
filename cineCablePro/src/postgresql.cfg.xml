@@ -93,5 +93,6 @@
         <mapping class="pojo.annotations.Referenciadir" />
         <mapping class="pojo.annotations.Cabimpfacturas" />
         <mapping class="pojo.annotations.Detimpfacturas" />
+        <mapping class="pojo.annotations.Mensajes" />
     </session-factory>
 </hibernate-configuration>

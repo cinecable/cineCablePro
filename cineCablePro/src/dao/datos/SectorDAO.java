@@ -10,6 +10,18 @@ import org.hibernate.criterion.Restrictions;
 import pojo.annotations.Sector;
 
 public class SectorDAO {
+	
+	public Sector sectorById(Session session, int idsector) throws Exception {
+        Sector sector;
+
+        Criteria criteria = session.createCriteria(Sector.class)
+                .add( Restrictions.eq("idsector", idsector));
+
+        sector = (Sector)criteria.uniqueResult();
+
+        return sector;
+    }
+	
 	@SuppressWarnings("unchecked")
 	public List<Sector> lisSectorByCiudad(Session session, int idCiudad) throws Exception {
         List<Sector> lisSector;

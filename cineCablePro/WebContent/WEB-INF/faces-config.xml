@@ -43,6 +43,10 @@
   <converter-id>persona</converter-id>
   <converter-class>faces.converter.PersonaConverter</converter-class>
  </converter>
+ <converter>
+  <converter-id>cliente</converter-id>
+  <converter-class>faces.converter.ClienteConverter</converter-class>
+ </converter>
  <lifecycle>
   <phase-listener>faces.listeners.SecurityPhaseListener</phase-listener>
  </lifecycle>

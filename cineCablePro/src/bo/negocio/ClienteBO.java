@@ -61,6 +61,23 @@ public class ClienteBO {
             return lisClientes;
     }
     
+    public List<Clientes> lisClientesByPageNombres(String[] nombres, int pageSize, int pageNumber, int args[]) throws RuntimeException{
+		List<Clientes> lisClientes = null;
+		Session session = null;
+		
+		try{
+			session = HibernateUtil.getSessionFactory().openSession();
+			lisClientes = clienteDAO.lisClientesByPageNombres(session, nombres, pageSize, pageNumber, args);
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new RuntimeException();
+		}finally{
+			session.close();
+		}
+		
+		return lisClientes;
+	}
+    
     public boolean modificar(Clientes clientes, Clientes clientesClon, Conyuge conyuge, Conyuge conyugeClon) throws Exception {
     	boolean ok = false;
     	Session session = null;
@@ -75,6 +92,8 @@ public class ClienteBO {
 			Date fecharegistro = new Date();
 			UsuarioBean usuarioBean = (UsuarioBean)new FacesUtil().getSessionBean("usuarioBean");
 			
+			boolean cambios = false;
+			
 			if(!clientes.equals(clientesClon)){
 				//Auditoria cliente
 				clientes.setFecha(fecharegistro);
@@ -84,6 +103,7 @@ public class ClienteBO {
 				
 				//modificar
 				clientesDAO.actualizarClientes(session, clientes);
+				cambios = true;
 			}
 			
 			if(conyuge != null){
@@ -93,16 +113,20 @@ public class ClienteBO {
 					
 					//ingresar
 					conyugeDAO.saveConyuge(session, conyuge);
+					cambios = true;
 				}else{
 					if(!conyuge.equals(conyugeClon)){
 						//modificar
 						conyugeDAO.updateConyuge(session, conyuge);
+						cambios = true;
 					}
 				}
 			}
 			
-			session.getTransaction().commit();
-			ok = true;
+			if(cambios){
+				session.getTransaction().commit();
+				ok = true;
+			}
     	}catch(Exception e){
     		session.getTransaction().rollback();
             throw new Exception(e);

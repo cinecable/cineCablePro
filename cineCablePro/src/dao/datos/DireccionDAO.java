@@ -2,8 +2,11 @@ package dao.datos;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 import pojo.annotations.Direccion;
 
@@ -32,6 +35,39 @@ public class DireccionDAO {
 		lisDireccion = (List<Direccion>) query.list();
 		
 		return lisDireccion;
+	}
+	
+	public Direccion direccionByIdcuentaTipo(Session session, int idcuenta, String tipo) throws Exception {
+		Direccion direccion = null;
+		
+		/*String hql = " select d from Direccion as d inner join d.calleprincipal inner join d.callesecundaria ";
+		hql += " where d.ctacliente.idcuenta = :idcuenta ";
+		hql += " and d.correspondencia = :tipo ";
+		hql += " order by iddireccion ";
+		
+		Query query = session.createQuery(hql)
+				.setInteger("idcuenta", idcuenta)
+				.setString("tipo", tipo);
+		
+		direccion = (Direccion)query.uniqueResult();*/
+		
+		Criteria criteria = session.createCriteria(Direccion.class)
+				.add(Restrictions.eq("ctacliente.idcuenta", idcuenta))
+				.add(Restrictions.eq("correspondencia", tipo))
+				.createAlias("calleprincipal", "cp", Criteria.LEFT_JOIN)
+				.createAlias("callesecundaria", "cs", Criteria.LEFT_JOIN)
+				.createAlias("ubicacion", "ub", Criteria.LEFT_JOIN)
+				.createAlias("referenciadir", "rf", Criteria.LEFT_JOIN)
+				//.createAlias("ctacliente", "cta", Criteria.LEFT_JOIN)
+				.createAlias("edificio", "ed", Criteria.LEFT_JOIN)
+				.createAlias("tiposector", "ts", Criteria.LEFT_JOIN)
+				.createAlias("nodos", "no", Criteria.LEFT_JOIN)
+				.createAlias("sector", "se", Criteria.LEFT_JOIN)
+				.addOrder(Order.asc("iddireccion"));
+		
+		direccion = (Direccion)criteria.uniqueResult();
+		
+		return direccion;
 	}
 	
 	public Direccion dirxCuenta(Session session,int idcuenta) throws Exception {

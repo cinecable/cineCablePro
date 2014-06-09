@@ -18,7 +18,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "telefono", schema = "public")
-public class Telefono implements java.io.Serializable {
+public class Telefono implements java.io.Serializable, Cloneable {
 
 	/**
 	 * 
@@ -85,7 +85,7 @@ public class Telefono implements java.io.Serializable {
 		this.nombre = nombre;
 	}
 
-	@Column(name = "numero", nullable = false)
+	@Column(name = "numero")
 	public int getNumero() {
 		return this.numero;
 	}
@@ -111,6 +111,15 @@ public class Telefono implements java.io.Serializable {
 
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
+	}
+	
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+	
+	public Telefono clonar() throws Exception {
+		return (Telefono)this.clone();
 	}
 
 	@Override

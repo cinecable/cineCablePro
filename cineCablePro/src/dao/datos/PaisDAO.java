@@ -10,6 +10,18 @@ import org.hibernate.criterion.Restrictions;
 import pojo.annotations.Pais;
 
 public class PaisDAO {
+	
+	public Pais paisById(Session session, int idpais) throws Exception {
+        Pais pais = null;
+
+        Criteria criteria = session.createCriteria(Pais.class)
+        		.add(Restrictions.eq("idpais", idpais));
+
+        pais = (Pais)criteria.uniqueResult();
+
+        return pais;
+    }
+	
 	 @SuppressWarnings("unchecked")
 		public List<Pais> lisPais(Session session) throws Exception {
 	        List<Pais> lisPais;

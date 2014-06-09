@@ -64,8 +64,8 @@ public class DbasCliBean  implements Serializable{
 	 titNombres="Datos Persona";
 	 clientes = new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null, null, null, null, new Date(), null, 1, 0, 1, 1, new Date(), null);
 	 clientesClon = new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null, null, null, null, new Date(), null, 1, 0, 1, 1, new Date(), null);
-	 conyuge = new Conyuge();
-	 conyugeClon = new Conyuge();
+	 conyuge = new Conyuge(null, new Clientes(), null, null, null, null);
+	 conyugeClon = new Conyuge(null, new Clientes(), null, null, null, null);
      habEmpresa=false;		
 	 CargaTDoc();
 	 
@@ -79,7 +79,7 @@ public class DbasCliBean  implements Serializable{
 						.getParametroUrl("idcuenta").toString() : "0");
 
 		if (idcuenta > 0) {
-			consultarDatosBasicos();
+			//consultarDatosBasicos();
 		}
 	}
 
@@ -96,10 +96,16 @@ public class DbasCliBean  implements Serializable{
 					//consultar conyuge
 					ConyugeBO conyugeBO = new ConyugeBO();
 					conyuge = conyugeBO.getConyugeByIdcliente(clientes.getIdcliente());
-					if(conyuge == null){
-						conyuge = new Conyuge();
+					
+					if(conyuge != null){
+						if(conyuge.getClientes() == null){
+							conyuge.setClientes(new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null, null, null, null, new Date(), null, 1, 0, 1, 1, new Date(), null));
+						}
+						
+						conyugeClon = conyuge.clonar();
+					}else{
+						conyuge = new Conyuge(null, new Clientes(), null, null, null, null);
 					}
-					conyugeClon = conyuge.clonar();
 				}
 			} catch(Exception e) {
 				e.printStackTrace();

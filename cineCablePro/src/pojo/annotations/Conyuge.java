@@ -180,7 +180,9 @@ public class Conyuge implements java.io.Serializable, Cloneable {
 	
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
-		return super.clone();
+		Conyuge conyugeClon = (Conyuge)super.clone();
+		
+		return conyugeClon;
 	}
 
 	public Conyuge clonar() throws Exception {

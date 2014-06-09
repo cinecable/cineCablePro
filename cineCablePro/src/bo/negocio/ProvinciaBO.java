@@ -15,6 +15,24 @@ public class ProvinciaBO {
         provinciaDAO = new ProvinciaDAO();
     }
     
+    public Provincia provinciaPorId(int idProvincia) throws Exception {
+        Provincia provincia = null;
+        Session session = null;
+        
+        try{
+            session = HibernateUtil.getSessionFactory().openSession();
+            provincia = provinciaDAO.provinciaById(session, idProvincia);
+        }
+        catch(Exception ex){
+            throw new Exception(ex);
+        }
+        finally{
+            session.close();
+        }
+        
+        return provincia;
+    }
+    
     public List<Provincia> consultarProvinciaPorPais(int idpais) throws Exception {
         List<Provincia> lisProvincia = null;
         Session session = null;

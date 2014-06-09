@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -24,9 +25,11 @@ import pojo.annotations.Tiposector;
 import pojo.annotations.Ubicacion;
 import pojo.annotations.Usuario;
 import util.FacesUtil;
+import util.MessageUtil;
 import bo.negocio.CallePrincipalBO;
 import bo.negocio.CallesecundariaBO;
 import bo.negocio.CiudadBO;
+import bo.negocio.DireccionBO;
 import bo.negocio.EmpresaBO;
 import bo.negocio.NodosBO;
 import bo.negocio.PaisBO;
@@ -62,6 +65,8 @@ public class DireccionBean implements Serializable{
     private Direccion direccion;
      
     private boolean habilitaTipoSector;
+    private int idcuenta;
+    private String tipo;
    
 	public DireccionBean() {
 		lisPais = new ArrayList<Pais>();
@@ -81,9 +86,204 @@ public class DireccionBean implements Serializable{
         direccion = new Direccion(0, new Edificio(), new Referenciadir(), new Ctacliente(), new Calleprincipal(), new Tiposector(0, new Usuario(), null, null, null), new Callesecundaria(), new Ubicacion(), new Nodos(), new Sector(), 0, 0, 0, null, null, null, null, null);
         
         habilitaTipoSector = false;
+        tipo = "";
         
         llenarxDefectoCombos();
     }
+	
+	@PostConstruct
+	public void initDireccionBean() {
+		FacesUtil facesUtil = new FacesUtil();
+		idcuenta = Integer
+				.parseInt(facesUtil.getParametroUrl("idcuenta") != null ? facesUtil
+						.getParametroUrl("idcuenta").toString() : "0");
+		
+		if(idcuenta > 0){
+		}
+	}
+	
+	//consultar data de la tabla de direcciones
+	//List<Direccion> lisDireccion = direccionBO.consultarDireccionesPorCuenta(idcuenta);
+	//llenar combo pais y setear el selected
+	//llenar el combo provincia segun pais y setear el selected
+	//llenar el combo ciudad segun provincia y setear el selected
+	//llenar el combo sector segun ciudad y setear el selected
+	//llenar el combo tipo sector y setear el seleccionado
+	//calle principal setear el consultado
+	//calle secundaria setear el consultado
+	//ubicacion consultar
+	//edificio consultar
+	//referenciadir consultar
+	public void consultarDireccionPorTipo(int idcuenta, String tipo){
+		try{
+			DireccionBO direccionBO = new DireccionBO();
+			direccion = direccionBO.consultarDireccionPorCuentaTipo(idcuenta, tipo);
+			
+			if(direccion == null){
+				direccion = new Direccion(0, new Edificio(), new Referenciadir(), new Ctacliente(), new Calleprincipal(), new Tiposector(0, new Usuario(), null, null, null), new Callesecundaria(), new Ubicacion(), new Nodos(), new Sector(), 0, 0, 0, null, null, null, null, null);
+			}
+			
+			if(direccion.getCalleprincipal() == null){
+				direccion.setCalleprincipal(new Calleprincipal());
+			}
+			
+			if(direccion.getCallesecundaria() == null){
+				direccion.setCallesecundaria(new Callesecundaria());
+			}
+			
+			if(direccion.getUbicacion() == null){
+				direccion.setUbicacion(new Ubicacion());
+			}
+			
+			if(direccion.getEdificio() == null){
+				direccion.setEdificio(new Edificio());
+			}
+			
+			if(direccion.getReferenciadir() == null){
+				direccion.setReferenciadir(new Referenciadir());
+			}
+			
+			if(direccion.getCtacliente() == null){
+				direccion.setCtacliente(new Ctacliente());
+			}
+			
+			if(direccion.getTiposector() == null){
+				direccion.setTiposector(new Tiposector());
+			}
+			
+			if(direccion.getSector() == null){
+				direccion.setSector(new Sector());
+			}
+		}catch(Exception ex){
+			ex.printStackTrace();
+			new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", "");
+		}
+	}
+	
+	public void consultarSectoresCiudadesProvinciasPaises(){
+		if(direccion != null && direccion.getIddireccion() > 0){
+			try{
+				//Sectores
+				Sector sector = new Sector();
+		        sector.setIdsector(0);
+		        sector.setNombre("Seleccione Sector...");
+		         
+		        lisSector = new ArrayList<Sector>();
+		        lisSector.add(sector);
+		       
+	            SectorBO sectorBO = new SectorBO();
+	            Sector sectorTmp = sectorBO.sectorById(direccion.getSector().getIdsector());
+	            
+	            List<Sector> lisSectorTmp = sectorBO.SectorxCiudad(sectorTmp.getCiudad().getIdciudad());
+	            if(lisSectorTmp != null && lisSectorTmp.size() > 0){
+	                lisSector.addAll(lisSectorTmp);
+	            }
+	            
+	            //Ciudades
+	            Ciudad ciudad = new Ciudad();
+	            ciudad.setIdciudad(0);
+	            ciudad.setNombre("Seleccione Ciudad...");
+	            
+	            lisCiudad = new ArrayList<Ciudad>();
+	            lisCiudad.add(ciudad);
+		        
+	            CiudadBO ciudadBO = new CiudadBO();
+	            Ciudad ciudadTmp = ciudadBO.ciudadById(sectorTmp.getCiudad().getIdciudad());
+	            
+	            List<Ciudad> lisCiudadTmp = ciudadBO.consultarCiudadPorProvincia(ciudadTmp.getProvincia().getIdprovincia());
+	            if(lisCiudadTmp != null && lisCiudadTmp.size() > 0){
+	            	lisCiudad.addAll(lisCiudadTmp);
+	            }
+	            
+	            ciudadSelected = ciudadTmp;
+	            
+	            //Provincias
+	            Provincia provincia = new Provincia();
+	            provincia.setIdprovincia(0);
+	            provincia.setNombre("Selecciones Provincia...");
+	            
+	            lisProvincia = new ArrayList<Provincia>();
+	            lisProvincia.add(provincia);
+	            
+	            ProvinciaBO provinciaBO = new ProvinciaBO();
+	            Provincia provinciaTmp = provinciaBO.provinciaPorId(ciudadTmp.getProvincia().getIdprovincia());
+	            
+	            List<Provincia> lisProvinciaTmp = provinciaBO.consultarProvinciaPorPais(provinciaTmp.getPais().getIdpais());
+	            if(lisProvinciaTmp != null && lisProvinciaTmp.size() > 0){
+	            	lisProvincia.addAll(lisProvinciaTmp);
+	            }
+	            
+	            provinciaSelected = provinciaTmp;
+	            
+	            //Paises
+	            Pais pais = new Pais();
+	            pais.setIdpais(0);
+	            pais.setNombre("Seleccione Pais...");
+	            
+	            lisPais = new ArrayList<Pais>();
+	            lisPais.add(pais);
+	            
+	            PaisBO paisBO = new PaisBO();
+	            Pais paisTmp = paisBO.consultaPaisPorId(provinciaTmp.getPais().getIdpais());
+	            
+	            List<Pais> lisPaisTmp = paisBO.consultarPaises();
+	            if(lisPaisTmp != null && lisPaisTmp.size() > 0){
+	            	lisPais.addAll(lisPaisTmp);
+	            }
+	            
+	            paisSelected = paisTmp;
+	            
+	            //Ubicacion
+	            Ubicacion ubicacion = new Ubicacion();
+	            ubicacion.setIdubicacion(0);
+	            ubicacion.setNombre("Seleccione Ubicacion...");
+	            
+	            lisUbicacion = new ArrayList<Ubicacion>();
+	            lisUbicacion.add(ubicacion);
+	            
+	            UbicacionBO ubicacionBO = new UbicacionBO();
+	            
+	            List<Ubicacion> lisUbicacionTmp = ubicacionBO.ConsultarUbicacionxSector(sectorTmp.getIdsector());
+	            if(lisUbicacionTmp != null && lisUbicacionTmp.size() > 0){
+	            	lisUbicacion.addAll(lisUbicacionTmp);
+	            }
+	            
+	            //Edificio
+	            Edificio edificio = new Edificio();
+	            edificio.setIdedificio(0);
+	            edificio.setNombre("Seleccione Edificio...");
+	            
+	            lisEdificio = new ArrayList<Edificio>();
+	            lisEdificio.add(edificio);
+	            
+	            EdificiosBO edificiosBO = new EdificiosBO();
+	            
+	            List<Edificio> lisEdificioTmp = edificiosBO.EdificioxSector(sectorTmp.getIdsector());
+	            if(lisEdificioTmp != null && lisEdificioTmp.size() > 0){
+	            	lisEdificio.addAll(lisEdificioTmp);
+	            }
+	            
+	            //Nodo
+	            Nodos nodos = new Nodos();
+	            nodos.setIdnodo(0);
+	            nodos.setNombre("Seleccione Nodos...");
+	            
+	            lisNodos = new ArrayList<Nodos>();
+	            lisNodos.add(nodos);
+	            
+	            NodosBO nodosBO = new NodosBO();
+	            
+	            List<Nodos> lisNodosTmp = nodosBO.ConsultaNodosxSector(sectorTmp.getIdsector());
+	            if(lisNodosTmp != null && lisNodosTmp.size() > 0){
+	            	lisNodos.addAll(lisNodosTmp);
+	            }
+	            
+			}catch(Exception e){
+				e.printStackTrace();
+				new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", "");
+			}
+		}
+	}
 	
 	private void llenarxDefectoCombos() {
     	
@@ -601,6 +801,22 @@ public class DireccionBean implements Serializable{
 
 	public void setDireccion(Direccion direccion) {
 		this.direccion = direccion;
+	}
+
+	public int getIdcuenta() {
+		return idcuenta;
+	}
+
+	public void setIdcuenta(int idcuenta) {
+		this.idcuenta = idcuenta;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 
 }

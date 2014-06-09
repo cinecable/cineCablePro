@@ -8,8 +8,21 @@
 	
 	<h:form id="form-contentpage">
 		<p:growl id="mensajes" showDetail="true" />
+		<div class="ui-messages ui-widget" style="font-size: 12px;display: #{clienteBean.mostrarMensaje ? 'inline':'none'}">
+			<div class="ui-messages-info ui-corner-all" style="padding: 15px 10px 15px 10px;">
+				<a href="#" class="ui-messages-close" onclick="$(this).parent().slideUp();return false;">
+					<span class="ui-icon ui-icon-close"></span>
+				</a>
+				<span class="ui-messages-warn-icon"></span>
+				<ul>
+					<li>
+						<span class="ui-messages-info-summary">Aviso!</span>
+						<span class="ui-messages-info-detail">#{clienteBean.mensajes.descripcion}</span>
+					</li>
+				</ul>
+			</div>
+		</div>
 		<h1 class="title ui-widget-header" style="text-align: center;">#{clienteBean.ctacliente.clientes.nombre1} #{clienteBean.ctacliente.clientes.apellido1} Cta ##{clienteBean.ctacliente.idcuenta}</h1>
-		<br />
 		<p:tabView id="idDatosCliente" > 
 		    <p:tab id="idTabDato1" title="Datos Generales">
 		        <h:panelGrid id="idpanelDatosGenerales" columns="2" > 
@@ -51,64 +64,6 @@
 		            
 				</h:panelGrid>
 			</p:tab>
-			<!-- <p:tab id="idTabDato2" title="Direccion">
-				<h:panelGrid id="idpanelDatosAdicionales" columns="2">
-					<h:outputLabel value="Pais " for="idPais" style="font-weight: bold;" />
-		            <h:outputText id="idPais" value="{dirConsultasBean.direccion.pais.nombre}" />
-				
-					<h:outputLabel value="Provincia " for="idProv" style="font-weight: bold;" />
-		            <h:outputText id="idProv" value="{dirConsultasBean.direccion.idestadoope}" />
-		            
-		            <h:outputLabel value="Ciudad " for="idCiud" style="font-weight: bold;" />
-		            <h:outputText id="idCiud" value="{dirConsultasBean.direccion.idestadoope}" />
-		            
-		            <h:outputLabel value="Sector " for="idSec" style="font-weight: bold;" />
-		            <h:outputText id="idSec" value="{dirConsultasBean.direccion.idestadoope}" />
-		            
-		            <h:outputLabel value="Subsector " for="idSSec" style="font-weight: bold;" />
-		            <h:outputText id="idSSec" value="{dirConsultasBean.direccion.idestadoope}" />
-		            
-		            <h:outputLabel value="Ubicacion " for="idUbi" style="font-weight: bold;" />
-		            <h:outputText id="idUbi" value="{dirConsultasBean.direccion.idestadoope}" />
-		            
-		            <h:outputLabel value="Calle Principal " for="idCallp" style="font-weight: bold;" />
-		            <h:outputText id="idCallep" value="{dirConsultasBean.direccion.idestadoope}" />
-		            
-		            <h:outputLabel value="Calle Secundaria " for="idCalles" style="font-weight: bold;" />
-		            <h:outputText id="idCalles" value="{dirConsultasBean.direccion.idestadoope}" />
-		            
-		             <h:outputLabel value="Urbanizacion " for="idUrb" style="font-weight: bold;" />
-		            <h:outputText id="idUrb" value="{dirConsultasBean.direccion.idestadoope}" />
-		            
-		            <h:outputLabel value="Edificio " for="idEdif" style="font-weight: bold;" />
-		            <h:outputText id="idEdif" value="{dirConsultasBean.direccion.idestadoope}" />
-		            
-		            
-		             <h:outputLabel value="Solar " for="idSol" style="font-weight: bold;" />
-		            <h:outputText id="idSol" value="{dirConsultasBean.direccion.idestadoope}" />
-		            
-		            <h:outputLabel value="Nodo " for="idNodo" style="font-weight: bold;" />
-		            <h:outputText id="idNodo" value="{dirConsultasBean.direccion.idestadoope}" />
-		            
-		             <h:outputLabel value="Poste " for="idPoste" style="font-weight: bold;" />
-		            <h:outputText id="idPoste" value="{dirConsultasBean.direccion.idestadoope}" />
-		            
-		             <h:outputLabel value="Numero " for="idNum" style="font-weight: bold;" />
-		            <h:outputText id="idNum" value="{dirConsultasBean.direccion.idestadoope}" />
-		            
-		             <h:outputLabel value="Piso " for="idPiso" style="font-weight: bold;" />
-		            <h:outputText id="idPiso" value="{dirConsultasBean.direccion.idestadoope}" />
-		            
-		             <h:outputLabel value="Departamento " for="idDep" style="font-weight: bold;" />
-		            <h:outputText id="idDep" value="{dirConsultasBean.direccion.idestadoope}" />
-		            
-		             <h:outputLabel value="Viñeta " for="idVin" style="font-weight: bold;" />
-		            <h:outputText id="idVin" value="{dirConsultasBean.direccion.idestadoope}" />
-		            
-		             <h:outputLabel value="Tab " for="idTab" style="font-weight: bold;" />
-		            <h:outputText id="idTab" value="{dirConsultasBean.direccion.idestadoope}" />
-				</h:panelGrid>
-			</p:tab> -->
 		</p:tabView>
 	</h:form>
 </ui:composition>

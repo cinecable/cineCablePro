@@ -11,6 +11,18 @@ import pojo.annotations.Ubicacion;
 
 
 public class UbicacionDAO {
+	
+	public Ubicacion ubicacionPorId(Session session, int idubicacion) throws Exception {
+        Ubicacion ubicacion;
+
+        Criteria criteria = session.createCriteria(Ubicacion.class)
+                .add( Restrictions.eq("idubicacion", idubicacion));
+
+        ubicacion = (Ubicacion)criteria.uniqueResult();
+
+        return ubicacion;
+    }
+	
 	@SuppressWarnings("unchecked")
 	public List<Ubicacion> lisUbicaccionxSector(Session session, int idSector) throws Exception {
         List<Ubicacion> lisUbicacion;

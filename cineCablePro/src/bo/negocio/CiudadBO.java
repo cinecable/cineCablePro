@@ -15,6 +15,24 @@ public class CiudadBO {
 	        ciudadDAO = new CiudadDAO();
 	    }
 	    
+	    public Ciudad ciudadById(int idCiudad) throws Exception {
+	        Ciudad ciudad = null;
+	        Session session = null;
+	        
+	        try{
+	            session = HibernateUtil.getSessionFactory().openSession();
+	            ciudad = ciudadDAO.ciudadById(session, idCiudad);
+	        }
+	        catch(Exception ex){
+	            throw new Exception(ex);
+	        }
+	        finally{
+	            session.close();
+	        }
+	        
+	        return ciudad;
+	    }
+	    
 	    public List<Ciudad> consultarCiudadPorProvincia(int idprovincia) throws Exception {
 	        List<Ciudad> lisCiudad = null;
 	        Session session = null;

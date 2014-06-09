@@ -36,6 +36,18 @@ public class DebitosbcoDAO {
         return lisDebitobco;
     }
 	
+	public Debitobco getDebitobcoByIdcuenta(Session session, int idcuenta) throws Exception {
+		Debitobco debitobco = null;
+		
+		Criteria criteria = session.createCriteria(Debitobco.class)
+				.add( Restrictions.eq("idcuenta",idcuenta))
+				.createAlias("bancos", "bco");
+		
+		debitobco = (Debitobco) criteria.uniqueResult();
+		
+		return debitobco;
+	}
+	
 	public void saveDebitobco(Session session, Debitobco debitobco) throws Exception {
 		session.save(debitobco);
 	}

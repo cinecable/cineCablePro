@@ -21,7 +21,8 @@ public class ConyugeDAO {
 		Conyuge conyuge = null;
 		
 		Criteria criteria = session.createCriteria(Conyuge.class)
-				.add( Restrictions.eq("clientes.idcliente",idcliente));
+				.createAlias("clientes", "cli")
+				.add( Restrictions.eq("cli.idcliente",idcliente));
 		
 		conyuge = (Conyuge) criteria.uniqueResult();
 		

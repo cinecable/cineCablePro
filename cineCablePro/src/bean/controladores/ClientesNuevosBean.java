@@ -215,18 +215,6 @@ public class ClientesNuevosBean implements Serializable{
 				}
 			}
 			
-			if(ok){
-				if(debitosBancariosBean.getDebitobco().getIdtipoidentificacion() > 0){
-					if(debitosBancariosBean.getDebitobco().getIdtipoidentificacion() == Parametro.TIPO_IDENTIFICACION_OTRO || verificarId.verificarId(debitosBancariosBean.getDebitobco().getIdentificacion())){
-						ok = true;
-					}else{
-						new MessageUtil().showWarnMessage("Ingresar # Identidad en seccion Debito Bancario", null);
-					}
-				}else{
-					new MessageUtil().showWarnMessage("Seleccionar Tipo Identidad en seccion Debito Bancario", null);
-				}
-			}
-		
 		}catch(VerificarIdException e){
 			ok = false;
 			e.printStackTrace();
@@ -499,56 +487,69 @@ public class ClientesNuevosBean implements Serializable{
 	public boolean validacionDebitoBcoOk(){
 		boolean ok = false;
 		
-		if(debitosBancariosBean.getDebitobco().getIdtipodebito() > 0){
-			ok = true;
-		}else{
-			new MessageUtil().showWarnMessage("Debe seleccionar una forma de cobro en seccion Debito Bancario", null);
-		}
-		
-		if(ok){
-			if(debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_BANCARIO || debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_TARJETA){
-				if(debitosBancariosBean.getDebitobco().getBancos().getIdbanco() > 0){
-					if(debitosBancariosBean.getDebitobco().getPropietario() != null && debitosBancariosBean.getDebitobco().getPropietario().trim().length() > 0){
-						if(debitosBancariosBean.getDebitobco().getNrodebito() != null && debitosBancariosBean.getDebitobco().getNrodebito().trim().length() > 0){
-							ok = true;
+		try{
+			
+			VerificarId verificarId  = new VerificarId();
+			
+			if(debitosBancariosBean.getDebitobco().getIdtipodebito() > 0){
+				ok = true;
+			}else{
+				new MessageUtil().showWarnMessage("Debe seleccionar una forma de cobro en seccion Debito Bancario", null);
+			}
+			
+			if(ok){
+				if(debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_BANCARIO || debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_TARJETA){
+					if(debitosBancariosBean.getDebitobco().getBancos().getIdbanco() > 0){
+						if(debitosBancariosBean.getDebitobco().getPropietario() != null && debitosBancariosBean.getDebitobco().getPropietario().trim().length() > 0){
+							if(debitosBancariosBean.getDebitobco().getNrodebito() != null && debitosBancariosBean.getDebitobco().getNrodebito().trim().length() > 0){
+								ok = true;
+							}else{
+								ok = false;
+								new MessageUtil().showWarnMessage("Debe ingresar Nro Doc en seccion Debito Bancario", null);
+							}
 						}else{
 							ok = false;
-							new MessageUtil().showWarnMessage("Debe ingresar Nro Doc en seccion Debito Bancario", null);
+							new MessageUtil().showWarnMessage("Debe ingresar propietario en seccion Debito Bancario", null);
 						}
 					}else{
 						ok = false;
-						new MessageUtil().showWarnMessage("Debe ingresar propietario en seccion Debito Bancario", null);
+						new MessageUtil().showWarnMessage("Debe seleccionar banco/tarjeta en seccion Debito Bancario", null);
+					}
+				}
+			}
+			
+			if(ok){
+				if(debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_BANCARIO){
+					if(debitosBancariosBean.getDebitobco().getIdtipocuenta() > 0){
+						ok = true;
+					}else{
+						ok = false;
+						new MessageUtil().showWarnMessage("Debe seleccionar tipo de cuenta en seccion Debito Bancario", null);
+					}
+				}
+			}
+			
+			if(ok){
+				if(debitosBancariosBean.getDebitobco().getIdtipoidentificacion() > 0){
+					if(debitosBancariosBean.getDebitobco().getIdentificacion() != null && debitosBancariosBean.getDebitobco().getIdentificacion().trim().length() > 0){
+						if(debitosBancariosBean.getDebitobco().getIdtipoidentificacion() == Parametro.TIPO_IDENTIFICACION_OTRO || verificarId.verificarId(debitosBancariosBean.getDebitobco().getIdentificacion())){
+							ok = true;
+						}else{
+							ok = false;
+						}
+					}else{
+						ok = false;
+						new MessageUtil().showWarnMessage("Debe ingresar # identidad en seccion Debito Bancario", null);
 					}
 				}else{
 					ok = false;
-					new MessageUtil().showWarnMessage("Debe seleccionar banco/tarjeta en seccion Debito Bancario", null);
+					new MessageUtil().showWarnMessage("Debe seleccionar tipo identidad en seccion Debito Bancario", null);
 				}
 			}
-		}
-		
-		if(ok){
-			if(debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_BANCARIO){
-				if(debitosBancariosBean.getDebitobco().getIdtipocuenta() > 0){
-					ok = true;
-				}else{
-					ok = false;
-					new MessageUtil().showWarnMessage("Debe seleccionar tipo de cuenta en seccion Debito Bancario", null);
-				}
-			}
-		}
-		
-		if(ok){
-			if(debitosBancariosBean.getDebitobco().getIdtipoidentificacion() > 0){
-				if(debitosBancariosBean.getDebitobco().getIdentificacion() != null && debitosBancariosBean.getDebitobco().getIdentificacion().trim().length() > 0){
-					ok = true;
-				}else{
-					ok = false;
-					new MessageUtil().showWarnMessage("Debe ingresar # identidad en seccion Debito Bancario", null);
-				}
-			}else{
-				ok = false;
-				new MessageUtil().showWarnMessage("Debe seleccionar tipo identidad en seccion Debito Bancario", null);
-			}
+		}catch(VerificarIdException e){
+			ok = false;
+			e.printStackTrace();
+			new MessageUtil().showWarnMessage(e.getMessage(), e.getMessage());
 		}
 		
 		return ok;

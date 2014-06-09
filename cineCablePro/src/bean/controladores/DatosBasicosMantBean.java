@@ -5,15 +5,20 @@ import global.Parametro;
 
 import java.io.Serializable;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import pojo.annotations.Clientes;
+import pojo.annotations.Ctacliente;
+import pojo.annotations.Empresa;
 
+import util.FacesUtil;
 import util.MessageUtil;
 import util.VerificarId;
 import bo.negocio.ClienteBO;
+import bo.negocio.CtaclienteBO;
 
 @ManagedBean
 @ViewScoped
@@ -27,13 +32,45 @@ public class DatosBasicosMantBean implements Serializable{
 	@ManagedProperty(value="#{dbasCliBean}")
 	private DbasCliBean dbasCliBean;
 	
-	private Clientes clientes;
-
+	private int idcuenta;
+	private Ctacliente ctacliente;
+	
+	private boolean modificable;
+	
 	public DatosBasicosMantBean() {
-		clientes = new Clientes();
+		ctacliente = new Ctacliente(0, new Empresa(), new Clientes());
 	}
 	
-	public void grabarNuevoCliente(){
+	@PostConstruct
+	public void initDatosBasicosMantBean() {
+		try{
+			FacesUtil facesUtil = new FacesUtil();
+			idcuenta = Integer
+					.parseInt(facesUtil.getParametroUrl("idcuenta") != null ? facesUtil
+							.getParametroUrl("idcuenta").toString() : "0");
+	
+			if (idcuenta > 0) {
+				//Al recibir por parametro el idcuenta, consultamos
+				CtaclienteBO ctaclienteBO = new CtaclienteBO();
+				ctacliente = ctaclienteBO.getCtaclienteById(idcuenta);
+				
+				dbasCliBean.consultarDatosBasicos();
+				
+				if(dbasCliBean.getClientes() != null && dbasCliBean.getClientes().getIdcliente() != null && dbasCliBean.getClientes().getIdcliente().trim().length() > 0){
+					modificable = true;
+				}else{
+					modificable = false;
+					new MessageUtil().showWarnMessage("Cliente no posee Datos Basicos ingresados!", "");
+				}
+			}
+		}
+		catch(Exception re){
+			re.printStackTrace();
+			new MessageUtil().showFatalMessage("Esto es Vergonzoso!", "Ha ocurrido un error inesperado. Comunicar al Webmaster!");
+		}
+	}
+	
+	public void grabar(){
 		if(validacionOk()){
 			try{
 				ClienteBO clienteBO = new ClienteBO();
@@ -147,12 +184,28 @@ public class DatosBasicosMantBean implements Serializable{
 		this.dbasCliBean = dbasCliBean;
 	}
 
-	public Clientes getClientes() {
-		return clientes;
+	public int getIdcuenta() {
+		return idcuenta;
 	}
 
-	public void setClientes(Clientes clientes) {
-		this.clientes = clientes;
+	public void setIdcuenta(int idcuenta) {
+		this.idcuenta = idcuenta;
 	}
-	
+
+	public Ctacliente getCtacliente() {
+		return ctacliente;
+	}
+
+	public void setCtacliente(Ctacliente ctacliente) {
+		this.ctacliente = ctacliente;
+	}
+
+	public boolean isModificable() {
+		return modificable;
+	}
+
+	public void setModificable(boolean modificable) {
+		this.modificable = modificable;
+	}
+
 }

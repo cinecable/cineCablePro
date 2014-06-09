@@ -58,7 +58,7 @@
                    <h:outputLabel value="Calle Principal  :" for="idComboCallePrin" />
                 <p:autoComplete id="idComboCallePrin" size="60" value="#{cc.attrs.bean.direccion.calleprincipal}" completeMethod="#{cc.attrs.bean.CompletarCallesPrincipales}" 
 				var="i" itemLabel="#{i.nombre}" itemValue="#{i}" converter="callePrincipal" minQueryLength="1"  
-				forceSelection="true" required="true" requiredMessage="Ingresar Calle Principal">
+				forceSelection="true" required="true" requiredMessage="Ingresar Calle Principal" rendered="true">
 					<p:ajax event="itemSelect" process="idComboCallePrin"></p:ajax>
 					<f:facet name="itemtip">  
 	                    <h:panelGrid  columns="2" cellpadding="5" width="250px">  
@@ -71,7 +71,7 @@
 	            <h:outputLabel value="Calle Secundaria :" for="idComboCallesec" />
 	            <p:autoComplete id="idComboCallesec" size="60" value="#{cc.attrs.bean.direccion.callesecundaria}" completeMethod="#{cc.attrs.bean.CompletarCallesSecundarias}" 
 					var="i" itemLabel="#{i.nombre}" itemValue="#{i}" converter="calleSecundaria" minQueryLength="1"  
-					forceSelection="true" required="true" requiredMessage="Ingresar Calle Secundaria">
+					forceSelection="true" required="true" requiredMessage="Ingresar Calle Secundaria" rendered="true">
 					<p:ajax event="itemSelect" process="idComboCallesec"></p:ajax>
 					<f:facet name="itemtip">  
 	                    <h:panelGrid  columns="2" cellpadding="5" width="250px">  
@@ -82,7 +82,7 @@
 				</p:autoComplete>                  
                   
                     <h:outputLabel value="Ubicacion :" for="idComboUbicacion" />
-                    <p:selectOneMenu id="idComboUbicacion" value="#{cc.attrs.bean.direccion.ubicacion.idubicacion}" style="width: 150px">
+                    <p:selectOneMenu id="idComboUbicacion" value="#{cc.attrs.bean.direccion.ubicacion.idubicacion}" style="width: 150px" rendered="true">
                        <f:selectItems value="#{cc.attrs.bean.lisUbicacion}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idubicacion}" />
                        <p:ajax process="idComboUbicacion"></p:ajax>
                    </p:selectOneMenu>

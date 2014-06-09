@@ -16,6 +16,24 @@ public class UbicacionBO {
 	        ubicacionDAO = new UbicacionDAO();
 	    }
 	    
+	    public Ubicacion ubicacionPorId(int idubicacion) throws Exception {
+	        Ubicacion ubicacion = null;
+	        Session session = null;
+	        
+	        try{
+	            session = HibernateUtil.getSessionFactory().openSession();
+	            ubicacion = ubicacionDAO.ubicacionPorId(session, idubicacion);
+	        }
+	        catch(Exception ex){
+	            throw new Exception(ex);
+	        }
+	        finally{
+	            session.close();
+	        }
+	        
+	        return ubicacion;
+	    }
+	    
 	    public List<Ubicacion> ConsultarUbicacionxSector(int idSector) throws Exception {
 	        List<Ubicacion> lisUbicacion = null;
 	        Session session = null;

@@ -49,4 +49,22 @@ public class SectorBO {
         
         return lisSector;
     }
+    
+    public Sector sectorById(int idsector) throws Exception {
+        Sector sector = null;
+        Session session = null;
+        
+        try{
+            session = HibernateUtil.getSessionFactory().openSession();
+            sector = SectorDAO.sectorById(session, idsector);
+        }
+        catch(Exception ex){
+            throw new Exception(ex);
+        }
+        finally{
+            session.close();
+        }
+        
+        return sector;
+    }
 }

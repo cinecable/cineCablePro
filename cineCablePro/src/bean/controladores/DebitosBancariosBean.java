@@ -4,10 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import bo.negocio.BancosBO;
+import bo.negocio.DebitosbcoBO;
 import bo.negocio.TiposDebitoBO;
 
 import pojo.annotations.Bancos;
@@ -18,6 +20,8 @@ import pojo.annotations.Tipodebito;
 import pojo.annotations.Tipoentidad;
 import pojo.annotations.custom.TipoCuenta;
 import pojo.annotations.custom.TipoIdDoc;
+import util.FacesUtil;
+import util.MessageUtil;
 
 
 @ManagedBean
@@ -46,6 +50,7 @@ public class DebitosBancariosBean  implements Serializable{
 	private boolean reqBanco;
 	
 	private Debitobco debitobco;
+	private int idcuenta;
 	
 	public DebitosBancariosBean() {
 		lisTipodebito = new ArrayList<Tipodebito>();
@@ -68,6 +73,31 @@ public class DebitosBancariosBean  implements Serializable{
 		cargaBcoTar();
 		CargaTDoc();
 	}
+	
+	@PostConstruct
+	public void initDebitosBancariosBean() {
+		FacesUtil facesUtil = new FacesUtil();
+		idcuenta = Integer
+				.parseInt(facesUtil.getParametroUrl("idcuenta") != null ? facesUtil
+						.getParametroUrl("idcuenta").toString() : "0");
+
+		if (idcuenta > 0) {
+			//consultarDebitoBancario();
+		}
+	}
+	
+	public void consultarDebitoBancario(){
+		if(this.idcuenta > 0){
+			try {
+				DebitosbcoBO debitosbcoBO = new DebitosbcoBO();
+				debitobco = debitosbcoBO.getDebitobcoByIdcuenta(idcuenta);
+			} catch(Exception e) {
+				e.printStackTrace();
+				new MessageUtil().showFatalMessage("Error!", "Ha ocurrido un error inesperado. Comunicar al Webmaster!");
+			}
+		}
+	}
+	
 	public void cargaTiposdb() {
 		
 		try{
@@ -293,5 +323,13 @@ public void cargaBcoTar() {
 	}
 	public void setDebitobco(Debitobco debitobco) {
 		this.debitobco = debitobco;
+	}
+
+	public int getIdcuenta() {
+		return idcuenta;
+	}
+
+	public void setIdcuenta(int idcuenta) {
+		this.idcuenta = idcuenta;
 	}	
 }

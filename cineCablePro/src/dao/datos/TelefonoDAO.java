@@ -23,7 +23,7 @@ public class TelefonoDAO {
 		List<Telefono> lisTelefono = null;
 		
 		String hql = " from Telefono ";
-		hql += " where idcuenta = :idcuenta ";
+		hql += " where ctacliente.idcuenta = :idcuenta ";
 		hql += " and idestado = :idestado ";
 		hql += " order by idtelefono ";
 		
