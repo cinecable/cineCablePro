@@ -20,6 +20,55 @@
 			<p:panelGrid id="idBasico" styleClass="gridcriterios">
 
 				<p:row>
+					<p:column colspan="5">
+						<h:outputText value="#{dbasCliBean.titNombres}" id="idtxTitNom"
+							style=" color: red" />
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column>
+						<h:outputLabel value="Primer Nombre *:" for="idtxtnom1" />
+					</p:column>
+					<p:column>
+						<p:inputText id="idtxtnom1" size="15"
+							value="#{dbasCliBean.clientes.nombre1}" style="width: 100%"
+							required="true" requiredMessage="Ingrese Primer Nombre en la Seccion de Datos Basicos" />
+					</p:column>
+					<p:column>
+						<p:spacer width="10" />
+					</p:column>
+					<p:column>
+						<h:outputLabel value="Segundo Nombre :" for="idtxtnom2" />
+					</p:column>
+					<p:column>
+						<p:inputText id="idtxtnom2" size="15"
+							value="#{dbasCliBean.clientes.nombre2}" style="width: 100%" />
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column>
+						<h:outputLabel value="Primer Apellido *:" for="idtxtape1" />
+					</p:column>
+					<p:column>
+						<p:inputText id="idtxtape1" size="15"
+							value="#{dbasCliBean.clientes.apellido1}" style="width: 100%"
+							required="true" requiredMessage="Ingrese Primer Apellido en la seccion de Datos Basicos" />
+					</p:column>
+					<p:column>
+						<p:spacer width="10" />
+					</p:column>
+					<p:column>
+						<h:outputLabel value="Segundo Apellido :" for="idtxtape2" />
+					</p:column>
+					<p:column>
+						<p:inputText id="idtxtape2" size="15"
+							value="#{dbasCliBean.clientes.apellido2}" style="width: 100%" />
+					</p:column>
+				</p:row>
+
+				<p:row>
 					<p:column>
 						<p:outputLabel value="Tipo Identidad *:" for="idCmbTdcli" />
 					</p:column>
@@ -41,7 +90,7 @@
 					<p:column>
 						<p:inputText id="idtxIdentidad" size="15"
 							value="#{dbasCliBean.clientes.idcliente}" required="true"
-							requiredMessage="Ingresar número de identidad"
+							requiredMessage="Ingrese Número de Identidad en la seccion de Datos Basicos"
 							style="width: 100%" label="Identidad" />
 					</p:column>
 				</p:row>
@@ -72,56 +121,7 @@
 							value="#{dbasCliBean.clientes.empresa_1}" style="width: 100%" />
 					</p:column>
 				</p:row>
-
-				<p:row>
-					<p:column colspan="5">
-						<h:outputText value="#{dbasCliBean.titNombres}" id="idtxTitNom"
-							style=" color: red" />
-					</p:column>
-				</p:row>
-
-				<p:row>
-					<p:column>
-						<h:outputLabel value="Primer Nombre *:" for="idtxtnom1" />
-					</p:column>
-					<p:column>
-						<p:inputText id="idtxtnom1" size="15"
-							value="#{dbasCliBean.clientes.nombre1}" style="width: 100%"
-							required="true" requiredMessage="Primer Nombre" />
-					</p:column>
-					<p:column>
-						<p:spacer width="10" />
-					</p:column>
-					<p:column>
-						<h:outputLabel value="Segundo Nombre :" for="idtxtnom2" />
-					</p:column>
-					<p:column>
-						<p:inputText id="idtxtnom2" size="15"
-							value="#{dbasCliBean.clientes.nombre2}" style="width: 100%" />
-					</p:column>
-				</p:row>
-
-				<p:row>
-					<p:column>
-						<h:outputLabel value="Primer Apellido *:" for="idtxtape1" />
-					</p:column>
-					<p:column>
-						<p:inputText id="idtxtape1" size="15"
-							value="#{dbasCliBean.clientes.apellido1}" style="width: 100%"
-							required="true" requiredMessage="Ingresar Primer Apellido" />
-					</p:column>
-					<p:column>
-						<p:spacer width="10" />
-					</p:column>
-					<p:column>
-						<h:outputLabel value="Segundo Apellido :" for="idtxtape2" />
-					</p:column>
-					<p:column>
-						<p:inputText id="idtxtape2" size="15"
-							value="#{dbasCliBean.clientes.apellido2}" style="width: 100%" />
-					</p:column>
-				</p:row>
-
+				
 				<p:row>
 					<p:column>
 						<h:outputLabel value="Fecha de Nacimiento: "
@@ -142,7 +142,7 @@
 					<p:column>
 						<p:inputText id="idtxtcorreo" size="15"
 							value="#{dbasCliBean.clientes.email}" style="width: 100%"
-							required="true" requiredMessage="Ingresar Correo Electronico"
+							required="true" requiredMessage="Ingrese Correo Electronico en la seccion de Datos Basicos"
 							validatorMessage="Formato de Correo Electrónico incorrecto">
 							<f:validateRegex
 								pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
@@ -159,6 +159,7 @@
 							value="#{dbasCliBean.clientes.estadocivil}" style="width: 150px">
 							<f:selectItems value="#{dbasCliBean.lisTipoEstadoCivil}" var="i"
 								itemLabel="#{i.nombre}" itemValue="#{i.idEstadocivil}" />
+							<p:ajax listener="#{dbasCliBean.validarEstadoCivil}" process="#{cc.attrs.rutaPadre}:form-basicoscomponent:idCmbEstCvl" update="#{cc.attrs.rutaPadre}:form-basicoscomponent:idConyuge" />
 						</p:selectOneMenu>
 					</p:column>
 					<p:column>
@@ -176,7 +177,8 @@
 					</p:column>
 
 				</p:row>
-
+			</p:panelGrid>
+			<p:panelGrid id="idConyuge" styleClass="gridcriterios" rendered="#{dbasCliBean.tieneConyuge}">
 				<p:row>
 					<p:column colspan="5">
 						<h:outputText value="Datos Conyuge" style=" color: red" />

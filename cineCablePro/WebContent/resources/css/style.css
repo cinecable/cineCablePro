@@ -295,3 +295,10 @@ h3 {
 .ui-widget-content .ui-selectonelistbox {
 	overflow: hidden;
 }
+.ui-messages {
+	position: fixed;
+	bottom: 0px;
+    right: 10px;
+	z-index: 1;
+	max-width: 900px;
+}

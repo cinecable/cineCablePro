@@ -56,7 +56,7 @@
 				</p:selectOneMenu>
 
 				<h:outputLabel value="Nro Doc :" for="idtxndoc" />
-				<p:inputText required="#{debitosBancariosBean.reqBanco}" requiredMessage="Ingresar Nro Doc"
+				<p:inputText required="#{debitosBancariosBean.reqBanco}" requiredMessage="Ingrese Nro Doc en la Seccion de Debito Bancario"
 					id="idtxndoc" size="15" maxlength="20"
 					value="#{debitosBancariosBean.debitobco.nrodebito}" style="width: 100%" >
 					<p:ajax process="idtxndoc"> </p:ajax>
@@ -78,6 +78,9 @@
 				
 				<p:spacer width="8" />
 				
+				<h:outputText value="" />
+				<h:outputText value="" />
+				
 				<p:outputLabel value="Tipo Identidad *:" for="idCmbTdcli" />
 				<p:selectOneMenu id="idCmbTdcli"
 					value="#{debitosBancariosBean.debitobco.idtipoidentificacion}"
@@ -87,17 +90,15 @@
 					<p:ajax process="idCmbTdcli"> </p:ajax>
 				</p:selectOneMenu>
 				
+				<p:spacer width="8" />
+				
 				<h:outputLabel value="# Identidad *:" for="idtxIdentidad" />
 				<p:inputText id="idtxIdentidad" size="15"
 							value="#{debitosBancariosBean.debitobco.identificacion}" required="true"
-							requiredMessage="Ingresar número de identidad"
+							requiredMessage="Ingrese Número de Identidad en la Seccion de Debito Bancario"
 							style="width: 100%" label="Identidad" >
 					<p:ajax process="idtxIdentidad"> </p:ajax>
 				</p:inputText>
-				<p:spacer width="8" />
-				<h:outputText value="" />
-				<h:outputText value="" />
-				
 			</h:panelGrid>
 		</h:form>
 	</div>

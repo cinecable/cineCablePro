@@ -103,7 +103,7 @@ public class DireccionMantBean implements Serializable {
 					direccionConbranzaBean.getDireccion().setCallesecundaria(null);
 				}
 				
-				direccionBO.modificar(idcuenta, direccionInstalacionBean.getDireccion(), direccionCorrespondenciaBean.getDireccion(), direccionConbranzaBean.getDireccion());
+				direccionBO.modificar(idcuenta, direccionInstalacionBean.getDireccion(), direccionCorrespondenciaBean.getDireccion(), direccionConbranzaBean.getDireccion(), direccionInstalacionBean.getReferenciadir(), direccionCorrespondenciaBean.getReferenciadir(), direccionConbranzaBean.getReferenciadir());
 				
 				new MessageUtil().showInfoMessage("Listo!", "Grabado con exito");
 			} catch(Exception re) {

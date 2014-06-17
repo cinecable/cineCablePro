@@ -34,6 +34,7 @@ import bo.negocio.EmpresaBO;
 import bo.negocio.NodosBO;
 import bo.negocio.PaisBO;
 import bo.negocio.ProvinciaBO;
+import bo.negocio.ReferenciadirBO;
 import bo.negocio.SectorBO;
 import bo.negocio.EdificiosBO;
 import bo.negocio.TipoSectorBO;
@@ -63,6 +64,7 @@ public class DireccionBean implements Serializable{
     private Provincia provinciaSelected;
     private Ciudad ciudadSelected;
     private Direccion direccion;
+    private Referenciadir referenciadir;
      
     private boolean habilitaTipoSector;
     private int idcuenta;
@@ -83,7 +85,8 @@ public class DireccionBean implements Serializable{
         paisSelected = new Pais();
         provinciaSelected = new Provincia(0, new Pais(), new Usuario(), null, (int) 0, null);
         ciudadSelected = new Ciudad((int)0, new Estado(), new Usuario(), new Provincia(0, new Pais(), new Usuario(), null, (int) 0, null), null, null);
-        direccion = new Direccion(0, new Edificio(), new Referenciadir(), new Ctacliente(), new Calleprincipal(), new Tiposector(0, new Usuario(), null, null, null), new Callesecundaria(), new Ubicacion(), new Nodos(), new Sector(), 0, 0, 0, null, null, null, null, null);
+        direccion = new Direccion(0, new Edificio(), new Ctacliente(), new Calleprincipal(), new Tiposector(0, new Usuario(), null, null, null), new Callesecundaria(), new Ubicacion(), new Nodos(), new Sector(), 0, 0, 0, null, null, null, null, null);
+        referenciadir = new Referenciadir();
         
         habilitaTipoSector = false;
         tipo = "";
@@ -120,7 +123,7 @@ public class DireccionBean implements Serializable{
 			direccion = direccionBO.consultarDireccionPorCuentaTipo(idcuenta, tipo);
 			
 			if(direccion == null){
-				direccion = new Direccion(0, new Edificio(), new Referenciadir(), new Ctacliente(), new Calleprincipal(), new Tiposector(0, new Usuario(), null, null, null), new Callesecundaria(), new Ubicacion(), new Nodos(), new Sector(), 0, 0, 0, null, null, null, null, null);
+				direccion = new Direccion(0, new Edificio(), new Ctacliente(), new Calleprincipal(), new Tiposector(0, new Usuario(), null, null, null), new Callesecundaria(), new Ubicacion(), new Nodos(), new Sector(), 0, 0, 0, null, null, null, null, null);
 			}
 			
 			if(direccion.getCalleprincipal() == null){
@@ -139,10 +142,6 @@ public class DireccionBean implements Serializable{
 				direccion.setEdificio(new Edificio());
 			}
 			
-			if(direccion.getReferenciadir() == null){
-				direccion.setReferenciadir(new Referenciadir());
-			}
-			
 			if(direccion.getCtacliente() == null){
 				direccion.setCtacliente(new Ctacliente());
 			}
@@ -153,6 +152,13 @@ public class DireccionBean implements Serializable{
 			
 			if(direccion.getSector() == null){
 				direccion.setSector(new Sector());
+			}
+			
+			ReferenciadirBO referenciadirBO = new ReferenciadirBO();
+			referenciadir = referenciadirBO.getReferenciadirByIdDireccion(direccion.getIddireccion());
+			
+			if(referenciadir == null){
+				referenciadir = new Referenciadir();
 			}
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -817,6 +823,14 @@ public class DireccionBean implements Serializable{
 
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
+	}
+
+	public Referenciadir getReferenciadir() {
+		return referenciadir;
+	}
+
+	public void setReferenciadir(Referenciadir referenciadir) {
+		this.referenciadir = referenciadir;
 	}
 
 }

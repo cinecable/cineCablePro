@@ -78,11 +78,29 @@ public class TelefonosBean implements Serializable {
 	}
 	
 	public void agregarTelefonos(){
-		telefono.setCtacliente(ctacliente);
-		lisTelefonos.add(telefono);
-								
-		//inicializar
-		telefono = new Telefono();
+		if(validacionOk()){
+			telefono.setCtacliente(ctacliente);
+			lisTelefonos.add(telefono);
+									
+			//inicializar
+			telefono = new Telefono();
+		}
+	}
+	
+	private boolean validacionOk(){
+		boolean ok = false;
+		
+		if(telefono.getNombre() != null && telefono.getNombre().trim().length() > 0){
+			if(telefono.getNumero() != null && telefono.getNumero().trim().length() > 0){
+				ok = true;
+			}else{
+				new MessageUtil().showWarnMessage("Ingrese el numero de telefono del propietario.", "");
+			}
+		}else{
+			new MessageUtil().showWarnMessage("Ingrese el nombre del propietario del telefono.", "");
+		}
+		
+		return ok;
 	}
 	
 	public void quitarTelefono(){

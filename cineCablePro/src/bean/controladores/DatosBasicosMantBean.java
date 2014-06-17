@@ -66,7 +66,7 @@ public class DatosBasicosMantBean implements Serializable{
 		}
 		catch(Exception re){
 			re.printStackTrace();
-			new MessageUtil().showFatalMessage("Esto es Vergonzoso!", "Ha ocurrido un error inesperado. Comunicar al Webmaster!");
+			new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!","");
 		}
 	}
 	
@@ -84,13 +84,18 @@ public class DatosBasicosMantBean implements Serializable{
 				}
 				
 				if(ok){
-					new MessageUtil().showInfoMessage("Grabado con exito", null);
+					FacesUtil facesUtil = new FacesUtil();
+					try {
+						facesUtil.redirect("cliente.jsf?faces-redirect=true&idcuenta="+idcuenta);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}else{
-					new MessageUtil().showInfoMessage("No existen cambios que guardar", null);
+					new MessageUtil().showInfoMessage("No existen cambios que guardar", "");
 				}
 			} catch(Exception re) {
 				re.printStackTrace();
-				new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", null);
+				new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", "");
 			}
 		}
 	}

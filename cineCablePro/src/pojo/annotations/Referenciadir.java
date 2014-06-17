@@ -4,7 +4,10 @@ package pojo.annotations;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 
@@ -22,7 +25,7 @@ public class Referenciadir implements java.io.Serializable, Cloneable {
 	private int idreferencia;
 	private String referencia;
 	private int idcuenta;
-	private int iddireccion;
+	private Direccion direccion;
 
 	public Referenciadir() {
 	}
@@ -69,18 +72,23 @@ public class Referenciadir implements java.io.Serializable, Cloneable {
 		this.idcuenta = idcuenta;
 	}
 
-	@Column(name = "iddireccion", nullable = false)
-	public int getIddireccion() {
-		return iddireccion;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "iddireccion")
+	public Direccion getDireccion() {
+		return direccion;
 	}
 
-	public void setIddireccion(int iddireccion) {
-		this.iddireccion = iddireccion;
+	public void setDireccion(Direccion direccion) {
+		this.direccion = direccion;
 	}
 
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
-		return super.clone();
+		Referenciadir refrenciadir = (Referenciadir)super.clone(); 
+		return refrenciadir;
 	}
 	
+	public Referenciadir clonar() throws Exception {
+		return (Referenciadir)this.clone();
+	}
 }

@@ -56,6 +56,7 @@ public class DbasCliBean  implements Serializable{
 	private Conyuge conyugeClon;
 	
 	private int idcuenta;
+	private boolean tieneConyuge;
 	
 	public DbasCliBean() {
 	
@@ -64,9 +65,10 @@ public class DbasCliBean  implements Serializable{
 	 titNombres="Datos Persona";
 	 clientes = new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null, null, null, null, new Date(), null, 1, 0, 1, 1, new Date(), null);
 	 clientesClon = new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null, null, null, null, new Date(), null, 1, 0, 1, 1, new Date(), null);
-	 conyuge = new Conyuge(null, new Clientes(), null, null, null, null);
-	 conyugeClon = new Conyuge(null, new Clientes(), null, null, null, null);
+	 conyuge = new Conyuge(null, new Clientes(), null, null, null, null, null);
+	 conyugeClon = new Conyuge(null, new Clientes(), null, null, null, null, null);
      habEmpresa=false;		
+     tieneConyuge = false;
 	 CargaTDoc();
 	 
 	}
@@ -104,7 +106,8 @@ public class DbasCliBean  implements Serializable{
 						
 						conyugeClon = conyuge.clonar();
 					}else{
-						conyuge = new Conyuge(null, new Clientes(), null, null, null, null);
+						conyuge = new Conyuge(null, new Clientes(),"", "", "", "", "");
+						conyugeClon = new Conyuge(null, new Clientes(),"", "", "", "", "");
 					}
 				}
 			} catch(Exception e) {
@@ -161,6 +164,14 @@ public class DbasCliBean  implements Serializable{
 		if(getClientes().getIdtipoidentificacion() == Parametro.TIPO_IDENTIFICACION_RUC && getClientes().getIdtipopersona() == Parametro.TIPO_PERSONA_NATURAL){
 			String NombreCliente = getClientes().getNombre1() + " " + getClientes().getNombre2() + " " + getClientes().getApellido1() + " " + getClientes().getApellido2();
 			getClientes().setEmpresa_1(NombreCliente);
+		}
+	}
+	
+	public void validarEstadoCivil(){
+		if(clientes.getEstadocivil() == Parametro.ESTADO_CIVIL_CASADO || clientes.getEstadocivil() == Parametro.ESTADO_CIVIL_UNION_LIBRE){
+			tieneConyuge = true;
+		}else{
+			tieneConyuge = false;
 		}
 	}
 
@@ -282,6 +293,14 @@ public class DbasCliBean  implements Serializable{
 
 	public void setIdcuenta(int idcuenta) {
 		this.idcuenta = idcuenta;
+	}
+
+	public boolean isTieneConyuge() {
+		return tieneConyuge;
+	}
+
+	public void setTieneConyuge(boolean tieneConyuge) {
+		this.tieneConyuge = tieneConyuge;
 	}
 	
 	

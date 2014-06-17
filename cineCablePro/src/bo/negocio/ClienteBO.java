@@ -107,7 +107,7 @@ public class ClienteBO {
 			}
 			
 			if(conyuge != null){
-				if(conyuge.getIdconyuge() == null || conyuge.getIdconyuge().trim().length() == 0){
+				if((conyuge.getIdconyuge() == null || conyuge.getIdconyuge().trim().length() == 0) && conyuge.getNombre1() != null && conyuge.getNombre1().trim().length() > 0 && conyuge.getApellido1() != null && conyuge.getApellido1().trim().length() > 0){
 					conyuge.setIdconyuge(conyuge.getIdentificacion());
 					conyuge.setClientes(clientes);
 					

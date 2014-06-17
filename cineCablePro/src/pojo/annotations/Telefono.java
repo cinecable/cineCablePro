@@ -28,7 +28,7 @@ public class Telefono implements java.io.Serializable, Cloneable {
 	private Estado estado;
 	private Ctacliente ctacliente;
 	private String nombre;
-	private int numero;
+	private String numero;
 	private int idusuario;
 	private Date fecha;
 
@@ -36,7 +36,7 @@ public class Telefono implements java.io.Serializable, Cloneable {
 	}
 
 	public Telefono(int idtelefono, Estado estado, Ctacliente ctacliente,
-			String nombre, int numero, int idusuario, Date fecha) {
+			String nombre, String numero, int idusuario, Date fecha) {
 		this.idtelefono = idtelefono;
 		this.estado = estado;
 		this.ctacliente = ctacliente;
@@ -86,11 +86,11 @@ public class Telefono implements java.io.Serializable, Cloneable {
 	}
 
 	@Column(name = "numero")
-	public int getNumero() {
+	public String getNumero() {
 		return this.numero;
 	}
 
-	public void setNumero(int numero) {
+	public void setNumero(String numero) {
 		this.numero = numero;
 	}
 
@@ -130,7 +130,7 @@ public class Telefono implements java.io.Serializable, Cloneable {
 		result = prime * result + idtelefono;
 		result = prime * result + idusuario;
 		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
-		result = prime * result + numero;
+		result = prime * result + ((numero == null) ? 0 : numero.hashCode());
 		return result;
 	}
 
@@ -157,7 +157,10 @@ public class Telefono implements java.io.Serializable, Cloneable {
 				return false;
 		} else if (!nombre.equals(other.nombre))
 			return false;
-		if (numero != other.numero)
+		if (numero == null) {
+			if (other.numero != null)
+				return false;
+		} else if (!numero.equals(other.numero))
 			return false;
 		return true;
 	}

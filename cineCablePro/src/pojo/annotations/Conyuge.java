@@ -38,13 +38,14 @@ public class Conyuge implements java.io.Serializable, Cloneable {
 	}
 
 	public Conyuge(String idconyuge, Clientes clientes, String nombre1,
-			String nombre2, String apellido1, String apellido2) {
+			String nombre2, String apellido1, String apellido2, String identificacion) {
 		this.idconyuge = idconyuge;
 		this.clientes = clientes;
 		this.nombre1 = nombre1;
 		this.nombre2 = nombre2;
 		this.apellido1 = apellido1;
 		this.apellido2 = apellido2;
+		this.identificacion = identificacion;
 	}
 
 	@Id

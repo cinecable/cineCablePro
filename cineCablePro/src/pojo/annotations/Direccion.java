@@ -25,7 +25,6 @@ public class Direccion implements java.io.Serializable, Cloneable {
 	private static final long serialVersionUID = 21333028665661038L;
 	private int iddireccion;
 	private Edificio edificio;
-	private Referenciadir referenciadir;
 	private Ctacliente ctacliente;
 	private Calleprincipal calleprincipal;
 	private Tiposector tiposector;
@@ -58,7 +57,7 @@ public class Direccion implements java.io.Serializable, Cloneable {
 		this.vineta = vineta;
 	}
 
-	public Direccion(int iddireccion, Edificio edificio, Referenciadir referenciadir,Ctacliente ctacliente,
+	public Direccion(int iddireccion, Edificio edificio, Ctacliente ctacliente,
 			Calleprincipal calleprincipal, Tiposector tiposector,
 			Callesecundaria callesecundaria, Ubicacion ubicacion, Nodos nodos,
 			Sector sector, Integer numero, Integer piso, Integer departamento,
@@ -66,7 +65,6 @@ public class Direccion implements java.io.Serializable, Cloneable {
 			String solar) {
 		this.iddireccion = iddireccion;
 		this.edificio = edificio;
-		this.referenciadir = referenciadir;
 		this.ctacliente = ctacliente;
 		this.calleprincipal = calleprincipal;
 		this.tiposector = tiposector;
@@ -244,16 +242,6 @@ public class Direccion implements java.io.Serializable, Cloneable {
 
 	public void setSolar(String solar) {
 		this.solar = solar;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "idreferencia")
-	public Referenciadir getReferenciadir() {
-		return referenciadir;
-	}
-
-	public void setReferenciadir(Referenciadir referenciadir) {
-		this.referenciadir = referenciadir;
 	}
 
 	@Column(name = "idestado")

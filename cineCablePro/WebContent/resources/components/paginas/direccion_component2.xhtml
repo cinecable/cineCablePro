@@ -49,16 +49,16 @@
                     idComboCallesec,idComboUbicacion, idComboNodos,idComboTipoSector" />
                    </p:selectOneMenu>
                    
-                    <h:outputLabel value="Tipo Sector :" for="idComboTipoSector" />
+                    <h:outputLabel value="Tipo Sector *:" for="idComboTipoSector" />
                     <p:selectOneMenu id="idComboTipoSector" value="#{cc.attrs.bean.direccion.tiposector.idtiposector}" style="width: 150px">
                        <f:selectItems value="#{cc.attrs.bean.lisTipoSector}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idtiposector}" />
-                   		<p:ajax listener="#{cc.attrs.bean.llenarDependientesTipoSector()}" process="idComboTipoSector" update="idComboCallesec,idComboCallePrin,idComboUbicacion,idComboEdificio,idComboNodos,idComboTipoSector" />                          
+                   		<p:ajax listener="#{cc.attrs.bean.llenarDependientesTipoSector()}" process="idComboTipoSector" update="idComboCallesec,idComboCallePrin,idComboUbicacion,idComboEdificio,idComboNodos" />                          
                    </p:selectOneMenu>
                    
                    <h:outputLabel value="Calle Principal  :" for="idComboCallePrin" />
                 <p:autoComplete id="idComboCallePrin" size="60" value="#{cc.attrs.bean.direccion.calleprincipal}" completeMethod="#{cc.attrs.bean.CompletarCallesPrincipales}" 
 				var="i" itemLabel="#{i.nombre}" itemValue="#{i}" converter="callePrincipal" minQueryLength="1"  
-				forceSelection="true" required="true" requiredMessage="Ingresar Calle Principal" rendered="true">
+				forceSelection="true" required="true" requiredMessage="Ingrese Calle Principal en la Seccion de Direccion" rendered="true">
 					<p:ajax event="itemSelect" process="idComboCallePrin"></p:ajax>
 					<f:facet name="itemtip">  
 	                    <h:panelGrid  columns="2" cellpadding="5" width="250px">  
@@ -71,7 +71,7 @@
 	            <h:outputLabel value="Calle Secundaria :" for="idComboCallesec" />
 	            <p:autoComplete id="idComboCallesec" size="60" value="#{cc.attrs.bean.direccion.callesecundaria}" completeMethod="#{cc.attrs.bean.CompletarCallesSecundarias}" 
 					var="i" itemLabel="#{i.nombre}" itemValue="#{i}" converter="calleSecundaria" minQueryLength="1"  
-					forceSelection="true" required="true" requiredMessage="Ingresar Calle Secundaria" rendered="true">
+					forceSelection="true" required="true" requiredMessage="Ingrese Calle Secundaria en la Seccion de Direccion" rendered="true">
 					<p:ajax event="itemSelect" process="idComboCallesec"></p:ajax>
 					<f:facet name="itemtip">  
 	                    <h:panelGrid  columns="2" cellpadding="5" width="250px">  
@@ -100,7 +100,7 @@
                    </p:selectOneMenu>
                  
                   <h:outputLabel value="Numero *:" for="idtxtnub" />               
-                  <p:inputText id="idtxtnub" size="10" maxlength="20" value="#{cc.attrs.bean.direccion.numero}" required="true" requiredMessage="Debe ingresar Numero">
+                  <p:inputText id="idtxtnub" size="10" maxlength="20" value="#{cc.attrs.bean.direccion.numero}" required="true" requiredMessage="Ingrese Numero en la Seccion de Direccion">
                   	<p:ajax process="idtxtnub"> </p:ajax>
                   </p:inputText>
                   
@@ -115,7 +115,7 @@
                   </p:inputText>
                                 
                    <h:outputLabel value="Referencia :" for="idReferencia" />
-                  <p:inputTextarea id ="idReferencia" value="#{cc.attrs.bean.direccion.referenciadir.referencia}" rows="6" cols="33" style="width: 100%" >
+                  <p:inputTextarea id ="idReferencia" value="#{cc.attrs.bean.referenciadir.referencia}" rows="6" cols="33" style="width: 100%" >
                   	<p:ajax process="idReferencia"> </p:ajax>
                   </p:inputTextarea>
                   
@@ -125,7 +125,7 @@
                   </p:inputText>                
                   
                   <h:outputLabel value="Viñeta *:" for="txtvineta" />
-                  <p:inputText id="txtvineta" size="10" value="#{cc.attrs.bean.direccion.vineta}" required="true" requiredMessage="Debe ingresar viñeta"> 
+                  <p:inputText id="txtvineta" size="10" value="#{cc.attrs.bean.direccion.vineta}" required="true" requiredMessage="Ingrese viñeta en la Seccion de Direccion"> 
                   	<p:ajax process="txtvineta"> </p:ajax>
                   </p:inputText>
                   

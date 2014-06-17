@@ -8,6 +8,7 @@ import dao.datos.DireccionDAO;
 import dao.datos.ReferenciadirDAO;
 
 import pojo.annotations.Direccion;
+import pojo.annotations.Referenciadir;
 import util.HibernateUtil;
 
 public class DireccionBO {
@@ -76,7 +77,7 @@ public class DireccionBO {
 		return direccion;
 	}
 
-	public boolean modificar(int idcuenta, Direccion direccionInstalacion, Direccion direccionCorrespondencia, Direccion direccionCobranza) throws Exception {
+	public boolean modificar(int idcuenta, Direccion direccionInstalacion, Direccion direccionCorrespondencia, Direccion direccionCobranza, Referenciadir referenciadirInstalacion, Referenciadir referenciadirCorrespondencia, Referenciadir referenciadirCobranza) throws Exception {
 		boolean ok = false;
     	Session session = null;
     	
@@ -93,7 +94,7 @@ public class DireccionBO {
 			
 			//referenciadir de instalacion
 			//grabar
-			referenciadirDAO.updateReferenciadir(session, direccionInstalacion.getReferenciadir());
+			referenciadirDAO.updateReferenciadir(session, referenciadirInstalacion);
 			
 			
 			//direccion de correspondencia
@@ -102,16 +103,16 @@ public class DireccionBO {
 			
 			//referenciadir de correspondencia
 			//grabar
-			referenciadirDAO.updateReferenciadir(session, direccionCorrespondencia.getReferenciadir());
+			referenciadirDAO.updateReferenciadir(session, referenciadirCorrespondencia);
 			
 			
 			//direccion de cobranza
 			//grabar
 			direccionDAO.updateDireccion(session, direccionCobranza);
 			
-			//referenciadir de correspondencia
+			//referenciadir de cobranza
 			//grabar
-			referenciadirDAO.updateReferenciadir(session, direccionCobranza.getReferenciadir());
+			referenciadirDAO.updateReferenciadir(session, referenciadirCobranza);
 			
     		session.getTransaction().commit();
 			ok = true;

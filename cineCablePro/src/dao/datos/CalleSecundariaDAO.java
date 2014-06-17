@@ -48,7 +48,7 @@ public class CalleSecundariaDAO {
 		              
 		              .addOrder( Order.asc("nombre"));
 		              if(query != null && query.trim().length() > 0){
-		                  criteria.add( Restrictions.like("nombre",query.replaceAll(" ", "%")+"%").ignoreCase());
+		                  criteria.add( Restrictions.like("nombre","%"+query.replaceAll(" ", "%")+"%").ignoreCase());
 		              }
 		              
 		              lisCalleSecundaria = (List<Callesecundaria>)criteria.list();

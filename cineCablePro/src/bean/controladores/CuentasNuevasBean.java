@@ -1,5 +1,6 @@
 package bean.controladores;
 
+import exceptions.VerificarIdException;
 import global.Parametro;
 
 import java.io.Serializable;
@@ -21,6 +22,7 @@ import bo.negocio.PersonaBO;
 
 import util.FacesUtil;
 import util.MessageUtil;
+import util.VerificarId;
 
 @ManagedBean
 @ViewScoped
@@ -49,6 +51,7 @@ public class CuentasNuevasBean implements Serializable{
 	private Persona vendedor;
 	
 	private int idcuenta;
+	private int activeIndex;
 
 	public CuentasNuevasBean() {
 		ctacliente = new Ctacliente(0, new Empresa(), new Clientes(), null, null, 0);
@@ -58,6 +61,8 @@ public class CuentasNuevasBean implements Serializable{
 		direccionCorrespondenciaBean = new DireccionBean();
 		direccionConbranzaBean = new DireccionBean();
 		idcuenta = 0;
+		
+		activeIndex = 0;
 	}
 	
 	@PostConstruct
@@ -84,9 +89,9 @@ public class CuentasNuevasBean implements Serializable{
 			direccionCorrespondenciaBean.llenarDependientesSector();//borra(calle principal, calle secundaria, ubicacion, edificio, nodo), llena(tipos sector, nodos, edificios, ubicaciones)
 			//direccionCorrespondenciaBean.llenarDependientesTipoSector();//borra(calle principal, calle secundaria, ubicacion, edificio, nodo), llena(ubicaciones)
 			direccionCorrespondenciaBean.setDireccion(direccionInstalacionBean.getDireccion().clonar());
+			direccionCorrespondenciaBean.setReferenciadir(direccionInstalacionBean.getReferenciadir().clonar());
 			
-			
-			new MessageUtil().showInfoMessage("Listo!", null);
+			new MessageUtil().showInfoMessage("Listo, Direccion de Correspondencia igual que Instalacion", "");
 		} catch (Exception e) {
 			e.printStackTrace();
 			new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", null);
@@ -105,9 +110,9 @@ public class CuentasNuevasBean implements Serializable{
 			direccionConbranzaBean.llenarDependientesSector();//borra(calle principal, calle secundaria, ubicacion, edificio, nodo), llena(tipos sector, nodos, edificios, ubicaciones)
 			//direccionConbranzaBean.llenarDependientesTipoSector();
 			direccionConbranzaBean.setDireccion(direccionInstalacionBean.getDireccion().clonar());
+			direccionConbranzaBean.setReferenciadir(direccionInstalacionBean.getReferenciadir().clonar());
 			
-			
-			new MessageUtil().showInfoMessage("Listo!", null);
+			new MessageUtil().showInfoMessage("Listo, Direccion de Cobranza igual que Instalacion", "");
 		} catch (Exception e) {
 			e.printStackTrace();
 			new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", null);
@@ -124,10 +129,15 @@ public class CuentasNuevasBean implements Serializable{
 								CtaclienteBO ctaclienteBO = new CtaclienteBO();
 								
 								//Asignamos data a ctacliente
-								ctacliente.setIdcobrador(cobrador.getIdpersona());
-								ctacliente.setIdvendedor(vendedor.getIdpersona());
+								if(cobrador != null && cobrador.getIdpersona() > 0){
+									ctacliente.setIdcobrador(cobrador.getIdpersona());
+								}
+								if(vendedor != null && vendedor.getIdpersona() > 0){
+									ctacliente.setIdvendedor(vendedor.getIdpersona());
+								}
 								ctacliente.setIdcuenta(idcuenta);
 								
+								//Calles
 								if(direccionInstalacionBean.getDireccion().getCalleprincipal() != null && direccionInstalacionBean.getDireccion().getCalleprincipal().getIdcalleprincipal() == 0){
 									direccionInstalacionBean.getDireccion().setCalleprincipal(null);
 								}
@@ -147,9 +157,47 @@ public class CuentasNuevasBean implements Serializable{
 									direccionConbranzaBean.getDireccion().setCallesecundaria(null);
 								}
 								
-								ctaclienteBO.grabarCuenta(ctacliente, productosBean.getLisProductosId(), direccionInstalacionBean.getDireccion(), direccionCorrespondenciaBean.getDireccion(), direccionConbranzaBean.getDireccion(), debitosBancariosBean.getDebitobco(), telefonosBean.getLisTelefonos());
+								//Ubicacion
+								if(direccionInstalacionBean.getDireccion().getUbicacion() != null && direccionInstalacionBean.getDireccion().getUbicacion().getIdubicacion() == 0){
+									direccionInstalacionBean.getDireccion().setUbicacion(null);
+								}
+								if(direccionCorrespondenciaBean.getDireccion().getUbicacion() != null && direccionCorrespondenciaBean.getDireccion().getUbicacion().getIdubicacion() == 0){
+									direccionCorrespondenciaBean.getDireccion().setUbicacion(null);
+								}
+								if(direccionConbranzaBean.getDireccion().getUbicacion() != null && direccionConbranzaBean.getDireccion().getUbicacion().getIdubicacion() == 0){
+									direccionConbranzaBean.getDireccion().setUbicacion(null);
+								}
 								
-								new MessageUtil().showInfoMessage("Listo!", "Grabado con exito");
+								//Edificio
+								if(direccionInstalacionBean.getDireccion().getEdificio() != null && direccionInstalacionBean.getDireccion().getEdificio().getIdedificio() == 0){
+									direccionInstalacionBean.getDireccion().setEdificio(null);
+								}
+								if(direccionCorrespondenciaBean.getDireccion().getEdificio() != null && direccionCorrespondenciaBean.getDireccion().getEdificio().getIdedificio() == 0){
+									direccionCorrespondenciaBean.getDireccion().setEdificio(null);
+								}
+								if(direccionConbranzaBean.getDireccion().getEdificio() != null && direccionConbranzaBean.getDireccion().getEdificio().getIdedificio() == 0){
+									direccionConbranzaBean.getDireccion().setEdificio(null);
+								}
+								
+								//referencia
+								if(direccionInstalacionBean.getReferenciadir() != null && direccionInstalacionBean.getReferenciadir().getReferencia() != null && direccionInstalacionBean.getReferenciadir().getReferencia().trim().length() == 0){
+									direccionInstalacionBean.setReferenciadir(null);
+								}
+								if(direccionCorrespondenciaBean.getReferenciadir() != null && direccionCorrespondenciaBean.getReferenciadir().getReferencia() != null && direccionCorrespondenciaBean.getReferenciadir().getReferencia().trim().length() == 0){
+									direccionCorrespondenciaBean.setReferenciadir(null);
+								}
+								if(direccionConbranzaBean.getReferenciadir() != null && direccionConbranzaBean.getReferenciadir().getReferencia() != null && direccionConbranzaBean.getReferenciadir().getReferencia().trim().length() == 0){
+									direccionConbranzaBean.setReferenciadir(null);
+								}
+								
+								ctaclienteBO.grabarCuenta(ctacliente, productosBean.getLisProductosId(), direccionInstalacionBean.getDireccion(), direccionCorrespondenciaBean.getDireccion(), direccionConbranzaBean.getDireccion(), debitosBancariosBean.getDebitobco(), telefonosBean.getLisTelefonos(), direccionInstalacionBean.getReferenciadir(), direccionCorrespondenciaBean.getReferenciadir(), direccionConbranzaBean.getReferenciadir());
+								
+								FacesUtil facesUtil = new FacesUtil();
+								try {
+									facesUtil.redirect("cliente.jsf?faces-redirect=true&idcuenta="+idcuenta);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
 							} catch(Exception re) {
 								re.printStackTrace();
 								new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", null);
@@ -159,7 +207,8 @@ public class CuentasNuevasBean implements Serializable{
 				}
 			}
 		}else{
-			new MessageUtil().showWarnMessage("Nombre de cuenta ya existe", null);
+			activeIndex = 0;
+			new MessageUtil().showWarnMessage("Nombre de cuenta ya existe en seccion Productos Cliente", "");
 		}
 	}
 	
@@ -184,10 +233,21 @@ public class CuentasNuevasBean implements Serializable{
 	private boolean validacionProductoOk(){
 		boolean ok = false;
 		
-		if(productosBean.getLisProductosId() != null && productosBean.getLisProductosId().size() > 0){
-			ok = true;
+		if(cobrador != null && cobrador.getIdpersona() > 0){
+			if(vendedor != null && vendedor.getIdpersona() > 0){
+				if(productosBean.getLisProductosId() != null && productosBean.getLisProductosId().size() > 0){
+					ok = true;
+				}else{
+					activeIndex = 0;
+					new MessageUtil().showWarnMessage("Debe seleccionar al menos un producto en seccion Productos Cliente", "");
+				}
+			}else{
+				activeIndex = 0;
+				new MessageUtil().showWarnMessage("Debe ingresar Nombre Vendedor en seccion Productos Cliente", null);
+			}
 		}else{
-			new MessageUtil().showWarnMessage("Debe seleccionar al menos un producto en seccion Productos Cliente", null);
+			activeIndex = 0;
+			new MessageUtil().showWarnMessage("Debe ingresar Nombre Cobrador en seccion Productos Cliente", null);
 		}
 		
 		return ok;
@@ -201,24 +261,28 @@ public class CuentasNuevasBean implements Serializable{
 			if(direccionInstalacionBean.getDireccion().getSector() != null && direccionInstalacionBean.getDireccion().getSector().getIdsector() > 0){
 				ok = true;
 			}else{
+				activeIndex = 1;
 				new MessageUtil().showWarnMessage("Debe seleccionar el sector en la seccion Direccion de Instalacion", null);
 			}
 		}else{
+			activeIndex = 1;
 			new MessageUtil().showWarnMessage("Debe seleccionar la ciudad en la seccion Direccion de Instalacion", null);
 		}
 		
 		if(ok){
-			if(direccionInstalacionBean.getDireccion().getTiposector() != null){
+			if(direccionInstalacionBean.getDireccion().getTiposector() != null && direccionInstalacionBean.getDireccion().getTiposector().getIdtiposector() > 0){
 				if(direccionInstalacionBean.getDireccion().getTiposector().getIdtiposector() == Parametro.TIPO_SECTOR_ENTRECALLES){
 					if(direccionInstalacionBean.getDireccion().getCalleprincipal() != null && direccionInstalacionBean.getDireccion().getCalleprincipal().getIdcalleprincipal() > 0){
 						if(direccionInstalacionBean.getDireccion().getCallesecundaria() != null && direccionInstalacionBean.getDireccion().getCallesecundaria().getIdcallesecundaria() > 0){
 							ok = true;
 						}else{
 							ok = false;
+							activeIndex = 1;
 							new MessageUtil().showWarnMessage("Debe seleccionar calle secundaria en la seccion Direccion de Instalacion", null);
 						}
 					}else{
 						ok = false;
+						activeIndex = 1;
 						new MessageUtil().showWarnMessage("Debe seleccionar calle principal en la seccion Direccion de Instalacion", null);
 					}
 				}else{
@@ -228,14 +292,20 @@ public class CuentasNuevasBean implements Serializable{
 								ok = true;
 							}else{
 								ok = false;
+								activeIndex = 1;
 								new MessageUtil().showWarnMessage("Debe seleccionar solar en la seccion Direccion de Instalacion", null);
 							}
 						}else{
 							ok = false;
+							activeIndex = 1;
 							new MessageUtil().showWarnMessage("Debe seleccionar ubicacion en la seccion Direccion de Instalacion", null);
 						}
 					}
 				}
+			}else{
+				ok = false;
+				activeIndex = 1;
+				new MessageUtil().showWarnMessage("Debe seleccionar Tipo Sector en la seccion Direccion de Instalacion", null);
 			}
 		}
 		
@@ -246,14 +316,17 @@ public class CuentasNuevasBean implements Serializable{
 						ok = true;
 					}else{
 						ok = false;
+						activeIndex = 1;
 						new MessageUtil().showWarnMessage("Debe ingresar una viñeta en la seccion Direccion de Instalacion", null);
 					}
 				}else{
 					ok = false;
+					activeIndex = 1;
 					new MessageUtil().showWarnMessage("Debe ingresar un numero en la seccion Direccion de Instalacion", null);
 				}
 			}else{
 				ok = false;
+				activeIndex = 1;
 				new MessageUtil().showWarnMessage("Debe seleccionar nodo en la seccion Direccion de Instalacion", null);
 			}
 		}
@@ -265,10 +338,12 @@ public class CuentasNuevasBean implements Serializable{
 						ok = true;
 					}else{
 						ok = false;
+						activeIndex = 1;
 						new MessageUtil().showWarnMessage("Debe ingresar un numero de departamento en la seccion Direccion de Instalacion", null);
 					}
 				}else{
 					ok = false;
+					activeIndex = 1;
 					new MessageUtil().showWarnMessage("Debe ingresar un numero de piso en la seccion Direccion de Instalacion", null);
 				}
 			}
@@ -281,26 +356,30 @@ public class CuentasNuevasBean implements Serializable{
 					ok = true;
 				}else{
 					ok = false;
+					activeIndex = 1;
 					new MessageUtil().showWarnMessage("Debe seleccionar el sector en la seccion Direccion de Correspondencia", null);
 				}
 			}else{
 				ok = false;
+				activeIndex = 1;
 				new MessageUtil().showWarnMessage("Debe seleccionar la ciudad de Instalación en la seccion Direccion de Correspondencia", null);
 			}
 		}
 		
 		if(ok){
-			if(direccionCorrespondenciaBean.getDireccion().getTiposector() != null){
+			if(direccionCorrespondenciaBean.getDireccion().getTiposector() != null && direccionCorrespondenciaBean.getDireccion().getTiposector().getIdtiposector() > 0){
 				if(direccionCorrespondenciaBean.getDireccion().getTiposector().getIdtiposector() == Parametro.TIPO_SECTOR_ENTRECALLES){
 					if(direccionCorrespondenciaBean.getDireccion().getCalleprincipal() != null && direccionCorrespondenciaBean.getDireccion().getCalleprincipal().getIdcalleprincipal() > 0){
 						if(direccionCorrespondenciaBean.getDireccion().getCallesecundaria() != null && direccionCorrespondenciaBean.getDireccion().getCallesecundaria().getIdcallesecundaria() > 0){
 							ok = true;
 						}else{
 							ok = false;
+							activeIndex = 1;
 							new MessageUtil().showWarnMessage("Debe seleccionar calle secundaria en la seccion Direccion de Correspondencia", null);
 						}
 					}else{
 						ok = false;
+						activeIndex = 1;
 						new MessageUtil().showWarnMessage("Debe seleccionar calle principal en la seccion Direccion de Correspondencia", null);
 					}
 				}else{
@@ -310,14 +389,20 @@ public class CuentasNuevasBean implements Serializable{
 								ok = true;
 							}else{
 								ok = false;
+								activeIndex = 1;
 								new MessageUtil().showWarnMessage("Debe seleccionar solar en la seccion Direccion de Correspondencia", null);
 							}
 						}else{
 							ok = false;
+							activeIndex = 1;
 							new MessageUtil().showWarnMessage("Debe seleccionar ubicacion en la seccion Direccion de Correspondencia", null);
 						}
 					}
 				}
+			}else{
+				ok = false;
+				activeIndex = 1;
+				new MessageUtil().showWarnMessage("Debe seleccionar Tipo Sector en la seccion Direccion de Correspondencia", null);
 			}
 		}
 		
@@ -328,14 +413,17 @@ public class CuentasNuevasBean implements Serializable{
 						ok = true;
 					}else{
 						ok = false;
+						activeIndex = 1;
 						new MessageUtil().showWarnMessage("Debe ingresar una viñeta en la seccion Direccion de Correspondencia", null);
 					}
 				}else{
 					ok = false;
+					activeIndex = 1;
 					new MessageUtil().showWarnMessage("Debe ingresar un numero en la seccion Direccion de Correspondencia", null);
 				}
 			}else{
 				ok = false;
+				activeIndex = 1;
 				new MessageUtil().showWarnMessage("Debe seleccionar nodo en la seccion Direccion de Correspondencia", null);
 			}
 		}
@@ -347,10 +435,12 @@ public class CuentasNuevasBean implements Serializable{
 						ok = true;
 					}else{
 						ok = false;
+						activeIndex = 1;
 						new MessageUtil().showWarnMessage("Debe ingresar un numero de departamento en la seccion Direccion de Correspondencia", null);
 					}
 				}else{
 					ok = false;
+					activeIndex = 1;
 					new MessageUtil().showWarnMessage("Debe ingresar un numero de piso en la seccion Direccion de Correspondencia", null);
 				}
 			}
@@ -363,26 +453,30 @@ public class CuentasNuevasBean implements Serializable{
 					ok = true;
 				}else{
 					ok = false;
+					activeIndex = 1;
 					new MessageUtil().showWarnMessage("Debe seleccionar el sector en la seccion Direccion de Cobranza", null);
 				}
 			}else{
 				ok = false;
+				activeIndex = 1;
 				new MessageUtil().showWarnMessage("Debe seleccionar la ciudad en la seccion Direccion de Cobranza", null);
 			}
 		}
 		
 		if(ok){
-			if(direccionConbranzaBean.getDireccion().getTiposector() != null){
+			if(direccionConbranzaBean.getDireccion().getTiposector() != null && direccionConbranzaBean.getDireccion().getTiposector().getIdtiposector() > 0){
 				if(direccionConbranzaBean.getDireccion().getTiposector().getIdtiposector() == Parametro.TIPO_SECTOR_ENTRECALLES){
 					if(direccionConbranzaBean.getDireccion().getCalleprincipal() != null && direccionConbranzaBean.getDireccion().getCalleprincipal().getIdcalleprincipal() > 0){
 						if(direccionConbranzaBean.getDireccion().getCallesecundaria() != null && direccionConbranzaBean.getDireccion().getCallesecundaria().getIdcallesecundaria() > 0){
 							ok = true;
 						}else{
 							ok = false;
+							activeIndex = 1;
 							new MessageUtil().showWarnMessage("Debe seleccionar calle secundaria en la seccion Direccion de Cobranza", null);
 						}
 					}else{
 						ok = false;
+						activeIndex = 1;
 						new MessageUtil().showWarnMessage("Debe seleccionar calle principal en la seccion Direccion de Cobranza", null);
 					}
 				}else{
@@ -392,14 +486,20 @@ public class CuentasNuevasBean implements Serializable{
 								ok = true;
 							}else{
 								ok = false;
+								activeIndex = 1;
 								new MessageUtil().showWarnMessage("Debe seleccionar solar en la seccion Direccion de Cobranza", null);
 							}
 						}else{
 							ok = false;
+							activeIndex = 1;
 							new MessageUtil().showWarnMessage("Debe seleccionar ubicacion en la seccion Direccion de Cobranza", null);
 						}
 					}
 				}
+			}else{
+				ok = false;
+				activeIndex = 1;
+				new MessageUtil().showWarnMessage("Debe seleccionar Tipo Sector en la seccion Direccion de Cobranza", null);
 			}
 		}
 		
@@ -410,14 +510,17 @@ public class CuentasNuevasBean implements Serializable{
 						ok = true;
 					}else{
 						ok = false;
+						activeIndex = 1;
 						new MessageUtil().showWarnMessage("Debe ingresar una viñeta en la seccion Direccion de Cobranza", null);
 					}
 				}else{
 					ok = false;
+					activeIndex = 1;
 					new MessageUtil().showWarnMessage("Debe ingresar un numero en la seccion Direccion de Cobranza", null);
 				}
 			}else{
 				ok = false;
+				activeIndex = 1;
 				new MessageUtil().showWarnMessage("Debe seleccionar nodo en la seccion Direccion de Cobranza", null);
 			}
 		}
@@ -429,10 +532,12 @@ public class CuentasNuevasBean implements Serializable{
 						ok = true;
 					}else{
 						ok = false;
+						activeIndex = 1;
 						new MessageUtil().showWarnMessage("Debe ingresar un numero de departamento en la seccion Direccion de Cobranza", null);
 					}
 				}else{
 					ok = false;
+					activeIndex = 1;
 					new MessageUtil().showWarnMessage("Debe ingresar un numero de piso en la seccion Direccion de Cobranza", null);
 				}
 			}
@@ -444,56 +549,77 @@ public class CuentasNuevasBean implements Serializable{
 	public boolean validacionDebitoBcoOk(){
 		boolean ok = false;
 		
-		if(debitosBancariosBean.getDebitobco().getIdtipodebito() > 0){
-			ok = true;
-		}else{
-			new MessageUtil().showWarnMessage("Debe seleccionar una forma de cobro en seccion Debito Bancario", null);
-		}
-		
-		if(ok){
-			if(debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_BANCARIO || debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_TARJETA){
-				if(debitosBancariosBean.getDebitobco().getBancos().getIdbanco() > 0){
-					if(debitosBancariosBean.getDebitobco().getPropietario() != null && debitosBancariosBean.getDebitobco().getPropietario().trim().length() > 0){
+		try{
+			
+			VerificarId verificarId  = new VerificarId();
+			
+			if(debitosBancariosBean.getDebitobco().getIdtipodebito() > 0){
+				ok = true;
+			}else{
+				activeIndex = 2;
+				new MessageUtil().showWarnMessage("Debe seleccionar una forma de cobro en seccion Debito Bancario", null);
+			}
+			
+			if(ok){
+				if(debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_BANCARIO || debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_TARJETA){
+					if(debitosBancariosBean.getDebitobco().getBancos().getIdbanco() > 0){
 						if(debitosBancariosBean.getDebitobco().getNrodebito() != null && debitosBancariosBean.getDebitobco().getNrodebito().trim().length() > 0){
-							ok = true;
+							if(debitosBancariosBean.getDebitobco().getPropietario() != null && debitosBancariosBean.getDebitobco().getPropietario().trim().length() > 0){
+								ok = true;
+							}else{
+								ok = false;
+								activeIndex = 2;
+								new MessageUtil().showWarnMessage("Debe ingresar propietario en seccion Debito Bancario", null);
+							}
 						}else{
 							ok = false;
+							activeIndex = 2;
 							new MessageUtil().showWarnMessage("Debe ingresar Nro Doc en seccion Debito Bancario", null);
 						}
 					}else{
 						ok = false;
-						new MessageUtil().showWarnMessage("Debe ingresar propietario en seccion Debito Bancario", null);
+						activeIndex = 2;
+						new MessageUtil().showWarnMessage("Debe seleccionar banco/tarjeta en seccion Debito Bancario", null);
+					}
+				}
+			}
+			
+			if(ok){
+				if(debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_BANCARIO){
+					if(debitosBancariosBean.getDebitobco().getIdtipocuenta() > 0){
+						ok = true;
+					}else{
+						ok = false;
+						activeIndex = 2;
+						new MessageUtil().showWarnMessage("Debe seleccionar tipo de cuenta en seccion Debito Bancario", null);
+					}
+				}
+			}
+			
+			if(ok){
+				if(debitosBancariosBean.getDebitobco().getIdtipoidentificacion() > 0){
+					if(debitosBancariosBean.getDebitobco().getIdentificacion() != null && debitosBancariosBean.getDebitobco().getIdentificacion().trim().length() > 0){
+						if(debitosBancariosBean.getDebitobco().getIdtipoidentificacion() == Parametro.TIPO_IDENTIFICACION_OTRO || verificarId.verificarId(debitosBancariosBean.getDebitobco().getIdentificacion())){
+							ok = true;
+						}else{
+							ok = false;
+							activeIndex = 2;
+						}
+					}else{
+						ok = false;
+						activeIndex = 2;
+						new MessageUtil().showWarnMessage("Debe ingresar # identidad en seccion Debito Bancario", null);
 					}
 				}else{
 					ok = false;
-					new MessageUtil().showWarnMessage("Debe seleccionar banco/tarjeta en seccion Debito Bancario", null);
+					activeIndex = 2;
+					new MessageUtil().showWarnMessage("Debe seleccionar tipo identidad en seccion Debito Bancario", null);
 				}
 			}
-		}
-		
-		if(ok){
-			if(debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_BANCARIO){
-				if(debitosBancariosBean.getDebitobco().getIdtipocuenta() > 0){
-					ok = true;
-				}else{
-					ok = false;
-					new MessageUtil().showWarnMessage("Debe seleccionar tipo de cuenta en seccion Debito Bancario", null);
-				}
-			}
-		}
-		
-		if(ok){
-			if(debitosBancariosBean.getDebitobco().getIdtipoidentificacion() > 0){
-				if(debitosBancariosBean.getDebitobco().getIdentificacion() != null && debitosBancariosBean.getDebitobco().getIdentificacion().trim().length() > 0){
-					ok = true;
-				}else{
-					ok = false;
-					new MessageUtil().showWarnMessage("Debe ingresar # identidad en seccion Debito Bancario", null);
-				}
-			}else{
-				ok = false;
-				new MessageUtil().showWarnMessage("Debe seleccionar tipo identidad en seccion Debito Bancario", null);
-			}
+		}catch(VerificarIdException e){
+			ok = false;
+			e.printStackTrace();
+			new MessageUtil().showWarnMessage(e.getMessage() + " Seccion Debito Bancario.", e.getMessage() + " Seccion Debito Bancario.");
 		}
 		
 		return ok;
@@ -505,6 +631,7 @@ public class CuentasNuevasBean implements Serializable{
 		if(telefonosBean.getLisTelefonos() != null && telefonosBean.getLisTelefonos().size() > 0){
 			ok = true;
 		}else{
+			activeIndex = 3;
 			new MessageUtil().showWarnMessage("Debe agregar al menos un telefono en seccion Telefonos Cliente", null);
 		}
 		
@@ -627,5 +754,13 @@ public class CuentasNuevasBean implements Serializable{
 
 	public void setIdcuenta(int idcuenta) {
 		this.idcuenta = idcuenta;
+	}
+
+	public int getActiveIndex() {
+		return activeIndex;
+	}
+
+	public void setActiveIndex(int activeIndex) {
+		this.activeIndex = activeIndex;
 	}
 }

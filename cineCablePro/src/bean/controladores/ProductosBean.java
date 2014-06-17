@@ -79,8 +79,7 @@ public class ProductosBean implements Serializable {
 			} catch (Exception e) {
 				e.printStackTrace();
 				new MessageUtil()
-						.showFatalMessage("Error!",
-								"Ha ocurrido un error inesperado. Comunicar al Webmaster!");
+						.showFatalMessage("Error! Ha ocurrido un error inesperado. Comunicar al Webmaster!","");
 			}
 		}
 	}
@@ -124,7 +123,7 @@ public class ProductosBean implements Serializable {
 					.getTipojerarquia().split(","));
 		} else {
 			new MessageUtil().showWarnMessage(
-					"Debe seleccionar el producto principal", null);
+					"Debe seleccionar el producto principal", "");
 		}
 
 		return lisProducto;
@@ -141,37 +140,66 @@ public class ProductosBean implements Serializable {
 					jerarquia, filtroIn, 10, 0, args);
 		} catch (Exception e) {
 			e.printStackTrace();
-			new MessageUtil().showFatalMessage("Esto es Vergonzoso!",
-					"Ha ocurrido un error inesperado. Comunicar al Webmaster!");
+			new MessageUtil().showFatalMessage("Esto es Vergonzoso! Ha ocurrido un error inesperado. Comunicar al Webmaster!", "");
 		}
 
 		return lisProducto;
 	}
 
 	public void agregarProductos() {
-
-		ProductoId productosID = new ProductoId(0, null, 0, 0);
-
-		productosID.setIdProducto(productoSelected.getIdproducto());
-		productosID.setNombreProd(productoSelected.getNombre());
-		productosID.setCantidad(1);
-
-		lisProductosId.add(productosID);
+		if(validacionProductoOk()){
+			ProductoId productosID = new ProductoId(0, null, 0, 0);
+	
+			productosID.setIdProducto(productoSelected.getIdproducto());
+			productosID.setNombreProd(productoSelected.getNombre());
+			productosID.setCantidad(1);
+	
+			lisProductosId.add(productosID);
+		}
+	}
+	
+	private boolean validacionProductoOk(){
+		boolean ok = false;
+		
+		if(productoSelected != null && productoSelected.getIdproducto() > 0){
+			ok = true;
+		}else{
+			new MessageUtil().showWarnMessage("Ingrese un Producto","");
+		}
+		
+		return ok;
 	}
 
 	public void agregarAdicional() {
-
-		ProductoId productosID = new ProductoId(0, null, 0, 0);
-
-		productosID.setIdProducto(adicionalSelected.getIdproducto());
-		productosID.setNombreProd(adicionalSelected.getNombre());
-		productosID.setCantidad(cantidad);
-
-		lisProductosId.add(productosID);
-
-		// inicializar
-		adicionalSelected = new Producto();
-		cantidad = 1;
+		if(validacionAdicionalOk()){
+			ProductoId productosID = new ProductoId(0, null, 0, 0);
+	
+			productosID.setIdProducto(adicionalSelected.getIdproducto());
+			productosID.setNombreProd(adicionalSelected.getNombre());
+			productosID.setCantidad(cantidad);
+	
+			lisProductosId.add(productosID);
+	
+			// inicializar
+			adicionalSelected = new Producto();
+			cantidad = 1;
+		}
+	}
+	
+	private boolean validacionAdicionalOk(){
+		boolean ok = false;
+		
+		if(adicionalSelected != null && adicionalSelected.getIdproducto() > 0){
+			if(cantidad > 0){
+				ok = true;
+			}else{
+				new MessageUtil().showWarnMessage("Ingrese cantidad del Adicional","");
+			}
+		}else{
+			new MessageUtil().showWarnMessage("Ingrese un Adicional","");
+		}
+		
+		return ok;
 	}
 
 	public void quitarProducto() {
@@ -180,8 +208,7 @@ public class ProductosBean implements Serializable {
 
 			new MessageUtil().showInfoMessage("Listo!", "Producto excluida!");
 		} catch (Exception re) {
-			new MessageUtil().showFatalMessage("Esto es Vergonzoso!",
-					"Ha ocurrido un error inesperado. Comunicar al Webmaster!");
+			new MessageUtil().showFatalMessage("Esto es Vergonzoso! Ha ocurrido un error inesperado. Comunicar al Webmaster!", "");
 		}
 	}
 	

@@ -42,23 +42,39 @@ public class AdicionarProductosBean implements Serializable{
 	}
 
 	public void grabar(){
-		
-		try{
-			CtasprodBO ctasprodBO = new CtasprodBO();
-			boolean ok = ctasprodBO.grabarProductos(productosBean.getIdcuenta(), productosBean.getLisProductosId(), productosBean.getLisProductosIdClon());
-			
-			if(ok){
-				new MessageUtil().showInfoMessage("Listo!", "Datos grabados con Exito!");
-			}else{
-				new MessageUtil().showInfoMessage("Aviso", "No existen cambios que guardar");
+		if(validacionProductoOk()){
+			try{
+				CtasprodBO ctasprodBO = new CtasprodBO();
+				boolean ok = ctasprodBO.grabarProductos(productosBean.getIdcuenta(), productosBean.getLisProductosId(), productosBean.getLisProductosIdClon());
+				
+				if(ok){
+					FacesUtil facesUtil = new FacesUtil();
+					try {
+						facesUtil.redirect("cliente.jsf?faces-redirect=true&idcuenta="+idcuenta);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}else{
+					new MessageUtil().showInfoMessage("No existen cambios que guardar", "");
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+				new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", "");
 			}
-		}catch(Exception e){
-			e.printStackTrace();
-			new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", null);
 		}
-		
 	}
 
+	private boolean validacionProductoOk(){
+		boolean ok = false;
+		
+		if(productosBean.getLisProductosId() != null && productosBean.getLisProductosId().size() > 0){
+			ok = true;
+		}else{
+			new MessageUtil().showWarnMessage("Debe seleccionar al menos un producto en seccion Productos Cliente", "");
+		}
+		
+		return ok;
+	}
 	public ProductosBean getProductosBean() {
 		return productosBean;
 	}

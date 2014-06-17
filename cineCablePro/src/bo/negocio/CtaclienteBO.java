@@ -25,6 +25,7 @@ import pojo.annotations.Debitobco;
 import pojo.annotations.Direccion;
 import pojo.annotations.Estado;
 import pojo.annotations.Producto;
+import pojo.annotations.Referenciadir;
 import pojo.annotations.Telefono;
 import pojo.annotations.Tipocliente;
 import pojo.annotations.custom.ProductoId;
@@ -87,7 +88,7 @@ public class CtaclienteBO {
         return lisCtacliente;
     }
     
-    public boolean grabarCliente(Ctacliente ctacliente, Conyuge conyuge, List<ProductoId> lisProductoId, Direccion direccionInstalacion, Direccion direccionCorrespondencia, Direccion direccionCobranza, Debitobco debitobco, List<Telefono> lisTelefonos) throws Exception {
+    public boolean grabarCliente(Ctacliente ctacliente, Conyuge conyuge, List<ProductoId> lisProductoId, Direccion direccionInstalacion, Direccion direccionCorrespondencia, Direccion direccionCobranza, Debitobco debitobco, List<Telefono> lisTelefonos, Referenciadir referenciadirInstalacion, Referenciadir referenciadirCorrespondencia, Referenciadir referenciadirCobranza) throws Exception {
     	boolean ok = false;
     	Session session = null;
     	
@@ -185,16 +186,17 @@ public class CtaclienteBO {
 			//grabar
 			direccionDAO.saveDireccion(session, direccionInstalacion);
 			
-			//referenciadir de instalacion
-			int maxIdreferenciainstalacion = referenciadirDAO.maxIdreferencia(session) + 1;
-			
-			direccionInstalacion.getReferenciadir().setIdreferencia(maxIdreferenciainstalacion);
-			direccionInstalacion.getReferenciadir().setIddireccion(direccionInstalacion.getIddireccion());
-			direccionInstalacion.getReferenciadir().setIdcuenta(ctacliente.getIdcuenta());
-			
-			//grabar
-			referenciadirDAO.saveReferenciadir(session, direccionInstalacion.getReferenciadir());
-			
+			if(referenciadirInstalacion != null && referenciadirInstalacion.getReferencia() != null && referenciadirInstalacion.getReferencia().trim().length() > 0){
+				//referenciadir de instalacion
+				int maxIdreferenciainstalacion = referenciadirDAO.maxIdreferencia(session) + 1;
+				
+				referenciadirInstalacion.setIdreferencia(maxIdreferenciainstalacion);
+				referenciadirInstalacion.setDireccion(direccionInstalacion);
+				referenciadirInstalacion.setIdcuenta(ctacliente.getIdcuenta());
+				
+				//grabar
+				referenciadirDAO.saveReferenciadir(session, referenciadirInstalacion);
+			}
 			
 			//direccion de correspondencia
 			int maxIddireccioncorrespondencia = direccionDAO.maxIddireccion(session) + 1;
@@ -205,16 +207,18 @@ public class CtaclienteBO {
 			
 			//grabar
 			direccionDAO.saveDireccion(session, direccionCorrespondencia);
-			
-			//referenciadir de correspondencia
-			int maxIdreferenciacorrespondencia = referenciadirDAO.maxIdreferencia(session) + 1;
-			direccionCorrespondencia.getReferenciadir().setIdreferencia(maxIdreferenciacorrespondencia);
-			direccionCorrespondencia.getReferenciadir().setIddireccion(direccionCorrespondencia.getIddireccion());
-			direccionCorrespondencia.getReferenciadir().setIdcuenta(ctacliente.getIdcuenta());
-			
-			//grabar
-			referenciadirDAO.saveReferenciadir(session, direccionCorrespondencia.getReferenciadir());
-			
+
+			if(referenciadirCorrespondencia != null && referenciadirCorrespondencia.getReferencia() != null && referenciadirCorrespondencia.getReferencia().trim().length() > 0){
+				//referenciadir de correspondencia
+				int maxIdreferenciacorrespondencia = referenciadirDAO.maxIdreferencia(session) + 1;
+				
+				referenciadirCorrespondencia.setIdreferencia(maxIdreferenciacorrespondencia);
+				referenciadirCorrespondencia.setDireccion(direccionCorrespondencia);
+				referenciadirCorrespondencia.setIdcuenta(ctacliente.getIdcuenta());
+				
+				//grabar
+				referenciadirDAO.saveReferenciadir(session, referenciadirCorrespondencia);
+			}
 			
 			//direccion de cobranza
 			int maxIddireccioncobranza = direccionDAO.maxIddireccion(session) + 1;
@@ -226,15 +230,17 @@ public class CtaclienteBO {
 			//grabar
 			direccionDAO.saveDireccion(session, direccionCobranza);
 			
-			//referenciadir de correspondencia
-			int maxIdreferenciacobranza = referenciadirDAO.maxIdreferencia(session) + 1;
-			direccionCobranza.getReferenciadir().setIdreferencia(maxIdreferenciacobranza);
-			direccionCobranza.getReferenciadir().setIddireccion(direccionCobranza.getIddireccion());
-			direccionCobranza.getReferenciadir().setIdcuenta(ctacliente.getIdcuenta());
-			
-			//grabar
-			referenciadirDAO.saveReferenciadir(session, direccionCobranza.getReferenciadir());
-			
+			if(referenciadirCobranza != null && referenciadirCobranza.getReferencia() != null && referenciadirCobranza.getReferencia().trim().length() > 0){
+				//referenciadir de correspondencia
+				int maxIdreferenciacobranza = referenciadirDAO.maxIdreferencia(session) + 1;
+				
+				referenciadirCobranza.setIdreferencia(maxIdreferenciacobranza);
+				referenciadirCobranza.setDireccion(direccionCobranza);
+				referenciadirCobranza.setIdcuenta(ctacliente.getIdcuenta());
+				
+				//grabar
+				referenciadirDAO.saveReferenciadir(session, referenciadirCobranza);
+			}
 			
 			//debitobco
 			int maxIddebitobco = debitosbcoDAO.maxIddebitobco(session) + 1;
@@ -278,7 +284,7 @@ public class CtaclienteBO {
     	return ok;
     }
     
-    public boolean grabarCuenta(Ctacliente ctacliente, List<ProductoId> lisProductoId, Direccion direccionInstalacion, Direccion direccionCorrespondencia, Direccion direccionCobranza, Debitobco debitobco, List<Telefono> lisTelefonos) throws Exception {
+    public boolean grabarCuenta(Ctacliente ctacliente, List<ProductoId> lisProductoId, Direccion direccionInstalacion, Direccion direccionCorrespondencia, Direccion direccionCobranza, Debitobco debitobco, List<Telefono> lisTelefonos, Referenciadir referenciadirInstalacion, Referenciadir referenciadirCorrespondencia, Referenciadir referenciadirCobranza) throws Exception {
     	boolean ok = false;
     	Session session = null;
     	
@@ -352,16 +358,17 @@ public class CtaclienteBO {
 			//grabar
 			direccionDAO.saveDireccion(session, direccionInstalacion);
 			
-			//referenciadir de instalacion
-			int maxIdreferenciainstalacion = referenciadirDAO.maxIdreferencia(session) + 1;
-			
-			direccionInstalacion.getReferenciadir().setIdreferencia(maxIdreferenciainstalacion);
-			direccionInstalacion.getReferenciadir().setIddireccion(direccionInstalacion.getIddireccion());
-			direccionInstalacion.getReferenciadir().setIdcuenta(ctacliente.getIdcuenta());
-			
-			//grabar
-			referenciadirDAO.saveReferenciadir(session, direccionInstalacion.getReferenciadir());
-			
+			if(referenciadirInstalacion != null && referenciadirInstalacion.getReferencia() != null && referenciadirInstalacion.getReferencia().trim().length() > 0){
+				//referenciadir de instalacion
+				int maxIdreferenciainstalacion = referenciadirDAO.maxIdreferencia(session) + 1;
+				
+				referenciadirInstalacion.setIdreferencia(maxIdreferenciainstalacion);
+				referenciadirInstalacion.setDireccion(direccionInstalacion);
+				referenciadirInstalacion.setIdcuenta(ctacliente.getIdcuenta());
+				
+				//grabar
+				referenciadirDAO.saveReferenciadir(session, referenciadirInstalacion);
+			}
 			
 			//direccion de correspondencia
 			int maxIddireccioncorrespondencia = direccionDAO.maxIddireccion(session) + 1;
@@ -373,15 +380,17 @@ public class CtaclienteBO {
 			//grabar
 			direccionDAO.saveDireccion(session, direccionCorrespondencia);
 			
-			//referenciadir de correspondencia
-			int maxIdreferenciacorrespondencia = referenciadirDAO.maxIdreferencia(session) + 1;
-			direccionCorrespondencia.getReferenciadir().setIdreferencia(maxIdreferenciacorrespondencia);
-			direccionCorrespondencia.getReferenciadir().setIddireccion(direccionCorrespondencia.getIddireccion());
-			direccionCorrespondencia.getReferenciadir().setIdcuenta(ctacliente.getIdcuenta());
-			
-			//grabar
-			referenciadirDAO.saveReferenciadir(session, direccionCorrespondencia.getReferenciadir());
-			
+			if(referenciadirCorrespondencia != null && referenciadirCorrespondencia.getReferencia() != null && referenciadirCorrespondencia.getReferencia().trim().length() > 0){
+				//referenciadir de correspondencia
+				int maxIdreferenciacorrespondencia = referenciadirDAO.maxIdreferencia(session) + 1;
+				
+				referenciadirCorrespondencia.setIdreferencia(maxIdreferenciacorrespondencia);
+				referenciadirCorrespondencia.setDireccion(direccionCorrespondencia);
+				referenciadirCorrespondencia.setIdcuenta(ctacliente.getIdcuenta());
+				
+				//grabar
+				referenciadirDAO.saveReferenciadir(session, referenciadirCorrespondencia);
+			}
 			
 			//direccion de cobranza
 			int maxIddireccioncobranza = direccionDAO.maxIddireccion(session) + 1;
@@ -393,15 +402,17 @@ public class CtaclienteBO {
 			//grabar
 			direccionDAO.saveDireccion(session, direccionCobranza);
 			
-			//referenciadir de correspondencia
-			int maxIdreferenciacobranza = referenciadirDAO.maxIdreferencia(session) + 1;
-			direccionCobranza.getReferenciadir().setIdreferencia(maxIdreferenciacobranza);
-			direccionCobranza.getReferenciadir().setIddireccion(direccionCobranza.getIddireccion());
-			direccionCobranza.getReferenciadir().setIdcuenta(ctacliente.getIdcuenta());
-			
-			//grabar
-			referenciadirDAO.saveReferenciadir(session, direccionCobranza.getReferenciadir());
-			
+			if(referenciadirCobranza != null && referenciadirCobranza.getReferencia() != null && referenciadirCobranza.getReferencia().trim().length() > 0){
+				//referenciadir de correspondencia
+				int maxIdreferenciacobranza = referenciadirDAO.maxIdreferencia(session) + 1;
+				
+				referenciadirCobranza.setIdreferencia(maxIdreferenciacobranza);
+				referenciadirCobranza.setDireccion(direccionCobranza);
+				referenciadirCobranza.setIdcuenta(ctacliente.getIdcuenta());
+				
+				//grabar
+				referenciadirDAO.saveReferenciadir(session, referenciadirCobranza);
+			}
 			
 			//debitobco
 			int maxIddebitobco = debitosbcoDAO.maxIddebitobco(session) + 1;
