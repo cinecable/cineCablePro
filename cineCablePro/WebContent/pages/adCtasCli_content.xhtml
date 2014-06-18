@@ -8,10 +8,9 @@
 	xmlns:my="http://java.sun.com/jsf/composite/components/paginas">
 
 	<h:form id="form-contentpage">
-		<p:messages id="mensajes" autoUpdate="true" showSummary="true" closable="true" />
-
 		<h1 class="title ui-widget-header" style="text-align: center;">Cuentas
 			Nuevos</h1>
+		<p:messages id="mensajes" autoUpdate="true" showSummary="true" closable="true" />
 		<p:panel id="panel-content" style="min-height: 300px;margin: 20px 0">
 			<h:link value="Regresar" style="float: right;" outcome="cliente?faces-redirect=true" >
 				<f:param name="idcuenta" value="#{cuentasNuevasBean.idcuenta}"></f:param>
@@ -99,7 +98,7 @@
 			</p:accordionPanel>
 			<p:spacer height="50px"></p:spacer>
 			<center>
-				<p:commandButton value="Grabar" onclick="PF('widgetVarAcordion').collapse()" actionListener="#{cuentasNuevasBean.grabar()}"
+				<p:commandButton value="Grabar" actionListener="#{cuentasNuevasBean.grabar()}"
 					update=":form-contentpage:mensajes" />
 			</center>
 		</p:panel>

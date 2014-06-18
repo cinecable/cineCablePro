@@ -24,12 +24,13 @@ public class Mensajes implements java.io.Serializable {
 	private Date fecharegistro;
 	private String iplog;
 	private Date fechamodificacion;
+	private Date fechacaducidad;
 	
 	public Mensajes() {
 	}
 	
 	public Mensajes(int idmensajes, String descripcion, String idcliente, boolean estado, Date fecharegistro, 
-			String iplog, Date fechamodificacion) {
+			String iplog, Date fechamodificacion, Date fechacaducidad) {
 		this.idmensajes = idmensajes;
 		this.descripcion = descripcion;
 		this.idcliente = idcliente;
@@ -37,6 +38,7 @@ public class Mensajes implements java.io.Serializable {
 		this.fecharegistro = fecharegistro;
 		this.iplog = iplog;
 		this.fechamodificacion = fechamodificacion;
+		this.fechacaducidad = fechacaducidad;
 	}
 
 	@Id
@@ -103,6 +105,16 @@ public class Mensajes implements java.io.Serializable {
 
 	public void setFechamodificacion(Date fechamodificacion) {
 		this.fechamodificacion = fechamodificacion;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fechacaducidad", length = 29)
+	public Date getFechacaducidad() {
+		return fechacaducidad;
+	}
+
+	public void setFechacaducidad(Date fechacaducidad) {
+		this.fechacaducidad = fechacaducidad;
 	}
 	  
 }

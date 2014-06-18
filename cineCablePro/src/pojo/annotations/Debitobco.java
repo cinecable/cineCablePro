@@ -18,7 +18,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "debitobco", schema = "public")
-public class Debitobco implements java.io.Serializable {
+public class Debitobco implements java.io.Serializable, Cloneable {
 
 	/**
 	 * 
@@ -185,14 +185,100 @@ public class Debitobco implements java.io.Serializable {
 		this.idestado = idestado;
 	}
 
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 	
-	/*@OneToMany(fetch = FetchType.LAZY, mappedBy = "debitobco")
-	public Set<?> getCtaclientes() {
-		return this.ctaclientes;
+	public Debitobco clonar() throws Exception {
+		return (Debitobco)clone();
 	}
 
-	public void setCtaclientes(Set<?> ctaclientes) {
-		this.ctaclientes = ctaclientes;
-	}*/
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((bancos == null) ? 0 : bancos.getIdbanco());
+		result = prime * result
+				+ ((codigoseguridad == null) ? 0 : codigoseguridad.hashCode());
+		result = prime * result
+				+ ((fcaducidad == null) ? 0 : fcaducidad.hashCode());
+		result = prime * result
+				+ ((idbancotar == null) ? 0 : idbancotar.hashCode());
+		result = prime * result + idcuenta;
+		result = prime * result + iddebitobco;
+		result = prime * result
+				+ ((identificacion == null) ? 0 : identificacion.hashCode());
+		result = prime * result + idestado;
+		result = prime * result + idtipocuenta;
+		result = prime * result + idtipodebito;
+		result = prime * result + idtipoidentificacion;
+		result = prime * result
+				+ ((nrodebito == null) ? 0 : nrodebito.hashCode());
+		result = prime * result
+				+ ((propietario == null) ? 0 : propietario.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Debitobco other = (Debitobco) obj;
+		if (bancos == null) {
+			if (other.bancos != null)
+				return false;
+		} else if (bancos.getIdbanco() != other.bancos.getIdbanco())
+			return false;
+		if (codigoseguridad == null) {
+			if (other.codigoseguridad != null)
+				return false;
+		} else if (!codigoseguridad.equals(other.codigoseguridad))
+			return false;
+		if (fcaducidad == null) {
+			if (other.fcaducidad != null)
+				return false;
+		} else if (!fcaducidad.equals(other.fcaducidad))
+			return false;
+		if (idbancotar == null) {
+			if (other.idbancotar != null)
+				return false;
+		} else if (!idbancotar.equals(other.idbancotar))
+			return false;
+		if (idcuenta != other.idcuenta)
+			return false;
+		if (iddebitobco != other.iddebitobco)
+			return false;
+		if (identificacion == null) {
+			if (other.identificacion != null)
+				return false;
+		} else if (!identificacion.equals(other.identificacion))
+			return false;
+		if (idestado != other.idestado)
+			return false;
+		if (idtipocuenta != other.idtipocuenta)
+			return false;
+		if (idtipodebito != other.idtipodebito)
+			return false;
+		if (idtipoidentificacion != other.idtipoidentificacion)
+			return false;
+		if (nrodebito == null) {
+			if (other.nrodebito != null)
+				return false;
+		} else if (!nrodebito.equals(other.nrodebito))
+			return false;
+		if (propietario == null) {
+			if (other.propietario != null)
+				return false;
+		} else if (!propietario.equals(other.propietario))
+			return false;
+		return true;
+	}
+	
+	
 
 }

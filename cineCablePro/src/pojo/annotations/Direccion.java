@@ -300,4 +300,135 @@ public class Direccion implements java.io.Serializable, Cloneable {
 		return (Direccion)this.clone();
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((calleprincipal == null) ? 0 : calleprincipal.getIdcalleprincipal());
+		result = prime * result
+				+ ((callesecundaria == null) ? 0 : callesecundaria.getIdcallesecundaria());
+		result = prime * result
+				+ ((correspondencia == null) ? 0 : correspondencia.hashCode());
+		result = prime * result
+				+ ((ctacliente == null) ? 0 : ctacliente.getIdcuenta());
+		result = prime * result
+				+ ((departamento == null) ? 0 : departamento.hashCode());
+		result = prime * result
+				+ ((edificio == null) ? 0 : edificio.getIdedificio());
+		result = prime * result + iddireccion;
+		result = prime * result + idestado;
+		result = prime * result + ((idtab == null) ? 0 : idtab.hashCode());
+		result = prime * result + ((nodos == null) ? 0 : nodos.getIdnodo());
+		result = prime * result + ((numero == null) ? 0 : numero.hashCode());
+		result = prime * result + ((piso == null) ? 0 : piso.hashCode());
+		result = prime * result + ((poste == null) ? 0 : poste.hashCode());
+		result = prime * result + ((sector == null) ? 0 : sector.getIdsector());
+		result = prime * result + ((solar == null) ? 0 : solar.hashCode());
+		result = prime * result
+				+ ((tiposector == null) ? 0 : tiposector.getIdtiposector());
+		result = prime * result
+				+ ((ubicacion == null) ? 0 : ubicacion.getIdubicacion());
+		result = prime * result + ((vineta == null) ? 0 : vineta.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Direccion other = (Direccion) obj;
+		if (calleprincipal == null) {
+			if (other.calleprincipal != null)
+				return false;
+		} else if (calleprincipal.getIdcalleprincipal() != other.calleprincipal.getIdcalleprincipal())
+			return false;
+		if (callesecundaria == null) {
+			if (other.callesecundaria != null)
+				return false;
+		} else if (callesecundaria.getIdcallesecundaria() != other.callesecundaria.getIdcallesecundaria())
+			return false;
+		if (correspondencia == null) {
+			if (other.correspondencia != null)
+				return false;
+		} else if (!correspondencia.equals(other.correspondencia))
+			return false;
+		if (ctacliente == null) {
+			if (other.ctacliente != null)
+				return false;
+		} else if (ctacliente.getIdcuenta() != other.ctacliente.getIdcuenta())
+			return false;
+		if (departamento == null) {
+			if (other.departamento != null)
+				return false;
+		} else if (!departamento.equals(other.departamento))
+			return false;
+		if (edificio == null) {
+			if (other.edificio != null)
+				return false;
+		} else if (edificio.getIdedificio() != other.edificio.getIdedificio())
+			return false;
+		if (iddireccion != other.iddireccion)
+			return false;
+		if (idestado != other.idestado)
+			return false;
+		if (idtab == null) {
+			if (other.idtab != null)
+				return false;
+		} else if (!idtab.equals(other.idtab))
+			return false;
+		if (nodos == null) {
+			if (other.nodos != null)
+				return false;
+		} else if (nodos.getIdnodo() != other.nodos.getIdnodo())
+			return false;
+		if (numero == null) {
+			if (other.numero != null)
+				return false;
+		} else if (!numero.equals(other.numero))
+			return false;
+		if (piso == null) {
+			if (other.piso != null)
+				return false;
+		} else if (!piso.equals(other.piso))
+			return false;
+		if (poste == null) {
+			if (other.poste != null)
+				return false;
+		} else if (!poste.equals(other.poste))
+			return false;
+		if (sector == null) {
+			if (other.sector != null)
+				return false;
+		} else if (sector.getIdsector() != other.sector.getIdsector())
+			return false;
+		if (solar == null) {
+			if (other.solar != null)
+				return false;
+		} else if (!solar.equals(other.solar))
+			return false;
+		if (tiposector == null) {
+			if (other.tiposector != null)
+				return false;
+		} else if (tiposector.getIdtiposector() != other.tiposector.getIdtiposector())
+			return false;
+		if (ubicacion == null) {
+			if (other.ubicacion != null)
+				return false;
+		} else if (ubicacion.getIdubicacion() != other.ubicacion.getIdubicacion())
+			return false;
+		if (vineta == null) {
+			if (other.vineta != null)
+				return false;
+		} else if (!vineta.equals(other.vineta))
+			return false;
+		return true;
+	}
+	
+	
+
 }

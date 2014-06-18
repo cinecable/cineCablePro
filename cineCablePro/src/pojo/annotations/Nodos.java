@@ -140,5 +140,64 @@ public class Nodos implements java.io.Serializable, Cloneable {
 	protected Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
+	
+	public Nodos clonar() throws Exception {
+		return (Nodos)clone();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((abreviado == null) ? 0 : abreviado.hashCode());
+		result = prime * result + ((fecha == null) ? 0 : fecha.hashCode());
+		result = prime * result + idestado;
+		result = prime * result + idnodo;
+		result = prime * result + idusuario;
+		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
+		result = prime * result + ((sector == null) ? 0 : sector.getIdsector());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Nodos other = (Nodos) obj;
+		if (abreviado == null) {
+			if (other.abreviado != null)
+				return false;
+		} else if (!abreviado.equals(other.abreviado))
+			return false;
+		if (fecha == null) {
+			if (other.fecha != null)
+				return false;
+		} else if (!fecha.equals(other.fecha))
+			return false;
+		if (idestado != other.idestado)
+			return false;
+		if (idnodo != other.idnodo)
+			return false;
+		if (idusuario != other.idusuario)
+			return false;
+		if (nombre == null) {
+			if (other.nombre != null)
+				return false;
+		} else if (!nombre.equals(other.nombre))
+			return false;
+		if (sector == null) {
+			if (other.sector != null)
+				return false;
+		} else if (sector.getIdsector() != other.sector.getIdsector())
+			return false;
+		return true;
+	}
+	
+	
 
 }

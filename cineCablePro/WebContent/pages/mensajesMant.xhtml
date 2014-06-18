@@ -5,24 +5,18 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	template="../templates/default.xhtml">
 
-	<ui:define name="title">Datos Básicos</ui:define>
+	<ui:define name="title">Modificacion Mensajes</ui:define>
 	
 	<ui:define name="head">
-		<style type="text/css">
-            .gridcriterios {
-                width: 100%;
-            }
-            .gridcriterios tr, .gridcriterios td {
-                border: none;
-            }
+		 <style type="text/css">
         </style>
 	</ui:define>
 	
 	<ui:define name="side_page">
-		<ui:include src="../pages/datosBasicos_side.xhtml"></ui:include>
+		<ui:include src="../pages/mensajesMant_side.xhtml"></ui:include>
 	</ui:define>
 	<ui:define name="content_page">
-		<ui:include src="../pages/datosBasicos_content.xhtml"></ui:include>
+		<ui:include src="../pages/mensajesMant_content.xhtml"></ui:include>
 	</ui:define>
-	
+
 </ui:composition>

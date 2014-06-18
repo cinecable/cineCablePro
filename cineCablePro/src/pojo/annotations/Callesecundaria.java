@@ -164,4 +164,75 @@ public class Callesecundaria implements java.io.Serializable, Cloneable {
 	protected Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
+	
+	public Callesecundaria clonar() throws Exception {
+		return (Callesecundaria)clone();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((abreviado == null) ? 0 : abreviado.hashCode());
+		result = prime * result + ((empresa == null) ? 0 : empresa.getIdempresa());
+		result = prime * result + ((estado == null) ? 0 : estado.getIdestado());
+		result = prime * result + ((fecha == null) ? 0 : fecha.hashCode());
+		result = prime * result + idcallesecundaria;
+		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
+		result = prime * result + ((sector == null) ? 0 : sector.getIdsector());
+		result = prime * result + ((usuario == null) ? 0 : usuario.getIdusuario());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Callesecundaria other = (Callesecundaria) obj;
+		if (abreviado == null) {
+			if (other.abreviado != null)
+				return false;
+		} else if (!abreviado.equals(other.abreviado))
+			return false;
+		if (empresa == null) {
+			if (other.empresa != null)
+				return false;
+		} else if (empresa.getIdempresa() != other.empresa.getIdempresa())
+			return false;
+		if (estado == null) {
+			if (other.estado != null)
+				return false;
+		} else if (estado.getIdestado() != other.estado.getIdestado())
+			return false;
+		if (fecha == null) {
+			if (other.fecha != null)
+				return false;
+		} else if (!fecha.equals(other.fecha))
+			return false;
+		if (idcallesecundaria != other.idcallesecundaria)
+			return false;
+		if (nombre == null) {
+			if (other.nombre != null)
+				return false;
+		} else if (!nombre.equals(other.nombre))
+			return false;
+		if (sector == null) {
+			if (other.sector != null)
+				return false;
+		} else if (sector.getIdsector() != other.sector.getIdsector())
+			return false;
+		if (usuario == null) {
+			if (other.usuario != null)
+				return false;
+		} else if (usuario.getIdusuario() != other.usuario.getIdusuario())
+			return false;
+		return true;
+	}
+	
+	
 }

@@ -113,5 +113,58 @@ public class Tiposector implements java.io.Serializable, Cloneable {
 	protected Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
+	
+	public Tiposector clonar() throws Exception {
+		return (Tiposector)clone();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((abreviado == null) ? 0 : abreviado.hashCode());
+		result = prime * result + ((fecha == null) ? 0 : fecha.hashCode());
+		result = prime * result + idtiposector;
+		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
+		result = prime * result + ((usuario == null) ? 0 : usuario.getIdusuario());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Tiposector other = (Tiposector) obj;
+		if (abreviado == null) {
+			if (other.abreviado != null)
+				return false;
+		} else if (!abreviado.equals(other.abreviado))
+			return false;
+		if (fecha == null) {
+			if (other.fecha != null)
+				return false;
+		} else if (!fecha.equals(other.fecha))
+			return false;
+		if (idtiposector != other.idtiposector)
+			return false;
+		if (nombre == null) {
+			if (other.nombre != null)
+				return false;
+		} else if (!nombre.equals(other.nombre))
+			return false;
+		if (usuario == null) {
+			if (other.usuario != null)
+				return false;
+		} else if (usuario.getIdusuario() != other.usuario.getIdusuario())
+			return false;
+		return true;
+	}
+	
+	
 
 }

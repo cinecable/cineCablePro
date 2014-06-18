@@ -8,9 +8,14 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import pojo.annotations.Calleprincipal;
+import pojo.annotations.Callesecundaria;
 import pojo.annotations.Clientes;
 import pojo.annotations.Ctacliente;
+import pojo.annotations.Edificio;
 import pojo.annotations.Empresa;
+import pojo.annotations.Referenciadir;
+import pojo.annotations.Ubicacion;
 
 import util.FacesUtil;
 import util.MessageUtil;
@@ -84,31 +89,106 @@ public class DireccionMantBean implements Serializable {
 			try{
 				DireccionBO direccionBO = new DireccionBO();
 				
-				if(direccionInstalacionBean.getDireccion().getCalleprincipal() != null && direccionInstalacionBean.getDireccion().getCalleprincipal().getIdcalleprincipal() == 0){
-					direccionInstalacionBean.getDireccion().setCalleprincipal(null);
+				//calles
+				if(direccionInstalacionBean.getDireccion().getCalleprincipal() == null){
+					if(direccionInstalacionBean.getDireccionClon().getCalleprincipal() != null && direccionInstalacionBean.getDireccionClon().getCalleprincipal().getIdcalleprincipal() == 0){
+						direccionInstalacionBean.getDireccion().setCalleprincipal(new Calleprincipal());
+					}
 				}
-				if(direccionInstalacionBean.getDireccion().getCallesecundaria() != null && direccionInstalacionBean.getDireccion().getCallesecundaria().getIdcallesecundaria() == 0){
-					direccionInstalacionBean.getDireccion().setCallesecundaria(null);
-				}
-				if(direccionCorrespondenciaBean.getDireccion().getCalleprincipal() != null && direccionCorrespondenciaBean.getDireccion().getCalleprincipal().getIdcalleprincipal() == 0){
-					direccionCorrespondenciaBean.getDireccion().setCalleprincipal(null);
-				}
-				if(direccionCorrespondenciaBean.getDireccion().getCallesecundaria() != null && direccionCorrespondenciaBean.getDireccion().getCallesecundaria().getIdcallesecundaria() == 0){
-					direccionCorrespondenciaBean.getDireccion().setCallesecundaria(null);
-				}
-				if(direccionConbranzaBean.getDireccion().getCalleprincipal() != null && direccionConbranzaBean.getDireccion().getCalleprincipal().getIdcalleprincipal() == 0){
-					direccionConbranzaBean.getDireccion().setCalleprincipal(null);
-				}
-				if(direccionConbranzaBean.getDireccion().getCallesecundaria() != null && direccionConbranzaBean.getDireccion().getCallesecundaria().getIdcallesecundaria() == 0){
-					direccionConbranzaBean.getDireccion().setCallesecundaria(null);
+				if(direccionInstalacionBean.getDireccion().getCallesecundaria() == null){
+					if(direccionInstalacionBean.getDireccionClon().getCallesecundaria() != null && direccionInstalacionBean.getDireccionClon().getCallesecundaria().getIdcallesecundaria() == 0){
+						direccionInstalacionBean.getDireccion().setCallesecundaria(new Callesecundaria());
+					}
 				}
 				
-				direccionBO.modificar(idcuenta, direccionInstalacionBean.getDireccion(), direccionCorrespondenciaBean.getDireccion(), direccionConbranzaBean.getDireccion(), direccionInstalacionBean.getReferenciadir(), direccionCorrespondenciaBean.getReferenciadir(), direccionConbranzaBean.getReferenciadir());
+				if(direccionCorrespondenciaBean.getDireccion().getCalleprincipal() == null){
+					if(direccionCorrespondenciaBean.getDireccionClon().getCalleprincipal() != null && direccionCorrespondenciaBean.getDireccionClon().getCalleprincipal().getIdcalleprincipal() == 0){
+						direccionCorrespondenciaBean.getDireccion().setCalleprincipal(new Calleprincipal());
+					}
+				}
+				if(direccionCorrespondenciaBean.getDireccion().getCallesecundaria() == null){
+					if(direccionCorrespondenciaBean.getDireccionClon().getCallesecundaria() != null && direccionCorrespondenciaBean.getDireccionClon().getCallesecundaria().getIdcallesecundaria() == 0){
+						direccionCorrespondenciaBean.getDireccion().setCallesecundaria(new Callesecundaria());
+					}
+				}
 				
-				new MessageUtil().showInfoMessage("Listo!", "Grabado con exito");
+				if(direccionConbranzaBean.getDireccion().getCalleprincipal() == null){
+					if(direccionConbranzaBean.getDireccionClon().getCalleprincipal() != null && direccionConbranzaBean.getDireccionClon().getCalleprincipal().getIdcalleprincipal() == 0){
+						direccionConbranzaBean.getDireccion().setCalleprincipal(new Calleprincipal());
+					}
+				}
+				if(direccionConbranzaBean.getDireccion().getCallesecundaria() == null){
+					if(direccionConbranzaBean.getDireccionClon().getCallesecundaria() != null && direccionConbranzaBean.getDireccionClon().getCallesecundaria().getIdcallesecundaria() == 0){
+						direccionConbranzaBean.getDireccion().setCallesecundaria(new Callesecundaria());
+					}
+				}
+				
+				//Ubicacion
+				if(direccionInstalacionBean.getDireccion().getUbicacion() == null){
+					if(direccionInstalacionBean.getDireccionClon().getUbicacion() != null && direccionInstalacionBean.getDireccionClon().getUbicacion().getIdubicacion() == 0){
+						direccionInstalacionBean.getDireccion().setUbicacion(new Ubicacion());
+					}
+				}
+				if(direccionCorrespondenciaBean.getDireccion().getUbicacion() == null){
+					if(direccionCorrespondenciaBean.getDireccionClon().getUbicacion() != null && direccionCorrespondenciaBean.getDireccionClon().getUbicacion().getIdubicacion() == 0){
+						direccionCorrespondenciaBean.getDireccion().setUbicacion(new Ubicacion());
+					}
+				}
+				if(direccionConbranzaBean.getDireccion().getUbicacion() == null){
+					if(direccionConbranzaBean.getDireccionClon().getUbicacion() != null && direccionConbranzaBean.getDireccionClon().getUbicacion().getIdubicacion() == 0){
+						direccionConbranzaBean.getDireccion().setUbicacion(new Ubicacion());
+					}
+				}
+				
+				//Edificio
+				if(direccionInstalacionBean.getDireccion().getEdificio() == null){
+					if(direccionInstalacionBean.getDireccionClon().getEdificio() != null && direccionInstalacionBean.getDireccionClon().getEdificio().getIdedificio() == 0){
+						direccionInstalacionBean.getDireccion().setEdificio(new Edificio());
+					}
+				}
+				if(direccionCorrespondenciaBean.getDireccion().getEdificio() == null){
+					if(direccionCorrespondenciaBean.getDireccionClon().getEdificio() != null && direccionCorrespondenciaBean.getDireccionClon().getEdificio().getIdedificio() == 0){
+						direccionCorrespondenciaBean.getDireccion().setEdificio(new Edificio());
+					}
+				}
+				if(direccionConbranzaBean.getDireccion().getEdificio() == null){
+					if(direccionConbranzaBean.getDireccionClon().getEdificio() != null && direccionConbranzaBean.getDireccionClon().getEdificio().getIdedificio() == 0){
+						direccionConbranzaBean.getDireccion().setEdificio(new Edificio());
+					}
+				}
+				
+				//referencia
+				if(direccionInstalacionBean.getReferenciadir() == null){
+					if(direccionInstalacionBean.getReferenciadirClon() != null && direccionInstalacionBean.getReferenciadirClon().getIdreferencia() == 0){
+						direccionInstalacionBean.setReferenciadir(new Referenciadir());
+					}
+				}
+				if(direccionCorrespondenciaBean.getReferenciadir() == null){
+					if(direccionCorrespondenciaBean.getReferenciadirClon() != null && direccionCorrespondenciaBean.getReferenciadirClon().getIdreferencia() == 0){
+						direccionCorrespondenciaBean.setReferenciadir(new Referenciadir());
+					}
+				}
+				if(direccionConbranzaBean.getReferenciadir() == null){
+					if(direccionConbranzaBean.getReferenciadirClon() != null && direccionConbranzaBean.getReferenciadirClon().getIdreferencia() == 0){
+						direccionConbranzaBean.setReferenciadir(new Referenciadir());
+					}
+				}
+				
+				boolean ok = direccionBO.modificar(idcuenta, direccionInstalacionBean.getDireccion(), direccionInstalacionBean.getDireccionClon(), direccionCorrespondenciaBean.getDireccion(), direccionCorrespondenciaBean.getDireccionClon(), direccionConbranzaBean.getDireccion(), direccionConbranzaBean.getDireccionClon(), direccionInstalacionBean.getReferenciadir(), direccionInstalacionBean.getReferenciadirClon(), direccionCorrespondenciaBean.getReferenciadir(), direccionCorrespondenciaBean.getReferenciadirClon(), direccionConbranzaBean.getReferenciadir(), direccionConbranzaBean.getReferenciadirClon());
+				
+				if(ok){
+					FacesUtil facesUtil = new FacesUtil();
+					try {
+						facesUtil.redirect("cliente.jsf?faces-redirect=true&idcuenta="+idcuenta);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}else{
+					new MessageUtil().showInfoMessage("No existen cambios que guardar", "");
+				}
 			} catch(Exception re) {
 				re.printStackTrace();
-				new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", null);
+				new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", "");
 			}
 		}
 	}

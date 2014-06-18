@@ -50,6 +50,7 @@ public class DebitosBancariosBean  implements Serializable{
 	private boolean reqBanco;
 	
 	private Debitobco debitobco;
+	private Debitobco debitobcoClon;
 	private int idcuenta;
 	
 	public DebitosBancariosBean() {
@@ -60,6 +61,7 @@ public class DebitosBancariosBean  implements Serializable{
 		lisTipoIddoc = new ArrayList<TipoIdDoc>();
 		
 		debitobco = new Debitobco(0, new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null), 0, null, null, null, 0, null, 0, 0, null);
+		debitobcoClon = new Debitobco(0, new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null), 0, null, null, null, 0, null, 0, 0, null);
 		
 		//tipoDebitoSelected=new Tipodebito(0, null, 0, 0, null);
 		
@@ -91,6 +93,7 @@ public class DebitosBancariosBean  implements Serializable{
 			try {
 				DebitosbcoBO debitosbcoBO = new DebitosbcoBO();
 				debitobco = debitosbcoBO.getDebitobcoByIdcuenta(idcuenta);
+				debitobcoClon = debitobco.clonar();
 			} catch(Exception e) {
 				e.printStackTrace();
 				new MessageUtil().showFatalMessage("Error!", "Ha ocurrido un error inesperado. Comunicar al Webmaster!");
@@ -331,5 +334,13 @@ public void cargaBcoTar() {
 
 	public void setIdcuenta(int idcuenta) {
 		this.idcuenta = idcuenta;
+	}
+
+	public Debitobco getDebitobcoClon() {
+		return debitobcoClon;
+	}
+
+	public void setDebitobcoClon(Debitobco debitobcoClon) {
+		this.debitobcoClon = debitobcoClon;
 	}	
 }

@@ -8,33 +8,32 @@
 	xmlns:my="http://java.sun.com/jsf/composite/components/paginas">
 
 	<h:form id="form-contentpage">
-		<p:growl id="mensajes" autoUpdate="true" showDetail="true" />
-		<p:messages autoUpdate="true" showSummary="true" closable="true" />
 		#{direccionMantBean.vacio}
 		<h1 class="title ui-widget-header" style="text-align: center;">Modificación de Direcciones</h1>
+		<p:messages id="mensajes" autoUpdate="true" showSummary="true" closable="true" />
 		<h1 class="title ui-widget-header" style="text-align: center;">#{direccionMantBean.ctacliente.clientes.nombre1} #{direccionMantBean.ctacliente.clientes.apellido1} Cta ##{direccionMantBean.ctacliente.idcuenta}</h1>
 		<p:panel id="panel-content" style="min-height: 300px;margin: 20px 0" >
 			<h:link value="Regresar" style="float: right;" outcome="cliente?faces-redirect=true" >
 				<f:param name="idcuenta" value="#{direccionMantBean.idcuenta}"></f:param>
 			</h:link>
 			<br />
-					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
-						<p:fieldset id="idmarcoinstalacion" legend="Dirección de Instalación"> 
-							<my:direccion_component2 id="idcomponentedireccioninstalacion" bean="#{direccionMantBean.direccionInstalacionBean}" ></my:direccion_component2>
-						</p:fieldset>
-						
-						<p:fieldset id="idmarcocorrespondencia" legend="Dirección de Correspondencia" toggleable="true" toggleSpeed="500" collapsed="true">
-							<br />
-							<p:commandButton value="Hacer Dirección igual que Instalación" action="#{direccionMantBean.direccionCorrespondenciaIgual()}" update=":form-contentpage:mensajes, idcomponentedireccioncorrespondencia:form-direccioncomponent" immediate="true" ></p:commandButton>
-							<my:direccion_component2 id="idcomponentedireccioncorrespondencia" bean="#{direccionMantBean.direccionCorrespondenciaBean}"></my:direccion_component2>
-						</p:fieldset>
-						
-						<p:fieldset id="idmarcocobranza" legend="Dirección de Cobranza" toggleable="true" toggleSpeed="500" collapsed="true">
-							<br />
-							<p:commandButton value="Hacer Dirección igual que Instalación" action="#{direccionMantBean.direccionCobranzaIgual()}" update=":form-contentpage:mensajes, idcomponentedireccioncobranza:form-direccioncomponent" immediate="true" ></p:commandButton>
-							<my:direccion_component2 id="idcomponentedireccioncobranza" bean="#{direccionMantBean.direccionConbranzaBean}"></my:direccion_component2>
-						</p:fieldset>
-					</h:panelGrid>
+			<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
+				<p:fieldset id="idmarcoinstalacion" legend="Dirección de Instalación" toggleable="true" toggleSpeed="500" collapsed="true"> 
+					<my:direccion_component2 id="idcomponentedireccioninstalacion" bean="#{direccionMantBean.direccionInstalacionBean}" ></my:direccion_component2>
+				</p:fieldset>
+				
+				<p:fieldset id="idmarcocorrespondencia" legend="Dirección de Correspondencia" toggleable="true" toggleSpeed="500" collapsed="true">
+					<br />
+					<p:commandButton value="Hacer Dirección igual que Instalación" action="#{direccionMantBean.direccionCorrespondenciaIgual()}" update=":form-contentpage:mensajes, idcomponentedireccioncorrespondencia:form-direccioncomponent" immediate="true" ></p:commandButton>
+					<my:direccion_component2 id="idcomponentedireccioncorrespondencia" bean="#{direccionMantBean.direccionCorrespondenciaBean}"></my:direccion_component2>
+				</p:fieldset>
+				
+				<p:fieldset id="idmarcocobranza" legend="Dirección de Cobranza" toggleable="true" toggleSpeed="500" collapsed="true">
+					<br />
+					<p:commandButton value="Hacer Dirección igual que Instalación" action="#{direccionMantBean.direccionCobranzaIgual()}" update=":form-contentpage:mensajes, idcomponentedireccioncobranza:form-direccioncomponent" immediate="true" ></p:commandButton>
+					<my:direccion_component2 id="idcomponentedireccioncobranza" bean="#{direccionMantBean.direccionConbranzaBean}"></my:direccion_component2>
+				</p:fieldset>
+			</h:panelGrid>
 			<p:spacer height="50px"></p:spacer>
 			<center>
 				<p:commandButton value="Grabar" rendered="#{direccionMantBean.modificable}"

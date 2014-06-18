@@ -21,7 +21,7 @@ public class Conyuge implements java.io.Serializable, Cloneable {
 	 * 
 	 */
 	private static final long serialVersionUID = -7738032051406347728L;
-	private String idconyuge;
+	private int idconyuge;
 	private Clientes clientes;
 	private String nombre1;
 	private String nombre2;
@@ -32,12 +32,12 @@ public class Conyuge implements java.io.Serializable, Cloneable {
 	public Conyuge() {
 	}
 
-	public Conyuge(String idconyuge, Clientes clientes) {
+	public Conyuge(int idconyuge, Clientes clientes) {
 		this.idconyuge = idconyuge;
 		this.clientes = clientes;
 	}
 
-	public Conyuge(String idconyuge, Clientes clientes, String nombre1,
+	public Conyuge(int idconyuge, Clientes clientes, String nombre1,
 			String nombre2, String apellido1, String apellido2, String identificacion) {
 		this.idconyuge = idconyuge;
 		this.clientes = clientes;
@@ -49,12 +49,12 @@ public class Conyuge implements java.io.Serializable, Cloneable {
 	}
 
 	@Id
-	@Column(name = "idconyuge", unique = true, nullable = false, length = 20)
-	public String getIdconyuge() {
+	@Column(name = "idconyuge", unique = true, nullable = false)
+	public int getIdconyuge() {
 		return this.idconyuge;
 	}
 
-	public void setIdconyuge(String idconyuge) {
+	public void setIdconyuge(int idconyuge) {
 		this.idconyuge = idconyuge;
 	}
 
@@ -124,7 +124,7 @@ public class Conyuge implements java.io.Serializable, Cloneable {
 		result = prime * result
 				+ ((clientes == null) ? 0 : clientes.hashCode());
 		result = prime * result
-				+ ((idconyuge == null) ? 0 : idconyuge.hashCode());
+				+ idconyuge;
 		result = prime * result
 				+ ((identificacion == null) ? 0 : identificacion.hashCode());
 		result = prime * result + ((nombre1 == null) ? 0 : nombre1.hashCode());
@@ -156,10 +156,7 @@ public class Conyuge implements java.io.Serializable, Cloneable {
 				return false;
 		} else if (!clientes.equals(other.clientes))
 			return false;
-		if (idconyuge == null) {
-			if (other.idconyuge != null)
-				return false;
-		} else if (!idconyuge.equals(other.idconyuge))
+		if (idconyuge != other.idconyuge)
 			return false;
 		if (identificacion == null) {
 			if (other.identificacion != null)

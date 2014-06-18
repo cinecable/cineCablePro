@@ -91,4 +91,45 @@ public class Referenciadir implements java.io.Serializable, Cloneable {
 	public Referenciadir clonar() throws Exception {
 		return (Referenciadir)this.clone();
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((direccion == null) ? 0 : direccion.getIddireccion());
+		result = prime * result + idcuenta;
+		result = prime * result + idreferencia;
+		result = prime * result
+				+ ((referencia == null) ? 0 : referencia.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Referenciadir other = (Referenciadir) obj;
+		if (direccion == null) {
+			if (other.direccion != null)
+				return false;
+		} else if (direccion.getIddireccion() != other.direccion.getIddireccion())
+			return false;
+		if (idcuenta != other.idcuenta)
+			return false;
+		if (idreferencia != other.idreferencia)
+			return false;
+		if (referencia == null) {
+			if (other.referencia != null)
+				return false;
+		} else if (!referencia.equals(other.referencia))
+			return false;
+		return true;
+	}
+	
+	
 }

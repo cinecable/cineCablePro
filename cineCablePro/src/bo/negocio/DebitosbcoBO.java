@@ -49,7 +49,7 @@ public class DebitosbcoBO {
         return debitobco;
     }
 	
-	public boolean modificar(Debitobco debitobco) throws Exception {
+	public boolean modificar(Debitobco debitobco, Debitobco debitobcoClon) throws Exception {
     	boolean ok = false;
     	Session session = null;
     	
@@ -59,11 +59,18 @@ public class DebitosbcoBO {
     		session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
 			
-			//grabar
-			debitosbcoDAO.updateDebitobco(session, debitobco);
+			boolean cambios = false;
 			
-			session.getTransaction().commit();
-			ok = true;
+			//grabar
+			if(!debitobco.equals(debitobcoClon)){
+				debitosbcoDAO.updateDebitobco(session, debitobco);
+				cambios = true;
+			}
+			
+			if(cambios){
+				session.getTransaction().commit();
+				ok = true;
+			}
     	}catch(Exception e){
     		session.getTransaction().rollback();
             throw new Exception(e);

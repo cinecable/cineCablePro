@@ -10,6 +10,18 @@ import org.hibernate.criterion.Restrictions;
 import pojo.annotations.Callesecundaria;
 
 public class CalleSecundariaDAO {
+	
+	public Callesecundaria callesecundariaById(Session session, int idcallesecundaria) throws Exception {
+		Callesecundaria callesecundaria = null;
+		
+		Criteria criteria = session.createCriteria(Callesecundaria.class)
+                .add( Restrictions.eq("idcallesecundaria", idcallesecundaria));
+		
+		callesecundaria = (Callesecundaria)criteria.uniqueResult();
+				
+		return callesecundaria;
+	}
+	
 	  @SuppressWarnings("unchecked")
 			public List<Callesecundaria> lisCalleSxSector(Session session, int idSector) throws Exception {
 		        List<Callesecundaria> lisCalleSecundaria;

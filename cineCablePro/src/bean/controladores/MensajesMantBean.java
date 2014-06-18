@@ -20,7 +20,7 @@ import util.MessageUtil;
 
 @ManagedBean
 @ViewScoped
-public class MensajesBean implements Serializable {
+public class MensajesMantBean implements Serializable {
 
 	/**
 	 * 
@@ -32,9 +32,9 @@ public class MensajesBean implements Serializable {
 	private int idcuenta;
 	private Ctacliente ctacliente;
 	
-	private boolean ingresado;
+	private boolean modificable;
 	
-	public MensajesBean() {
+	public MensajesMantBean() {
 		mensajes = new Mensajes();
 	}
 
@@ -83,10 +83,11 @@ public class MensajesBean implements Serializable {
 			mensajes = mensajesBO.getMensajesByIdcliente(ctacliente.getClientes().getIdcliente());
 			
 			if(mensajes != null){
-				ingresado = true;
+				modificable = true;
 				clientesSelected = ctacliente.getClientes();
 			}else{
-				ingresado = false;
+				modificable = false;
+				new MessageUtil().showWarnMessage("Cliente no posee Mensajes ingresados!", "");
 				mensajes = new Mensajes();
 			}
 		}catch(Exception e){
@@ -102,10 +103,10 @@ public class MensajesBean implements Serializable {
 				boolean ok = false;
 				
 				if(mensajes.getIdcliente() != null && mensajes.getIdcliente().trim().length() > 0){
-					//ok = mensajesBO.modificarMensaje(mensajes);
+					ok = mensajesBO.modificarMensaje(mensajes);
 				}else{
-					mensajes.setIdcliente(ctacliente.getClientes().getIdcliente());
-					ok = mensajesBO.ingresarMensaje(mensajes);
+					//mensajes.setIdcliente(ctacliente.getClientes().getIdcliente());
+					//ok = mensajesBO.ingresarMensaje(mensajes);
 				}
 				
 				if(ok){
@@ -173,11 +174,11 @@ public class MensajesBean implements Serializable {
 		this.idcuenta = idcuenta;
 	}
 
-	public boolean isIngresado() {
-		return ingresado;
+	public boolean isModificable() {
+		return modificable;
 	}
 
-	public void setIngresado(boolean ingresado) {
-		this.ingresado = ingresado;
+	public void setModificable(boolean modificable) {
+		this.modificable = modificable;
 	}
 }

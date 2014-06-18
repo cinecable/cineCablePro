@@ -107,8 +107,9 @@ public class ClienteBO {
 			}
 			
 			if(conyuge != null){
-				if((conyuge.getIdconyuge() == null || conyuge.getIdconyuge().trim().length() == 0) && conyuge.getNombre1() != null && conyuge.getNombre1().trim().length() > 0 && conyuge.getApellido1() != null && conyuge.getApellido1().trim().length() > 0){
-					conyuge.setIdconyuge(conyuge.getIdentificacion());
+				if(conyuge.getIdconyuge() == 0 && conyuge.getNombre1() != null && conyuge.getNombre1().trim().length() > 0 && conyuge.getApellido1() != null && conyuge.getApellido1().trim().length() > 0){
+					int idsecuenciaconyuge = conyugeDAO.maxIdconyuge(session) + 1;
+					conyuge.setIdconyuge(idsecuenciaconyuge);
 					conyuge.setClientes(clientes);
 					
 					//ingresar

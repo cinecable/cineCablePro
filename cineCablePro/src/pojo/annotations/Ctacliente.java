@@ -209,5 +209,76 @@ public class Ctacliente implements java.io.Serializable, Cloneable {
 	protected Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
+	
+	public Ctacliente clonar() throws Exception {
+		return (Ctacliente)clone();
+	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((empresa == null) ? 0 : empresa.getIdempresa());
+		result = prime * result + ((fecha == null) ? 0 : fecha.hashCode());
+		result = prime * result + idcobrador;
+		result = prime * result + idcuenta;
+		result = prime * result + idestado;
+		result = prime * result + idusuario;
+		result = prime * result + idvendedor;
+		result = prime * result + impfact;
+		result = prime * result + ((ip == null) ? 0 : ip.hashCode());
+		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Ctacliente other = (Ctacliente) obj;
+		if (clientes == null) {
+			if (other.clientes != null)
+				return false;
+		} else if (clientes.getIdcliente() != other.clientes.getIdcliente())
+			return false;
+		if (empresa == null) {
+			if (other.empresa != null)
+				return false;
+		} else if (empresa.getIdempresa() != other.empresa.getIdempresa())
+			return false;
+		if (fecha == null) {
+			if (other.fecha != null)
+				return false;
+		} else if (!fecha.equals(other.fecha))
+			return false;
+		if (idcobrador != other.idcobrador)
+			return false;
+		if (idcuenta != other.idcuenta)
+			return false;
+		if (idestado != other.idestado)
+			return false;
+		if (idusuario != other.idusuario)
+			return false;
+		if (idvendedor != other.idvendedor)
+			return false;
+		if (impfact != other.impfact)
+			return false;
+		if (ip == null) {
+			if (other.ip != null)
+				return false;
+		} else if (!ip.equals(other.ip))
+			return false;
+		if (nombre == null) {
+			if (other.nombre != null)
+				return false;
+		} else if (!nombre.equals(other.nombre))
+			return false;
+		return true;
+	}
+
+	
 }

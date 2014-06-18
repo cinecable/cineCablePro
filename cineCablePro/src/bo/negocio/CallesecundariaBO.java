@@ -15,6 +15,24 @@ public class CallesecundariaBO {
 	    	callesecundariaDAO = new CalleSecundariaDAO();
 	    }
 	    
+	    public Callesecundaria callesecundariaPorId(int idcallesecundaria) throws Exception {
+	    	Callesecundaria callesecundaria = null;
+	    	Session session = null;
+	    	
+	    	try{
+	            session = HibernateUtil.getSessionFactory().openSession();
+	            callesecundaria = callesecundariaDAO.callesecundariaById(session, idcallesecundaria);
+	    	}
+	        catch(Exception ex){
+	            throw new Exception(ex);
+	        }
+	        finally{
+	            session.close();
+	        }
+	    	
+	    	return callesecundaria;
+	    }
+	    
 	    public List<Callesecundaria> ConsultarCalleSxSector(int idSector) throws Exception {
 	        List<Callesecundaria> lisCalleSecundaria = null;
 	        Session session = null;

@@ -1,7 +1,5 @@
 package faces.converter;
 
-import java.util.List;
-
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -19,8 +17,8 @@ public class CalleSecundariaConverter  implements Converter {
         } else {
             try {
                 int id = Integer.parseInt(submittedValue);
-                List<Callesecundaria> lisCallesecundaria= new CallesecundariaBO().ConsultarCalleSxCalleS(id);
-                return lisCallesecundaria.get(0);
+                Callesecundaria callesecundaria = new CallesecundariaBO().callesecundariaPorId(id);
+                return callesecundaria;
             } catch(Exception ex) {
             	ex.printStackTrace();
             	new MessageUtil().showFatalMessage("Esto es Vergonzoso!", "Ha ocurrido un error inesperado. Comunicar al Webmaster!");

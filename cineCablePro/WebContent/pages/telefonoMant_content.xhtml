@@ -9,9 +9,8 @@
 
 	<h:form id="form-contentpage">
 		#{telefonosMantBean.vacio}
-		<p:growl id="mensajes" autoUpdate="true" showDetail="true" />
-		<p:messages autoUpdate="true" showSummary="true" closable="true" />
 		<h1 class="title ui-widget-header" style="text-align: center;">Modificacion Telefono</h1>
+		<p:messages id="mensajes" autoUpdate="true" showSummary="true" closable="true" />
 		<h1 class="title ui-widget-header" style="text-align: center;">#{telefonosMantBean.ctacliente.clientes.nombre1} #{telefonosMantBean.ctacliente.clientes.apellido1} Cta ##{telefonosMantBean.ctacliente.idcuenta}</h1>
 		<p:panel id="panel-content" style="min-height: 300px;margin: 20px 0">
 			<h:link value="Regresar" style="float: right;" outcome="cliente?faces-redirect=true" >

@@ -58,7 +58,7 @@
                    <h:outputLabel value="Calle Principal  :" for="idComboCallePrin" />
                 <p:autoComplete id="idComboCallePrin" size="60" value="#{cc.attrs.bean.direccion.calleprincipal}" completeMethod="#{cc.attrs.bean.CompletarCallesPrincipales}" 
 				var="i" itemLabel="#{i.nombre}" itemValue="#{i}" converter="callePrincipal" minQueryLength="1"  
-				forceSelection="true" required="true" requiredMessage="Ingrese Calle Principal en la Seccion de Direccion" rendered="true">
+				forceSelection="true">
 					<p:ajax event="itemSelect" process="idComboCallePrin"></p:ajax>
 					<f:facet name="itemtip">  
 	                    <h:panelGrid  columns="2" cellpadding="5" width="250px">  
@@ -71,7 +71,7 @@
 	            <h:outputLabel value="Calle Secundaria :" for="idComboCallesec" />
 	            <p:autoComplete id="idComboCallesec" size="60" value="#{cc.attrs.bean.direccion.callesecundaria}" completeMethod="#{cc.attrs.bean.CompletarCallesSecundarias}" 
 					var="i" itemLabel="#{i.nombre}" itemValue="#{i}" converter="calleSecundaria" minQueryLength="1"  
-					forceSelection="true" required="true" requiredMessage="Ingrese Calle Secundaria en la Seccion de Direccion" rendered="true">
+					forceSelection="true">
 					<p:ajax event="itemSelect" process="idComboCallesec"></p:ajax>
 					<f:facet name="itemtip">  
 	                    <h:panelGrid  columns="2" cellpadding="5" width="250px">  

@@ -15,6 +15,24 @@ public class CallePrincipalBO {
     	calleprincipalDAO = new CallePrincipalDAO();
     }
     
+    public Calleprincipal calleprincipalPorId(int idcalleprincipal) throws Exception {
+    	Calleprincipal calleprincipal = null;
+    	Session session = null;
+    	
+    	try{
+            session = HibernateUtil.getSessionFactory().openSession();
+            calleprincipal = calleprincipalDAO.calleprincipalById(session, idcalleprincipal);
+    	}
+        catch(Exception ex){
+            throw new Exception(ex);
+        }
+        finally{
+            session.close();
+        }
+    	
+    	return calleprincipal;
+    }
+    
     public List<Calleprincipal> ConsultarCPxSector(int idSector) throws Exception {
         List<Calleprincipal> lisCallePrincipal = null;
         Session session = null;

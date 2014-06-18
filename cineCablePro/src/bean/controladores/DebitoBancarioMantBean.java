@@ -80,7 +80,7 @@ public class DebitoBancarioMantBean implements Serializable {
 		}
 		catch(Exception re){
 			re.printStackTrace();
-			new MessageUtil().showFatalMessage("Esto es Vergonzoso!", "Ha ocurrido un error inesperado. Comunicar al Webmaster!");
+			new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", "");
 		}
 	}
 	
@@ -92,11 +92,16 @@ public class DebitoBancarioMantBean implements Serializable {
 				
 				if(debitosBancariosBean.getIdcuenta() > 0){
 					//modificacion
-					ok = debitosbcoBO.modificar(debitosBancariosBean.getDebitobco());
+					ok = debitosbcoBO.modificar(debitosBancariosBean.getDebitobco(), debitosBancariosBean.getDebitobcoClon());
 				}
 				
 				if(ok){
-					new MessageUtil().showInfoMessage("Grabado con exito","");
+					FacesUtil facesUtil = new FacesUtil();
+					try {
+						facesUtil.redirect("cliente.jsf?faces-redirect=true&idcuenta="+idcuenta);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}else{
 					new MessageUtil().showInfoMessage("No hay cambios que guardar","");
 				}

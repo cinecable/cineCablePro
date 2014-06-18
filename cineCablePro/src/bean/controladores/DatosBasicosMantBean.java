@@ -78,6 +78,13 @@ public class DatosBasicosMantBean implements Serializable{
 				boolean ok = false;
 				
 				if(dbasCliBean.getIdcuenta() > 0){
+					if(dbasCliBean.getClientes().getEstadocivil() != Parametro.ESTADO_CIVIL_CASADO && dbasCliBean.getClientes().getEstadocivil() != Parametro.ESTADO_CIVIL_UNION_LIBRE){
+						dbasCliBean.getConyuge().setNombre1(null);
+						dbasCliBean.getConyuge().setNombre2(null);
+						dbasCliBean.getConyuge().setApellido1(null);
+						dbasCliBean.getConyuge().setApellido2(null);
+						dbasCliBean.getConyuge().setIdentificacion(null);
+					}
 					ok = clienteBO.modificar(dbasCliBean.getClientes(), dbasCliBean.getClientesClon(), dbasCliBean.getConyuge(), dbasCliBean.getConyugeClon());
 				}else{
 					

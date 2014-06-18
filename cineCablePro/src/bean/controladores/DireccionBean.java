@@ -64,7 +64,9 @@ public class DireccionBean implements Serializable{
     private Provincia provinciaSelected;
     private Ciudad ciudadSelected;
     private Direccion direccion;
+    private Direccion direccionClon;
     private Referenciadir referenciadir;
+    private Referenciadir referenciadirClon;
      
     private boolean habilitaTipoSector;
     private int idcuenta;
@@ -86,7 +88,9 @@ public class DireccionBean implements Serializable{
         provinciaSelected = new Provincia(0, new Pais(), new Usuario(), null, (int) 0, null);
         ciudadSelected = new Ciudad((int)0, new Estado(), new Usuario(), new Provincia(0, new Pais(), new Usuario(), null, (int) 0, null), null, null);
         direccion = new Direccion(0, new Edificio(), new Ctacliente(), new Calleprincipal(), new Tiposector(0, new Usuario(), null, null, null), new Callesecundaria(), new Ubicacion(), new Nodos(), new Sector(), 0, 0, 0, null, null, null, null, null);
+        direccionClon = new Direccion(0, new Edificio(), new Ctacliente(), new Calleprincipal(), new Tiposector(0, new Usuario(), null, null, null), new Callesecundaria(), new Ubicacion(), new Nodos(), new Sector(), 0, 0, 0, null, null, null, null, null);
         referenciadir = new Referenciadir();
+        referenciadirClon = new Referenciadir();
         
         habilitaTipoSector = false;
         tipo = "";
@@ -124,34 +128,58 @@ public class DireccionBean implements Serializable{
 			
 			if(direccion == null){
 				direccion = new Direccion(0, new Edificio(), new Ctacliente(), new Calleprincipal(), new Tiposector(0, new Usuario(), null, null, null), new Callesecundaria(), new Ubicacion(), new Nodos(), new Sector(), 0, 0, 0, null, null, null, null, null);
+				direccionClon = new Direccion(0, new Edificio(), new Ctacliente(), new Calleprincipal(), new Tiposector(0, new Usuario(), null, null, null), new Callesecundaria(), new Ubicacion(), new Nodos(), new Sector(), 0, 0, 0, null, null, null, null, null);
+			}else{
+				direccionClon = direccion.clonar();
 			}
 			
 			if(direccion.getCalleprincipal() == null){
 				direccion.setCalleprincipal(new Calleprincipal());
+				direccionClon.setCalleprincipal(new Calleprincipal());
+			}else{
+				direccionClon.setCalleprincipal(direccion.getCalleprincipal().clonar());
 			}
 			
 			if(direccion.getCallesecundaria() == null){
 				direccion.setCallesecundaria(new Callesecundaria());
+				direccionClon.setCallesecundaria(new Callesecundaria());
+			}else{
+				direccionClon.setCallesecundaria(direccion.getCallesecundaria().clonar());
 			}
 			
 			if(direccion.getUbicacion() == null){
 				direccion.setUbicacion(new Ubicacion());
+				direccionClon.setUbicacion(new Ubicacion());
+			}else{
+				direccionClon.setUbicacion(direccion.getUbicacion().clonar());
 			}
 			
 			if(direccion.getEdificio() == null){
 				direccion.setEdificio(new Edificio());
+				direccionClon.setEdificio(new Edificio());
+			}else{
+				direccionClon.setEdificio(direccion.getEdificio().clonar());
 			}
 			
 			if(direccion.getCtacliente() == null){
 				direccion.setCtacliente(new Ctacliente());
+				direccionClon.setCtacliente(new Ctacliente());
+			}else{
+				direccionClon.setCtacliente(direccion.getCtacliente().clonar());
 			}
 			
 			if(direccion.getTiposector() == null){
 				direccion.setTiposector(new Tiposector());
+				direccionClon.setTiposector(new Tiposector());
+			}else{
+				direccionClon.setTiposector(direccion.getTiposector().clonar());
 			}
 			
 			if(direccion.getSector() == null){
 				direccion.setSector(new Sector());
+				direccionClon.setSector(new Sector());
+			}else{
+				direccionClon.setSector(direccion.getSector());
 			}
 			
 			ReferenciadirBO referenciadirBO = new ReferenciadirBO();
@@ -159,6 +187,9 @@ public class DireccionBean implements Serializable{
 			
 			if(referenciadir == null){
 				referenciadir = new Referenciadir();
+				referenciadirClon = new Referenciadir();
+			}else{
+				referenciadirClon = referenciadir.clonar();
 			}
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -831,6 +862,22 @@ public class DireccionBean implements Serializable{
 
 	public void setReferenciadir(Referenciadir referenciadir) {
 		this.referenciadir = referenciadir;
+	}
+
+	public Direccion getDireccionClon() {
+		return direccionClon;
+	}
+
+	public void setDireccionClon(Direccion direccionClon) {
+		this.direccionClon = direccionClon;
+	}
+
+	public Referenciadir getReferenciadirClon() {
+		return referenciadirClon;
+	}
+
+	public void setReferenciadirClon(Referenciadir referenciadirClon) {
+		this.referenciadirClon = referenciadirClon;
 	}
 
 }

@@ -8,36 +8,36 @@
 	
 	<h:form id="form-contentpage">
 		<p:focus for="idtxtMensaje"></p:focus>
-		<h1 class="title ui-widget-header" style="text-align: center;">Mensajes de Clientes</h1>
+		<h1 class="title ui-widget-header" style="text-align: center;">Modificacion de Mensajes de Clientes</h1>
 		<p:messages id="mensajes" autoUpdate="true" showSummary="true" closable="true" />
 		<p:panel id="panel-content" style="min-height: 300px;margin: 20px 0">
 			<h:link value="Regresar" style="float: right;" outcome="cliente?faces-redirect=true" >
-				<f:param name="idcuenta" value="#{mensajesBean.idcuenta}"></f:param>
+				<f:param name="idcuenta" value="#{mensajesMantBean.idcuenta}"></f:param>
 			</h:link>
 			<br />
 			<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
-				<p:outputLabel style="font-size: 15px;font-weight: bold;" value="Mensaje para #{mensajesBean.ctacliente.clientes.nombre1} #{mensajesBean.ctacliente.clientes.nombre2} #{mensajesBean.ctacliente.clientes.apellido1} #{mensajesBean.ctacliente.clientes.apellido2}"></p:outputLabel>
+				<p:outputLabel style="font-size: 15px;font-weight: bold;" value="Mensaje para #{mensajesMantBean.ctacliente.clientes.nombre1} #{mensajesMantBean.ctacliente.clientes.nombre2} #{mensajesMantBean.ctacliente.clientes.apellido1} #{mensajesMantBean.ctacliente.clientes.apellido2}"></p:outputLabel>
 				
-				<p:inputTextarea id="idtxtMensaje" value="#{mensajesBean.mensajes.descripcion}" style="width: 100%; height: 100px;" autoResize="false" required="true" requiredMessage="Ingrese mensaje" />
-
+				<p:inputTextarea id="idtxtMensaje" value="#{mensajesMantBean.mensajes.descripcion}" style="width: 100%; height: 100px;" autoResize="false" required="true" requiredMessage="Ingrese mensaje" />
+				
 				<h:panelGroup>				
 					<p:outputLabel value="Fecha de Caducidad: " for="idfechacaducidad" />
 					
 					<p:calendar id="idfechacaducidad"
-					value="#{mensajesBean.mensajes.fechacaducidad}"
+					value="#{mensajesMantBean.mensajes.fechacaducidad}"
 					yearRange="c-50:c" locale="es" pattern="dd/MM/yyyy"
-					navigator="true" required="true" requiredMessage="Ingrese la fecha de caducidad"/>
+					navigator="true" required="true" requiredMessage="Ingrese la fecha de caducidad" />
 				</h:panelGroup>
 				
 				<h:panelGroup>
 					<p:outputLabel value="Activo: " for="chkEstado" />
-					<p:selectBooleanCheckbox id="chkEstado" value="#{mensajesBean.mensajes.estado}"></p:selectBooleanCheckbox>
+					<p:selectBooleanCheckbox id="chkEstado" value="#{mensajesMantBean.mensajes.estado}"></p:selectBooleanCheckbox>
 				</h:panelGroup>
 			</h:panelGrid>
 			<p:spacer height="50px"></p:spacer>
 			<center>
-				<p:commandButton value="Grabar" action="#{mensajesBean.grabar()}" 
-				rendered="#{!mensajesBean.ingresado}" update=":form-contentpage:mensajes" />
+				<p:commandButton value="Grabar" action="#{mensajesMantBean.grabar()}" 
+				rendered="#{mensajesMantBean.modificable}" update=":form-contentpage:mensajes" />
 			</center>
 		</p:panel>
 	</h:form>

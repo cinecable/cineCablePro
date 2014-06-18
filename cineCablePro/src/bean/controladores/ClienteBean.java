@@ -8,6 +8,7 @@ import bo.negocio.CtaclienteBO;
 import bo.negocio.MensajesBO;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -56,8 +57,12 @@ public class ClienteBean implements Serializable{
 					MensajesBO mensajesBO = new MensajesBO();
 					mensajes = mensajesBO.getMensajesByIdcliente(ctacliente.getClientes().getIdcliente());
 					
+					Calendar ahorita = Calendar.getInstance();
+					
 					if(mensajes != null && mensajes.getDescripcion() != null && mensajes.getDescripcion().trim().length() > 0){
-						mostrarMensaje = true;
+						if(mensajes.getFechacaducidad().compareTo(ahorita.getTime()) >= 0){
+							mostrarMensaje = true;
+						}
 					}else{
 						mostrarMensaje = false;
 					}

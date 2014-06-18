@@ -81,7 +81,12 @@ public class TelefonosMantBean implements Serializable {
 				}
 				
 				if(ok){
-					new MessageUtil().showInfoMessage("Grabado con exito","");
+					FacesUtil facesUtil = new FacesUtil();
+					try {
+						facesUtil.redirect("cliente.jsf?faces-redirect=true&idcuenta="+idcuenta);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}else{
 					new MessageUtil().showInfoMessage("No hay cambios que guardar","");
 				}

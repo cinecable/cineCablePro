@@ -125,7 +125,8 @@ public class CtaclienteBO {
 			
 			//grabar conyuge
 			if(conyuge != null && conyuge.getNombre1() != null && conyuge.getNombre1().trim().length() > 0 && conyuge.getApellido1() != null && conyuge.getApellido1().trim().length() > 0){
-				conyuge.setIdconyuge(conyuge.getIdentificacion());
+				int idsecuenciaconyuge = conyugeDAO.maxIdconyuge(session) + 1;
+				conyuge.setIdconyuge(idsecuenciaconyuge);
 				conyuge.setClientes(ctacliente.getClientes());
 				
 				//grabar

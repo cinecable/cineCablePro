@@ -8,10 +8,9 @@
 	xmlns:my="http://java.sun.com/jsf/composite/components/paginas">
 
 	<h:form id="form-contentpage">
-		<p:growl id="mensajes" autoUpdate="true" showDetail="true" />
-		<p:messages autoUpdate="true" showSummary="true" closable="true" />
 		#{debitoBancarioMantBean.vacio}
 		<h1 class="title ui-widget-header" style="text-align: center;">Modificacion Debito Bancario</h1>
+		<p:messages id="mensajes" autoUpdate="true" showSummary="true" closable="true" />
 		<h1 class="title ui-widget-header" style="text-align: center;">#{debitoBancarioMantBean.ctacliente.clientes.nombre1} #{debitoBancarioMantBean.ctacliente.clientes.apellido1} Cta ##{debitoBancarioMantBean.ctacliente.idcuenta}</h1>
 		<p:panel id="panel-content" style="min-height: 300px;margin: 20px 0">
 			<h:link value="Regresar" style="float: right;" outcome="cliente?faces-redirect=true" >
