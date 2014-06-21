@@ -1,7 +1,10 @@
 package dao.datos;
 
-import org.hibernate.Query;
+import java.util.Calendar;
+
+import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 
 import pojo.annotations.Mensajes;
 
@@ -19,15 +22,14 @@ public class MensajesDAO {
 	public Mensajes getMensajesByIdcliente(Session session, String idcliente) {
 		Mensajes mensajes = null;
 		
-		String hql = " from Mensajes ";
-		hql += " where idcliente = :idcliente ";
-		hql += " and estado = :estado ";
+		Calendar ahorita = Calendar.getInstance();
 		
-		Query query = session.createQuery(hql)
-				.setString("idcliente", idcliente)
-				.setBoolean("estado", true);
+		Criteria criteria = session.createCriteria(Mensajes.class)
+				.add( Restrictions.eq("idcliente", idcliente))
+				.add( Restrictions.eq("estado", true))
+				.add( Restrictions.gt("fechacaducidad", ahorita.getTime()));
 		
-		mensajes = (Mensajes) query.uniqueResult();
+		mensajes = (Mensajes) criteria.uniqueResult();
 		
 		return mensajes;
 	}

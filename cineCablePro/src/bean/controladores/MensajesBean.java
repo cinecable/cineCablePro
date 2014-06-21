@@ -84,6 +84,7 @@ public class MensajesBean implements Serializable {
 			
 			if(mensajes != null){
 				ingresado = true;
+				new MessageUtil().showWarnMessage("Mensaje esta vigente, para modificar el mensaje dirijase a la opcion de modificacion.", "");
 				clientesSelected = ctacliente.getClientes();
 			}else{
 				ingresado = false;

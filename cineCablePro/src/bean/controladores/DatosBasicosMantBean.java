@@ -122,7 +122,11 @@ public class DatosBasicosMantBean implements Serializable{
 								if(dbasCliBean.getClientes().getEmail() != null && dbasCliBean.getClientes().getEmail().trim().length() > 0){
 									if(dbasCliBean.getClientes().getEstadocivil()  > 0){
 										if(dbasCliBean.getClientes().getGenero()  > 0){
-											ok = true;
+											if(dbasCliBean.getClientes().getTipocliente().getIdtipocliente() > 0){
+												ok = true;
+											}else{
+												new MessageUtil().showWarnMessage("Seleccionar Tipo Cliente en seccion Datos Basicos", null);
+											}
 										}else{
 											new MessageUtil().showWarnMessage("Seleccionar Género en seccion Datos Basicos", null);
 										}

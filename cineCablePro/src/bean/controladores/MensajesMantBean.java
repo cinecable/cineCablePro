@@ -87,7 +87,7 @@ public class MensajesMantBean implements Serializable {
 				clientesSelected = ctacliente.getClientes();
 			}else{
 				modificable = false;
-				new MessageUtil().showWarnMessage("Cliente no posee Mensajes ingresados!", "");
+				new MessageUtil().showWarnMessage("Cliente no posee Mensajes ingresados, dirijase a la opcion de ingreso para que ingrese un mensaje.", "");
 				mensajes = new Mensajes();
 			}
 		}catch(Exception e){

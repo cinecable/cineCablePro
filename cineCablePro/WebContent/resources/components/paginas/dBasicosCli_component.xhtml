@@ -179,6 +179,29 @@
 				</p:row>
 
 				<p:row>
+					<p:column>
+						<p:outputLabel value="Tipo Cliente *:" for="idTipoCliente" />
+					</p:column>
+					<p:column>
+						<p:selectOneMenu id="idTipoCliente"
+							value="#{dbasCliBean.clientes.tipocliente.idtipocliente}" style="width: 150px">
+							<f:selectItems value="#{dbasCliBean.lisTipocliente}" var="i"
+								itemLabel="#{i.nombre}" itemValue="#{i.idtipocliente}" />
+						</p:selectOneMenu>
+					</p:column>
+					<p:column>
+						<p:spacer width="10" />
+					</p:column>
+					<p:column>
+						<h:outputText value="" />
+					</p:column>
+					<p:column>
+						<h:outputText value="" />
+					</p:column>
+
+				</p:row>
+				
+				<p:row>
 					<p:column colspan="5">
 						<h:outputText value="Datos Conyuge" style=" color: red" />
 					</p:column>

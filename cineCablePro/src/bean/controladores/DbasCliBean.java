@@ -13,6 +13,7 @@ import javax.faces.bean.ViewScoped;
 
 import bo.negocio.ConyugeBO;
 import bo.negocio.CtaclienteBO;
+import bo.negocio.TipoclienteBO;
 
 import pojo.annotations.Clientes;
 import pojo.annotations.Conyuge;
@@ -44,6 +45,7 @@ public class DbasCliBean  implements Serializable{
 	
 	private List<TipoEstadoCivil> lisTipoEstadoCivil;
 	private List<Genero> lisGenero;
+	private List<Tipocliente> lisTipocliente;
 	
 	private String nomEmpresa;
 	private String titNombres;
@@ -67,10 +69,33 @@ public class DbasCliBean  implements Serializable{
 	 clientesClon = new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null, null, null, null, new Date(), null, 1, 0, 1, 1, new Date(), null);
 	 conyuge = new Conyuge(0, new Clientes(), null, null, null, null, null);
 	 conyugeClon = new Conyuge(0, new Clientes(), null, null, null, null, null);
+	 
+	 lisTipocliente = new ArrayList<Tipocliente>();
+	 
      habEmpresa=false;		
      tieneConyuge = false;
 	 CargaTDoc();
-	 
+	 ListaTipoCliente();
+	}
+	
+	private void ListaTipoCliente(){
+		try{
+			Tipocliente tipocliente = new Tipocliente();
+			tipocliente.setIdtipocliente(0);
+			tipocliente.setNombre("Seleccione");
+			
+			lisTipocliente.add(tipocliente);
+			
+			TipoclienteBO tipoclienteBO = new TipoclienteBO();
+			List<Tipocliente> lisTmp = tipoclienteBO.lisTipocliente();
+			
+			if(lisTmp != null && lisTmp.size() > 0){
+				lisTipocliente.addAll(lisTmp);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!","");
+		}
 	}
 	
 	@PostConstruct
@@ -303,6 +328,14 @@ public class DbasCliBean  implements Serializable{
 
 	public void setTieneConyuge(boolean tieneConyuge) {
 		this.tieneConyuge = tieneConyuge;
+	}
+
+	public List<Tipocliente> getLisTipocliente() {
+		return lisTipocliente;
+	}
+
+	public void setLisTipocliente(List<Tipocliente> lisTipocliente) {
+		this.lisTipocliente = lisTipocliente;
 	}
 	
 	

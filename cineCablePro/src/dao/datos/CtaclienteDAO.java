@@ -27,7 +27,8 @@ public class CtaclienteDAO {
 		
 		Criteria criteria = session.createCriteria(Ctacliente.class)
 				.add( Restrictions.eq("idcuenta", idcuenta))
-				.createAlias("clientes", "cli");
+				.createAlias("clientes", "cli")
+				.createAlias("cli.tipocliente", "tc");
 		
 		ctacliente = (Ctacliente) criteria.uniqueResult();
 		
