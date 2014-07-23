@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:form id="form-contentpage">
+		<p:growl id="mensajes" showDetail="true" />
+		<h1 class="title ui-widget-header" style="text-align: center;">Transacciones - N/C N/D</h1>
+		<p:panel id="panel-content" style="min-height: 300px;margin: 20px 0">
+			<br />
+			<p:focus for="txtnombre1" />
+			<p:panelGrid id="pnlcabecera" columns="4" style="width: 100%">
+				
+				<f:facet name="header">Parámetros de Consulta</f:facet>
+				
+				<p:outputLabel value="Primer Nombre:" for="txtnombre1" />
+				<p:inputText id="txtnombre1" value="#{clientesBean.nombre1}" >
+				    <p:ajax event="keyup" update="idTablaClientes"></p:ajax>
+				</p:inputText>
+				
+				<p:outputLabel value="Segundo Nombre:" for="txtnombre2" />
+				<p:inputText id="txtnombre2" value="#{clientesBean.nombre2}" >
+				    <f:ajax event="keyup" render="idTablaClientes"></f:ajax>
+				</p:inputText>
+				
+				<p:outputLabel value="Primer Apellido:" for="txtapellido1" />
+				<p:inputText id="txtapellido1" value="#{clientesBean.apellido1}" >
+				    <f:ajax event="keyup" render="idTablaClientes"></f:ajax>
+				</p:inputText>
+				
+				<p:outputLabel value="Segundo Apellido:" for="txtapellido2" />
+				<p:inputText id="txtapellido2" value="#{clientesBean.apellido2}" >
+				    <f:ajax event="keyup" render="idTablaClientes"></f:ajax>
+				</p:inputText>
+				
+				<p:outputLabel value="Identificación:" for="txtidentificacion" />
+				<p:inputText id="txtidentificacion" value="#{clientesBean.numeroIdentificacion}" >
+				    <f:ajax event="keyup" render="idTablaClientes"></f:ajax>
+				</p:inputText>
+				
+				<p:outputLabel value="Empresa:" for="txtempresa" />
+				<p:inputText id="txtempresa" value="#{clientesBean.empresa}" >
+				    <f:ajax event="keyup" render="idTablaClientes"></f:ajax>
+				</p:inputText>
+            </p:panelGrid>
+			<br /><br /> 
+			<p:dataTable id="idTablaClientes" value="#{clientesBean.lisCtacliente}" var="cuenta" rowKey="#{cuenta.idcuenta}" widgetVar="vartablaCtacliente"
+			paginator="true" rows="10" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			selection="#{clientesBean.ctaclienteItem}" selectionMode="single" emptyMessage="No se encontraron registros" lazy="true">
+
+				<p:ajax event="rowSelect" listener="#{clientesBean.onRowSelect}" />
+                            
+				<f:facet name="header">
+					Cuentas del Cliente
+				</f:facet>
+				
+				<p:column id="idNombre1Header" headerText="Nombre1" style="width: 150px">
+                 	<h:outputText value="#{cuenta.clientes.nombre1}" />
+				</p:column>
+				
+				<p:column id="idNombre2Header" headerText="Nombre2" style="width: 150px">
+                 	<h:outputText value="#{cuenta.clientes.nombre2}" />
+				</p:column>
+				
+				<p:column id="idApellido1Header" headerText="Apellido1">
+                	<h:outputText value="#{cuenta.clientes.apellido1}" />
+				</p:column>
+				
+				<p:column id="idApellido2Header" headerText="Apellido2">
+                	<h:outputText value="#{cuenta.clientes.apellido2}" />
+				</p:column>
+				
+				<p:column id="idIdentificacionHeader" headerText="Identificación">
+                	<h:outputText value="#{cuenta.clientes.idcliente}" />
+				</p:column>
+                            
+                <p:column id="idEmpresaHeader" headerText="Empresa">
+                    <h:outputText value="#{cuenta.clientes.empresa_1}" />
+				</p:column>
+				
+				<p:column id="idNombreCuentaHeader" headerText="Nro de Cuenta" style="text-align: right;">
+                    <h:outputText value="#{cuenta.idcuenta}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</h:form>
+</ui:composition>
