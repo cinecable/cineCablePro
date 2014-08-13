@@ -10,8 +10,11 @@
 	<h:form id="form-contentpage">
 		<p:growl id="mensajes" showDetail="true" />
 		<h1 class="title ui-widget-header" style="text-align: center;" >Caja</h1>
-		<p:spacer height="15px;"/>
 		<p:panel id="idcabecera">
+			<h:link value="Regresar" style="float: right;" outcome="cliente?faces-redirect=true" >
+				<f:param name="idcuenta" value="#{pagosBean.idcuenta}"></f:param>
+			</h:link>
+			<br />
 			<h1>#{pagosBean.ctacliente.clientes.nombre1} #{pagosBean.ctacliente.clientes.nombre2} #{pagosBean.ctacliente.clientes.apellido1} #{pagosBean.ctacliente.clientes.apellido2}</h1>
 			<h1>Cuenta ##{pagosBean.ctacliente.idcuenta}</h1>
 		</p:panel> 
