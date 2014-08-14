@@ -38,7 +38,7 @@ public class ProductoDAO {
 		
 		Query query = session.createQuery(hql)
 				.setInteger("idcuenta", idcuenta)
-				.setInteger("idestado", 1)
+				.setInteger("idestado", 3)//ojo ver x q estaba en 1, por eso no salían los productos
 				.setInteger("idempresa", idempresa);
 		
 		lisProducto = (List<Producto>) query.list();
