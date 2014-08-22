@@ -84,11 +84,11 @@ public class Cargos implements java.io.Serializable {
 	 * @param motivo
 	 * @param valpendiente
 	 */
-	public Cargos(String idfactura, int idgeneracion, short nivel, String motivo, Double valpendiente){
+	public Cargos(String idfactura, int idsecuencia, short nivel, String motivo, Double valpendiente){
 		this.idcargo = 0;
 		this.estado = new Estado(0, null);
 		Factura factura = new Factura();
-		factura.setIdgeneracion(idgeneracion);
+		factura.setIdsecuencia(idsecuencia);
 		this.factura = factura;
 		this.usuario = new Usuario();
 		this.empresa = new Empresa();
@@ -124,7 +124,7 @@ public class Cargos implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "idgeneracion", nullable = false)
+	@JoinColumn(name = "idsecuencia", nullable = false)
 	public Factura getFactura() {
 		return this.factura;
 	}
@@ -237,7 +237,7 @@ public class Cargos implements java.io.Serializable {
 	
 	@Column(name = "producto", length = 150)
 	public String getProducto() {
-		return producto;
+		return this.producto;
 	}
 
 	public void setProducto(String producto) {

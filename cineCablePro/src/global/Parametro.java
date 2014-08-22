@@ -73,4 +73,31 @@ public class Parametro {
 	public static final int TIPO_DEBITO_BANCARIO = 1;
 	public static final int TIPO_DEBITO_TARJETA = 2;
 	public static final int TIPO_DEBITO_OFICINA = 3;
+	
+	//Estados Factura
+	public static final int FACTURA_ESTADO_PENDIENTE = 3;
+	public static final int FACTURA_ESTADO_PAGADA = 4;
+	public static final int FACTURA_ESTADO_MORA = 5;
+	
+	//Estados Credito
+	public static final int CREDITO_ESTADO_CONSUMIDO = 4;
+	
+	//Estados Excedente
+	public static final int EXCEDENTE_ESTADO_PENDIENTE = 3;
+	public static final int EXCEDENTE_ESTADO_CONSUMIDO = 4;
+	
+	//Estados Pagos
+	public static final int PAGOS_ESTADO_ACTIVO = 1;
+	
+	//Estados TPagos
+	public static final int TPAGOS_ESTADO_PENDIENTE = 3;
+	public static final int TPAGOS_ESTADO_CONSUMIDO = 4;
+	
+	//Estados Cargo
+	public static final int CARGOS_ESTADO_PENDIENTE = 3;
+	public static final int CARGOS_ESTADO_PAGADO = 4;
+	
+	//Estados Cuenta Cliente
+	public static final int CUENTA_CLIENTE_IMPAGO = 3;
+	public static final int CUENTA_CLIENTE_PENDIENTE = 2;
 }

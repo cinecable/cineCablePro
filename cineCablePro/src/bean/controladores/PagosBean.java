@@ -11,6 +11,7 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.event.TabChangeEvent;
 
 import exceptions.SecuenciaFacturaException;
+import global.Parametro;
 
 import bo.negocio.BancosBO;
 import bo.negocio.CargosBO;
@@ -136,7 +137,7 @@ public class PagosBean implements Serializable {
 		totalPagarContrato = 0;
 		
 		//Inicializa objetos del editor
-		tpagosEditor = new Tpagos(0, new Fpago(), new Bancos(), new Pagos(), new Bancos(), 0, 3, 0, 0);
+		tpagosEditor = new Tpagos(0, new Fpago(), new Bancos(), new Pagos(), new Bancos(), 0, Parametro.TPAGOS_ESTADO_PENDIENTE, 0, 0);
 		lisFpago = new ArrayList<Fpago>();
 		lisEntidadBancos = new ArrayList<Bancos>();
 		lisEntidadTarjeta = new ArrayList<Bancos>();
@@ -249,7 +250,7 @@ public class PagosBean implements Serializable {
 				ctacliente = ctaclienteBO.getCtaclienteById(idcuenta);
 				
 				//si cuenta cliente tiene estado 3 = impago entonces activo pestaña contratos e inactivo las demas pestañas
-				if(ctacliente != null && ctacliente.getIdestado() == 3){
+				if(ctacliente != null && ctacliente.getIdestado() == Parametro.CUENTA_CLIENTE_IMPAGO){
 					isTabAnticipadosRendered = false;
 					isTabFacturaRendered = false;
 					isTabGeneracionRendered = false;
@@ -469,6 +470,8 @@ public class PagosBean implements Serializable {
 	
 	public void agregarQuitarFactura(){
 		try{
+			FacturaBO facturaBO = new FacturaBO();
+			
 			//Busca la factura en el detalle
 			boolean existe = false;
 			DetalleFacturaPojo detalleEncontrado = new DetalleFacturaPojo();
@@ -504,6 +507,111 @@ public class PagosBean implements Serializable {
 					lisCargosNivelDetalle = cargosBO.lisCargosFacturaNivelDetalle(facturaSeleccionada.getIdfactura());
 					lisCargosNivelDescuento = cargosBO.lisCargosFacturaNivelDescuento(facturaSeleccionada.getIdfactura());
 					lisCargosNivelImpuesto = cargosBO.lisCargosFacturaNivelImpuestoSum(facturaSeleccionada.getIdfactura());
+					
+					//Nuevo - Si factura esta en mora
+					if(facturaSeleccionada.getIdestado() == Parametro.FACTURA_ESTADO_MORA){
+						//Funcion postgres retorna data
+						Object args[] = new Object[1];
+						facturaBO.obtenerRubrosMora(2, args);
+						String[][] rubros = (String[][]) args[0];
+						
+						/*
+						[0][0] descripción
+						[0][1] valor del cargo fraccionado
+						[0][2] valor del descuento fraccionado
+						[0][3] código de línea de la transacción
+						 */
+						
+						float totalRubrosProductos = 0;
+						float totalRubrosDescuento = 0;
+						float totalRubrosImpuesto = 0;
+						//Agrego rubros de detalle nuevos
+						boolean finCiclo = false;
+						int fila = 0;
+						while(!finCiclo && fila < rubros.length){
+							//linea de transaccion en cero quiere decir fin
+							if(Integer.parseInt(rubros[fila][3]) > 0 ){
+								
+								//linea de transaccion = 1 es el producto
+								if(Integer.parseInt(rubros[fila][3]) == 1){
+									float valorServicio = Float.parseFloat(rubros[fila][1]);
+									float valorDescuento = Float.parseFloat(rubros[fila][2]);
+									
+									Cargos cargosNivelDetalle = new Cargos();
+									cargosNivelDetalle.setIdcargo(-1);
+									cargosNivelDetalle.setIdfactura(facturaSeleccionada.getIdfactura());
+									cargosNivelDetalle.setFactura(facturaSeleccionada);
+									cargosNivelDetalle.setValcargo(valorServicio);
+									cargosNivelDetalle.setMotivo(rubros[fila][0]);
+									cargosNivelDetalle.setValpendiente(valorServicio);
+									cargosNivelDetalle.setValbase(valorServicio);
+									cargosNivelDetalle.setDescuento(valorDescuento);
+									cargosNivelDetalle.setIdrubropadre(0);
+									totalRubrosProductos += valorServicio;
+									
+									lisCargosNivelDetalle.add(cargosNivelDetalle);
+									
+									
+									Cargos cargosNivelDescuento = new Cargos();
+									cargosNivelDescuento.setIdcargo(-1);
+									cargosNivelDescuento.setIdfactura(facturaSeleccionada.getIdfactura());
+									cargosNivelDescuento.setFactura(facturaSeleccionada);
+									cargosNivelDescuento.setValcargo(valorDescuento);
+									cargosNivelDescuento.setMotivo("Descuento "+rubros[fila][0]);
+									cargosNivelDescuento.setValpendiente(valorDescuento);
+									cargosNivelDescuento.setValbase(valorServicio);
+									cargosNivelDescuento.setDescuento(0f);
+									cargosNivelDescuento.setIdrubropadre(0);
+									totalRubrosDescuento += valorDescuento;
+									
+									lisCargosNivelDescuento.add(cargosNivelDescuento);
+								}else{
+									//linea de transaccion = 2 es el impuesto
+									if(Integer.parseInt(rubros[fila][3]) == 2){
+										float valorImpuesto = Float.parseFloat(rubros[fila][1]);
+										
+										Cargos cargosNivelImpuesto = new Cargos();
+										cargosNivelImpuesto.setIdcargo(-1);
+										cargosNivelImpuesto.setIdfactura(facturaSeleccionada.getIdfactura());
+										cargosNivelImpuesto.setFactura(facturaSeleccionada);
+										cargosNivelImpuesto.setValcargo(valorImpuesto);
+										cargosNivelImpuesto.setMotivo(rubros[fila][0]);
+										cargosNivelImpuesto.setValpendiente(valorImpuesto);
+										cargosNivelImpuesto.setValbase(0f);
+										cargosNivelImpuesto.setDescuento(0f);
+										cargosNivelImpuesto.setIdrubropadre(0);
+										totalRubrosImpuesto += valorImpuesto;
+										
+										lisCargosNivelImpuesto.add(cargosNivelImpuesto);
+									}
+								}
+							}else{
+								finCiclo = true;
+							}
+							
+							fila++;
+						}
+						
+						//Actualizo factura
+						float valbruto = facturaSeleccionada.getValbruto() + totalRubrosProductos;
+						facturaSeleccionada.setValbruto(valbruto);
+						
+						float valdescuentos = facturaSeleccionada.getValdescuentos() + totalRubrosDescuento;
+						facturaSeleccionada.setValdescuentos(valdescuentos);
+						
+						float subtotal = facturaSeleccionada.getValbase() + totalRubrosProductos - totalRubrosDescuento;
+						facturaSeleccionada.setValbase(subtotal);
+						
+						float valimpuestos = facturaSeleccionada.getValimpuestos() + totalRubrosImpuesto;
+						facturaSeleccionada.setValimpuestos(valimpuestos);
+						
+						float valtotal = facturaSeleccionada.getValbase() + facturaSeleccionada.getValimpuestos();
+						facturaSeleccionada.setValtotal(valtotal);
+						
+						//Actualizo el total de la factura le sumo rubros de detalle e impuestos
+						float valpendiente = facturaSeleccionada.getValpendiente() + totalRubrosProductos + totalRubrosImpuesto - totalRubrosDescuento;
+						facturaSeleccionada.setValpendiente(valpendiente);
+					}
 				}else{
 					if(activeTab.compareTo(TAB_GENERACION_TITLE) == 0){
 						lisCargosNivelDetalle = cargosBO.lisCargosGeneracionNivelDetalle(facturaSeleccionada.getIdsecuencia());

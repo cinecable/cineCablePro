@@ -132,6 +132,7 @@ public class FacturaBO {
 			PagosDAO pagosDAO = new PagosDAO();
 			TpagosDAO tpagosDAO = new TpagosDAO();
 			ExcedentesDAO excedentesDAO = new ExcedentesDAO();
+			CargosDAO cargosDAO = new CargosDAO();
 			
 			CreditosBO creditosBO = new CreditosBO();
 			ExcedentesBO excedentesBO = new ExcedentesBO();
@@ -170,7 +171,7 @@ public class FacturaBO {
 				//Consulto las formas de pago disponibles de la cuenta
 				List<Tpagos> lisTpagosTmp2 = new ArrayList<Tpagos>();
 				for(Tpagos tpagos : lisFormasPagoCuenta){
-					if(tpagos.getIdestado() == 1){
+					if(tpagos.getIdestado() == Parametro.TPAGOS_ESTADO_PENDIENTE){
 						lisTpagosTmp2.add(tpagos.clonar());
 					}
 				}
@@ -181,12 +182,83 @@ public class FacturaBO {
 					totalFormasPagoCuenta += tpagos.getValpago();
 				}
 				
+				//Si la factura está en mora, mando a grabar los cargos
+				if(factura.getIdestado() == Parametro.FACTURA_ESTADO_MORA){
+					short nivelServicio = Parametro.CARGO_NIVEL_SERVICIO_MIN;
+					short nivelDescuento = Parametro.CARGO_NIVEL_DESCUENTO_MIN;
+					short nivelImpuesto = Parametro.CARGO_NIVEL_IMPUESTO_MIN;
+					
+					for(Cargos cargoDetalle : detalleFacturaPojo.getLisCargosNivelDetalle()){
+						if(cargoDetalle.getIdcargo() == -1){
+							int idcargodetalle = cargosDAO.maxIdCargos(session) + 1;
+							cargoDetalle.setIdcargo(idcargodetalle);
+							cargoDetalle.setNivel(nivelServicio);
+							Estado estado = new Estado();
+							estado.setIdestado(Parametro.CARGOS_ESTADO_PAGADO);
+							cargoDetalle.setEstado(estado);
+							
+							nivelServicio++;
+							
+							//Auditoria
+							fecharegistro = new Date();
+							cargoDetalle.setFecha(fecharegistro);
+							cargoDetalle.setUsuario(usuarioBean.getUsuario());
+							cargoDetalle.setEmpresa(usuarioBean.getUsuario().getEmpresa());
+							
+							//grabo productos en cargos
+							cargosDAO.ingresarCargos(session, cargoDetalle);
+						}
+					}
+					for(Cargos cargoDescuento : detalleFacturaPojo.getLisCargosNivelDescuento()){
+						if(cargoDescuento.getIdcargo() == -1){
+							int idcargodescuento = cargosDAO.maxIdCargos(session) + 1;
+							cargoDescuento.setIdcargo(idcargodescuento);
+							cargoDescuento.setNivel(nivelDescuento);
+							Estado estado = new Estado();
+							estado.setIdestado(Parametro.CARGOS_ESTADO_PAGADO);
+							cargoDescuento.setEstado(estado);
+							
+							nivelDescuento++;
+							
+							//Auditoria
+							fecharegistro = new Date();
+							cargoDescuento.setFecha(fecharegistro);
+							cargoDescuento.setUsuario(usuarioBean.getUsuario());
+							cargoDescuento.setEmpresa(usuarioBean.getUsuario().getEmpresa());
+							
+							//grabo productos en cargos
+							cargosDAO.ingresarCargos(session, cargoDescuento);
+						}
+					}
+					for(Cargos cargoImpuesto : detalleFacturaPojo.getLisCargosNivelImpuesto()){
+						if(cargoImpuesto.getIdcargo() == -1){
+							int idcargoimpuesto = cargosDAO.maxIdCargos(session) + 1;
+							cargoImpuesto.setIdcargo(idcargoimpuesto);
+							cargoImpuesto.setNivel(nivelImpuesto);
+							Estado estado = new Estado();
+							estado.setIdestado(Parametro.CARGOS_ESTADO_PAGADO);
+							cargoImpuesto.setEstado(estado);
+							
+							nivelImpuesto++;
+							
+							//Auditoria
+							fecharegistro = new Date();
+							cargoImpuesto.setFecha(fecharegistro);
+							cargoImpuesto.setUsuario(usuarioBean.getUsuario());
+							cargoImpuesto.setEmpresa(usuarioBean.getUsuario().getEmpresa());
+							
+							//grabo productos en cargos
+							cargosDAO.ingresarCargos(session, cargoImpuesto);
+						}
+					}
+				}
+				
 				if(totalCreditosCuenta >= facturaValpendiente_Credito){
 					//SI MIS CREDITOS CUBREN EL TOTAL DE LA FACTURA O MAS
 					//al valor del credito en la factura se le sumará el total de la factura
 					factura.setValcreditos(factura.getValcreditos() + facturaValpendiente_Credito);
 					//El estado de la factura pasa a pagada
-					factura.setIdestado(4);
+					factura.setIdestado(Parametro.FACTURA_ESTADO_PAGADA);
 					//Ya no hay valor pendiente
 					factura.setValpendiente((float)0);
 					//el total de creditos que voy a usar sera el total de la factura
@@ -209,7 +281,7 @@ public class FacturaBO {
 						//al valor del excedente en la factura se le sumará el total de la factura
 						factura.setValorexcedentes(factura.getValorexcedentes() + facturaValpendiente_Excedente);
 						//El estado de la factura pasa a pagada
-						factura.setIdestado(4);
+						factura.setIdestado(Parametro.FACTURA_ESTADO_PAGADA);
 						//Ya no hay valor pendiente
 						factura.setValpendiente((float)0);
 						//el total de excedentes que voy a usar sera el total de la factura
@@ -229,7 +301,7 @@ public class FacturaBO {
 						if(totalFormasPagoCuenta >= facturaValpendiente_FormaPago){
 							//SI MIS FORMAS DE PAGO CUBREN EL TOTAL DE LA FACTURA O MAS
 							//El estado de la factura pasa a pagada
-							factura.setIdestado(4);
+							factura.setIdestado(Parametro.FACTURA_ESTADO_PAGADA);
 							//Ya no hay valor pendiente
 							factura.setValpendiente((float)0);
 							//el total de formas de pago que voy a usar sera el total de la factura
@@ -266,7 +338,7 @@ public class FacturaBO {
 					pagosCredito.setValtotal(totalCreditosUsar);
 					pagosCredito.setEmpresa(usuarioBean.getUsuario().getEmpresa());
 					Estado estado = new Estado();
-					estado.setIdestado(1);
+					estado.setIdestado(Parametro.PAGOS_ESTADO_ACTIVO);
 					pagosCredito.setEstado(estado);
 					pagosCredito.setIdcuenta(idcuenta);
 					
@@ -297,7 +369,7 @@ public class FacturaBO {
 								creditos.setVacredito(0);
 								//El estado del credito pasa a consumido
 								Estado estadoCredito = new Estado();
-								estadoCredito.setIdestado(4);
+								estadoCredito.setIdestado(Parametro.CREDITO_ESTADO_CONSUMIDO);
 								creditos.setEstado(estadoCredito);
 								//descuento el valor del credito usado del total de creditos a usar
 								totalCreditosUsar -= creditoUsado;
@@ -319,7 +391,7 @@ public class FacturaBO {
 							creditos.setVacredito(0);
 							//El estado del credito pasa a consumido
 							Estado estadoCredito = new Estado();
-							estadoCredito.setIdestado(4);
+							estadoCredito.setIdestado(Parametro.CREDITO_ESTADO_CONSUMIDO);
 							creditos.setEstado(estadoCredito);
 						}
 						
@@ -345,7 +417,7 @@ public class FacturaBO {
 						Fpago fpago = new Fpago();
 						fpago.setIdfpago(Parametro.TIPO_FORMA_PAGO_CREDITO);
 						tpagosCredito.setFpago(fpago);
-						tpagosCredito.setIdestado(4);
+						tpagosCredito.setIdestado(Parametro.TPAGOS_ESTADO_CONSUMIDO);
 						tpagosCredito.setIdempresa(usuarioBean.getUsuario().getEmpresa().getIdempresa());
 						
 						//Auditoria
@@ -369,7 +441,7 @@ public class FacturaBO {
 					pagosExcedente.setValtotal(totalExcedentesUsar);
 					pagosExcedente.setEmpresa(usuarioBean.getUsuario().getEmpresa());
 					Estado estado = new Estado();
-					estado.setIdestado(1);
+					estado.setIdestado(Parametro.PAGOS_ESTADO_ACTIVO);
 					pagosExcedente.setEstado(estado);
 					pagosExcedente.setIdcuenta(idcuenta);
 					
@@ -399,7 +471,7 @@ public class FacturaBO {
 								//el valor del excedente pasa a cero
 								excedentes.setValpendiente(0);
 								//El estado del excedente pasa a consumido
-								excedentes.setIdestado(4);
+								excedentes.setIdestado(Parametro.EXCEDENTE_ESTADO_CONSUMIDO);
 								//descuento el valor del excedente usado del total de excedentes a usar
 								totalExcedentesUsar -= excedenteUsado;
 							}else{
@@ -419,7 +491,7 @@ public class FacturaBO {
 							//el valor del credito pasa a cero
 							excedentes.setValpendiente(0);
 							//El estado del excedente pasa a consumido
-							excedentes.setIdestado(4);
+							excedentes.setIdestado(Parametro.EXCEDENTE_ESTADO_CONSUMIDO);
 						}
 	
 						excedentes.setIdpago(IdpagopagosExcedente);
@@ -444,7 +516,7 @@ public class FacturaBO {
 						Fpago fpago = new Fpago();
 						fpago.setIdfpago(Parametro.TIPO_FORMA_PAGO_EXCEDENTE);
 						tpagosExcedente.setFpago(fpago);
-						tpagosExcedente.setIdestado(4);
+						tpagosExcedente.setIdestado(Parametro.TPAGOS_ESTADO_CONSUMIDO);
 						tpagosExcedente.setIdempresa(usuarioBean.getUsuario().getEmpresa().getIdempresa());
 						
 						//Auditoria
@@ -468,7 +540,7 @@ public class FacturaBO {
 					pagosFormasPago.setValtotal(totalFormasPagoUsar);
 					pagosFormasPago.setEmpresa(usuarioBean.getUsuario().getEmpresa());
 					Estado estado = new Estado();
-					estado.setIdestado(1);
+					estado.setIdestado(Parametro.PAGOS_ESTADO_ACTIVO);
 					pagosFormasPago.setEstado(estado);
 					pagosFormasPago.setIdcuenta(idcuenta);
 					
@@ -498,7 +570,7 @@ public class FacturaBO {
 								//el valor de la forma de pago pasa a cero
 								tpagos.setValpago(0);
 								//El estado de la forma de pago pasa a consumido
-								tpagos.setIdestado(4);
+								tpagos.setIdestado(Parametro.TPAGOS_ESTADO_CONSUMIDO);
 								//descuento el valor de la forma de pago usado del total de formas de pago a usar
 								totalFormasPagoUsar -= formaPagoUsado;
 							}else{
@@ -518,7 +590,7 @@ public class FacturaBO {
 							//el valor de la forma de pago pasa a cero
 							tpagos.setValpago(0);
 							//El estado de la forma de pago pasa a consumido
-							tpagos.setIdestado(4);
+							tpagos.setIdestado(Parametro.TPAGOS_ESTADO_CONSUMIDO);
 						}
 
 						//Obtengo Secuencia
@@ -537,7 +609,7 @@ public class FacturaBO {
 						tpagosFormasPago.setCodseguridad(tpagos.getCodseguridad());
 						tpagosFormasPago.setPropietario(tpagos.getPropietario());
 						tpagosFormasPago.setNrocuenta(tpagos.getNrocuenta());
-						tpagosFormasPago.setIdestado(4);
+						tpagosFormasPago.setIdestado(Parametro.TPAGOS_ESTADO_CONSUMIDO);
 						tpagosFormasPago.setIdempresa(usuarioBean.getUsuario().getEmpresa().getIdempresa());
 						tpagosFormasPago.setIdnexo(0);
 						
@@ -554,7 +626,7 @@ public class FacturaBO {
 			//Consulto las formas de pago sobrantes disponibles de la cuenta
 			List<Tpagos> lisTpagosTmp2 = new ArrayList<Tpagos>();
 			for(Tpagos tpagos : lisFormasPagoCuenta){
-				if(tpagos.getIdestado() == 1){
+				if(tpagos.getIdestado() == Parametro.TPAGOS_ESTADO_PENDIENTE){//1
 					lisTpagosTmp2.add(tpagos);
 				}
 			}
@@ -592,7 +664,7 @@ public class FacturaBO {
 				if(tpagos.getNrocuenta() != null && tpagos.getNrocuenta().trim().length() > 0){
 					excedentes.setNrocuenta(tpagos.getNrocuenta());
 				}
-				excedentes.setIdestado(3);
+				excedentes.setIdestado(Parametro.EXCEDENTE_ESTADO_PENDIENTE);
 				excedentes.setIdempresa(usuarioBean.getUsuario().getEmpresa().getIdempresa());
 				excedentes.setIdcuenta(idcuenta);
 				excedentes.setValpendiente(tpagos.getValpago());
@@ -687,7 +759,7 @@ public class FacturaBO {
 				//Consulto las formas de pago disponibles de la cuenta
 				List<Tpagos> lisTpagosTmp2 = new ArrayList<Tpagos>();
 				for(Tpagos tpagos : lisFormasPagoCuenta){
-					if(tpagos.getIdestado() == 1){
+					if(tpagos.getIdestado() == Parametro.TPAGOS_ESTADO_PENDIENTE){//1
 						lisTpagosTmp2.add(tpagos.clonar());
 					}
 				}
@@ -703,7 +775,7 @@ public class FacturaBO {
 					//al valor del credito en la factura se le sumará el total de la factura
 					factura.setValcreditos(factura.getValcreditos() + facturaValpendiente_Credito);
 					//El estado de la factura pasa a pagada
-					factura.setIdestado(4);
+					factura.setIdestado(Parametro.FACTURA_ESTADO_PAGADA);
 					//Ya no hay valor pendiente
 					factura.setValpendiente((float)0);
 					//el total de creditos que voy a usar sera el total de la factura
@@ -743,7 +815,7 @@ public class FacturaBO {
 						//al valor del excedente en la factura se le sumará el total de la factura
 						factura.setValorexcedentes(factura.getValorexcedentes() + facturaValpendiente_Excedente);
 						//El estado de la factura pasa a pagada
-						factura.setIdestado(4);
+						factura.setIdestado(Parametro.FACTURA_ESTADO_PAGADA);
 						//Ya no hay valor pendiente
 						factura.setValpendiente((float)0);
 						//el total de excedentes que voy a usar sera el total de la factura
@@ -781,7 +853,7 @@ public class FacturaBO {
 						if(totalFormasPagoCuenta >= facturaValpendiente_FormaPago){
 							//SI MIS FORMAS DE PAGO CUBREN EL TOTAL DE LA FACTURA O MAS
 							//El estado de la factura pasa a pagada
-							factura.setIdestado(4);
+							factura.setIdestado(Parametro.FACTURA_ESTADO_PAGADA);
 							//Ya no hay valor pendiente
 							factura.setValpendiente((float)0);
 							//el total de formas de pago que voy a usar sera el total de la factura
@@ -904,7 +976,7 @@ public class FacturaBO {
 					facturaAbono.setValpendiente(facturaTotalAbono);
 					facturaAbono.setValorexcedentes(0f);
 					facturaAbono.setIdfactura(numeroFactura);
-					facturaAbono.setIdestado(4);
+					facturaAbono.setIdestado(Parametro.FACTURA_ESTADO_PAGADA);
 					
 					//Auditoria
 					fecharegistro = new Date();
@@ -930,7 +1002,7 @@ public class FacturaBO {
 					pagosCredito.setValtotal(totalCreditosUsar);
 					pagosCredito.setEmpresa(usuarioBean.getUsuario().getEmpresa());
 					Estado estado = new Estado();
-					estado.setIdestado(1);
+					estado.setIdestado(Parametro.PAGOS_ESTADO_ACTIVO);
 					pagosCredito.setEstado(estado);
 					pagosCredito.setIdcuenta(idcuenta);
 					
@@ -961,7 +1033,7 @@ public class FacturaBO {
 								creditos.setVacredito(0);
 								//El estado del credito pasa a consumido
 								Estado estadoCredito = new Estado();
-								estadoCredito.setIdestado(4);
+								estadoCredito.setIdestado(Parametro.CREDITO_ESTADO_CONSUMIDO);
 								creditos.setEstado(estadoCredito);
 								//descuento el valor del credito usado del total de creditos a usar
 								totalCreditosUsar -= creditoUsado;
@@ -983,7 +1055,7 @@ public class FacturaBO {
 							creditos.setVacredito(0);
 							//El estado del credito pasa a consumido
 							Estado estadoCredito = new Estado();
-							estadoCredito.setIdestado(4);
+							estadoCredito.setIdestado(Parametro.CREDITO_ESTADO_CONSUMIDO);
 							creditos.setEstado(estadoCredito);
 						}
 						
@@ -1009,7 +1081,7 @@ public class FacturaBO {
 						Fpago fpago = new Fpago();
 						fpago.setIdfpago(Parametro.TIPO_FORMA_PAGO_CREDITO);
 						tpagosCredito.setFpago(fpago);
-						tpagosCredito.setIdestado(4);
+						tpagosCredito.setIdestado(Parametro.TPAGOS_ESTADO_CONSUMIDO);
 						tpagosCredito.setIdempresa(usuarioBean.getUsuario().getEmpresa().getIdempresa());
 						
 						//Auditoria
@@ -1033,7 +1105,7 @@ public class FacturaBO {
 					pagosExcedente.setValtotal(totalExcedentesUsar);
 					pagosExcedente.setEmpresa(usuarioBean.getUsuario().getEmpresa());
 					Estado estado = new Estado();
-					estado.setIdestado(1);
+					estado.setIdestado(Parametro.PAGOS_ESTADO_ACTIVO);
 					pagosExcedente.setEstado(estado);
 					pagosExcedente.setIdcuenta(idcuenta);
 					
@@ -1063,7 +1135,7 @@ public class FacturaBO {
 								//el valor del excedente pasa a cero
 								excedentes.setValpendiente(0);
 								//El estado del excedente pasa a consumido
-								excedentes.setIdestado(4);
+								excedentes.setIdestado(Parametro.EXCEDENTE_ESTADO_CONSUMIDO);
 								//descuento el valor del excedente usado del total de excedentes a usar
 								totalExcedentesUsar -= excedenteUsado;
 							}else{
@@ -1083,7 +1155,7 @@ public class FacturaBO {
 							//el valor del credito pasa a cero
 							excedentes.setValpendiente(0);
 							//El estado del excedente pasa a consumido
-							excedentes.setIdestado(4);
+							excedentes.setIdestado(Parametro.EXCEDENTE_ESTADO_CONSUMIDO);
 						}
 	
 						excedentes.setIdpago(IdpagopagosExcedente);
@@ -1108,7 +1180,7 @@ public class FacturaBO {
 						Fpago fpago = new Fpago();
 						fpago.setIdfpago(Parametro.TIPO_FORMA_PAGO_EXCEDENTE);
 						tpagosExcedente.setFpago(fpago);
-						tpagosExcedente.setIdestado(4);
+						tpagosExcedente.setIdestado(Parametro.TPAGOS_ESTADO_CONSUMIDO);
 						tpagosExcedente.setIdempresa(usuarioBean.getUsuario().getEmpresa().getIdempresa());
 						
 						//Auditoria
@@ -1132,7 +1204,7 @@ public class FacturaBO {
 					pagosFormasPago.setValtotal(totalFormasPagoUsar);
 					pagosFormasPago.setEmpresa(usuarioBean.getUsuario().getEmpresa());
 					Estado estado = new Estado();
-					estado.setIdestado(1);
+					estado.setIdestado(Parametro.PAGOS_ESTADO_ACTIVO);
 					pagosFormasPago.setEstado(estado);
 					pagosFormasPago.setIdcuenta(idcuenta);
 					
@@ -1162,7 +1234,7 @@ public class FacturaBO {
 								//el valor de la forma de pago pasa a cero
 								tpagos.setValpago(0);
 								//El estado de la forma de pago pasa a consumido
-								tpagos.setIdestado(4);
+								tpagos.setIdestado(Parametro.TPAGOS_ESTADO_CONSUMIDO);
 								//descuento el valor de la forma de pago usado del total de formas de pago a usar
 								totalFormasPagoUsar -= formaPagoUsado;
 							}else{
@@ -1182,7 +1254,7 @@ public class FacturaBO {
 							//el valor de la forma de pago pasa a cero
 							tpagos.setValpago(0);
 							//El estado de la forma de pago pasa a consumido
-							tpagos.setIdestado(4);
+							tpagos.setIdestado(Parametro.TPAGOS_ESTADO_CONSUMIDO);
 							
 						}
 
@@ -1202,7 +1274,7 @@ public class FacturaBO {
 						tpagosFormasPago.setCodseguridad(tpagos.getCodseguridad());
 						tpagosFormasPago.setPropietario(tpagos.getPropietario());
 						tpagosFormasPago.setNrocuenta(tpagos.getNrocuenta());
-						tpagosFormasPago.setIdestado(4);
+						tpagosFormasPago.setIdestado(Parametro.TPAGOS_ESTADO_CONSUMIDO);
 						tpagosFormasPago.setIdempresa(usuarioBean.getUsuario().getEmpresa().getIdempresa());
 						tpagosFormasPago.setIdnexo(0);
 						
@@ -1219,7 +1291,7 @@ public class FacturaBO {
 			//Consulto las formas de pago sobrantes disponibles de la cuenta
 			List<Tpagos> lisTpagosTmp2 = new ArrayList<Tpagos>();
 			for(Tpagos tpagos : lisFormasPagoCuenta){
-				if(tpagos.getIdestado() == 1){
+				if(tpagos.getIdestado() == Parametro.TPAGOS_ESTADO_PENDIENTE){//1
 					lisTpagosTmp2.add(tpagos);
 				}
 			}
@@ -1257,7 +1329,7 @@ public class FacturaBO {
 				if(tpagos.getNrocuenta() != null && tpagos.getNrocuenta().trim().length() > 0){
 					excedentes.setNrocuenta(tpagos.getNrocuenta());
 				}
-				excedentes.setIdestado(3);
+				excedentes.setIdestado(Parametro.EXCEDENTE_ESTADO_PENDIENTE);
 				excedentes.setIdempresa(usuarioBean.getUsuario().getEmpresa().getIdempresa());
 				excedentes.setIdcuenta(idcuenta);
 				excedentes.setValpendiente(tpagos.getValpago());
@@ -1429,7 +1501,7 @@ public class FacturaBO {
 			if(totalFormasPagoCuenta >= totalFactura){
 				//SI MIS FORMAS DE PAGO CUBREN EL TOTAL DE LA FACTURA O MAS
 				//El estado de la factura pasa a pagada
-				factura.setIdestado(4);
+				factura.setIdestado(Parametro.FACTURA_ESTADO_PAGADA);
 				//Ya no hay valor pendiente
 				factura.setValpendiente((float)0);
 				//el total de formas de pago que voy a usar sera el total de la factura
@@ -1462,7 +1534,7 @@ public class FacturaBO {
 			}else{
 				//SI MIS FORMAS DE PAGO CUBREN UNA PARTE DE LA FACTURA
 				//El estado de la factura queda pendiente
-				factura.setIdestado(3);
+				factura.setIdestado(Parametro.FACTURA_ESTADO_PENDIENTE);
 				//el valor pendiente en la factura será la diferencia entre el valor del total de la factura y el total de mis formas de pago
 				factura.setValpendiente(totalFactura - totalFormasPagoCuenta);
 				//el total de creditos que voy a usar sera el total de creditos de la cuenta
@@ -1557,14 +1629,14 @@ public class FacturaBO {
 						//si mi abono es mayor o igual que la factura, mi servicio se graba como pagado
 						cargosServicio.setValpendiente(0f);
 						estado = new Estado();
-						estado.setIdestado(4);
+						estado.setIdestado(Parametro.CARGOS_ESTADO_PAGADO);
 						cargosServicio.setEstado(estado);
 					}else{
 						//si mi abono es menor que la factura, mi servicio se graba rebajado a la proporcion
 						cargosServicio.setValpendiente(servicioValor.getServicio().getCostoservicio().getCosto() - (servicioValor.getServicio().getCostoservicio().getCosto() * proporcional));
 						
 						estado = new Estado();
-						estado.setIdestado(3);
+						estado.setIdestado(Parametro.CARGOS_ESTADO_PENDIENTE);
 						cargosServicio.setEstado(estado);
 					}
 					valorBrutoPendiente += cargosServicio.getValpendiente();
@@ -1598,13 +1670,13 @@ public class FacturaBO {
 							//si mi abono es mayor o igual que la factura, mi descuento se graba como pagado
 							cargosDescuento.setValpendiente(0f);
 							estado = new Estado();
-							estado.setIdestado(4);
+							estado.setIdestado(Parametro.CARGOS_ESTADO_PAGADO);
 							cargosDescuento.setEstado(estado);
 						}else{
 							//si mi abono es menor que la factura, mi descuento se graba rebajado a la proporcion
 							cargosDescuento.setValpendiente(servicioValor.getValorDescuento() - (servicioValor.getValorDescuento() * proporcional));
 							estado = new Estado();
-							estado.setIdestado(3);
+							estado.setIdestado(Parametro.CARGOS_ESTADO_PENDIENTE);
 							cargosDescuento.setEstado(estado);
 						}
 						valorDescuentoPendiente += cargosDescuento.getValpendiente();
@@ -1640,7 +1712,7 @@ public class FacturaBO {
 								//si mi abono es mayor o igual que la factura, mi impuesto se graba como pagado
 								cargosImpuesto.setValpendiente(0f);
 								estado = new Estado();
-								estado.setIdestado(4);
+								estado.setIdestado(Parametro.CARGOS_ESTADO_PAGADO);
 								cargosImpuesto.setEstado(estado);
 								
 								if(impuestoValor.getImpservicios().getDescripcion().compareToIgnoreCase("iva") == 0){
@@ -1654,7 +1726,7 @@ public class FacturaBO {
 								//si mi abono es menor que la factura, mi impuesto se graba rebajado a la proporcion
 								cargosImpuesto.setValpendiente(impuestoValor.getValor() - (impuestoValor.getValor() * proporcional));
 								estado = new Estado();
-								estado.setIdestado(3);
+								estado.setIdestado(Parametro.CARGOS_ESTADO_PENDIENTE);
 								cargosImpuesto.setEstado(estado);
 								
 								if(impuestoValor.getImpservicios().getDescripcion().compareToIgnoreCase("iva") == 0){
@@ -1716,7 +1788,7 @@ public class FacturaBO {
 				facturaAbono.setValpendiente(facturaTotalAbono);
 				facturaAbono.setValorexcedentes(0f);
 				facturaAbono.setIdfactura(numeroFactura);
-				facturaAbono.setIdestado(4);
+				facturaAbono.setIdestado(Parametro.FACTURA_ESTADO_PAGADA);
 				
 				//Auditoria
 				fecharegistro = new Date();
@@ -1751,7 +1823,7 @@ public class FacturaBO {
 				pagosFormasPago.setValtotal(totalFormasPagoUsar);
 				pagosFormasPago.setEmpresa(usuarioBean.getUsuario().getEmpresa());
 				Estado estado = new Estado();
-				estado.setIdestado(1);
+				estado.setIdestado(Parametro.PAGOS_ESTADO_ACTIVO);
 				pagosFormasPago.setEstado(estado);
 				pagosFormasPago.setIdcuenta(idcuenta);
 				
@@ -1781,7 +1853,7 @@ public class FacturaBO {
 							//el valor de la forma de pago pasa a cero
 							tpagos.setValpago(0);
 							//El estado de la forma de pago pasa a consumido
-							tpagos.setIdestado(4);
+							tpagos.setIdestado(Parametro.TPAGOS_ESTADO_CONSUMIDO);
 							//descuento el valor de la forma de pago usado del total de formas de pago a usar
 							totalFormasPagoUsar -= formaPagoUsado;
 						}else{
@@ -1792,7 +1864,7 @@ public class FacturaBO {
 							//al valor de la forma de pago se le resta el total de formas de pago a usar y me queda un saldo para la siguiente factura
 							tpagos.setValpago(tpagos.getValpago() - totalFormasPagoUsar);
 							//El estado de la forma de pago queda pendiente
-							tpagos.setIdestado(3);
+							tpagos.setIdestado(Parametro.TPAGOS_ESTADO_PENDIENTE);
 							//el total de formas de pago a usar queda en cero
 							totalFormasPagoUsar = 0;
 						}
@@ -1803,7 +1875,7 @@ public class FacturaBO {
 						//el valor de la forma de pago pasa a cero
 						tpagos.setValpago(0);
 						//El estado de la forma de pago pasa a consumido
-						tpagos.setIdestado(4);
+						tpagos.setIdestado(Parametro.TPAGOS_ESTADO_CONSUMIDO);
 					}
 
 					//Obtengo Secuencia
@@ -1822,7 +1894,7 @@ public class FacturaBO {
 					tpagosFormasPago.setCodseguridad(tpagos.getCodseguridad());
 					tpagosFormasPago.setPropietario(tpagos.getPropietario());
 					tpagosFormasPago.setNrocuenta(tpagos.getNrocuenta());
-					tpagosFormasPago.setIdestado(4);
+					tpagosFormasPago.setIdestado(Parametro.TPAGOS_ESTADO_CONSUMIDO);
 					tpagosFormasPago.setIdempresa(usuarioBean.getUsuario().getEmpresa().getIdempresa());
 					tpagosFormasPago.setIdnexo(0);
 					
@@ -1838,7 +1910,7 @@ public class FacturaBO {
 			//Consulto las formas de pago sobrantes disponibles de la cuenta
 			List<Tpagos> lisTpagosTmp2 = new ArrayList<Tpagos>();
 			for(Tpagos tpagos : lisFormasPagoCuenta){
-				if(tpagos.getIdestado() == 1){
+				if(tpagos.getIdestado() == Parametro.TPAGOS_ESTADO_PENDIENTE){//1
 					lisTpagosTmp2.add(tpagos);
 				}
 			}
@@ -1876,7 +1948,7 @@ public class FacturaBO {
 				if(tpagos.getNrocuenta() != null && tpagos.getNrocuenta().trim().length() > 0){
 					excedentes.setNrocuenta(tpagos.getNrocuenta());
 				}
-				excedentes.setIdestado(3);
+				excedentes.setIdestado(Parametro.EXCEDENTE_ESTADO_PENDIENTE);
 				excedentes.setIdempresa(usuarioBean.getUsuario().getEmpresa().getIdempresa());
 				excedentes.setIdcuenta(idcuenta);
 				excedentes.setValpendiente(tpagos.getValpago());
@@ -1892,7 +1964,7 @@ public class FacturaBO {
 			}
 			
 			//cambio el estado de la cuenta del cliente
-			ctacliente.setIdestado(2);
+			ctacliente.setIdestado(Parametro.CUENTA_CLIENTE_PENDIENTE);
 			ctaclienteDAO.actualizarCtacliente(session, ctacliente); 
 			
 			//GRABO LOS DATOS PARA LA IMPRESION DE LA FACTURA
@@ -1978,7 +2050,7 @@ public class FacturaBO {
 			
 			//el estado del cargo pasa a pagado
 			Estado estado = new Estado();
-			estado.setIdestado(4);
+			estado.setIdestado(Parametro.CARGOS_ESTADO_PAGADO);
 			cargos.setEstado(estado);
 			
 			//auditoria
@@ -1989,5 +2061,21 @@ public class FacturaBO {
 			//actualizo los cargos
 			cargosDAO.actualizarCargos(session, cargos);
 		}
+	}
+	
+	public void obtenerRubrosMora(int idcuenta, Object args[]) throws Exception {
+		Session session = null;
+		
+		try{
+            session = HibernateUtil.getSessionFactory().openSession();
+            facturaDAO.obtenerRubrosMora(session, idcuenta, args);
+        }
+        catch(Exception ex){
+            throw new Exception(ex);
+        }
+        finally{
+            session.close();
+        }
+		
 	}
 }

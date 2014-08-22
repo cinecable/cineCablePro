@@ -72,11 +72,11 @@ public class CargosDAO {
 	public List<Cargos> lisCargosFacturaNivelImpuestoSum(Session session, String idfactura) throws Exception {
 		List<Cargos> lisCargos = null;
 		
-		String hql = " select new Cargos(idfactura, factura.idgeneracion, nivel, motivo, sum(valpendiente)) from Cargos ";
+		String hql = " select new Cargos(idfactura, factura.idsecuencia, nivel, motivo, sum(valpendiente)) from Cargos ";
 		hql += " where idfactura = :idfactura ";
 		hql += " and estado.idestado = :idestado ";
 		hql += " and nivel between :nivel_impuesto_min and :nivel_impuesto_max ";
-		hql += " group by idfactura, factura.idgeneracion, nivel, motivo ";
+		hql += " group by idfactura, factura.idsecuencia, nivel, motivo ";
 		hql += " order by nivel ";
 		
 		Query query = session.createQuery(hql)
@@ -138,11 +138,11 @@ public class CargosDAO {
 	/**
 	 * Retorna una lista de tipo Cargos con los impuestos sumados por tipo
 	 * Depende del constructor 
-	 * public Cargos(String idfactura, int idgeneracion, short nivel, String motivo, Double valpendiente){
+	 * public Cargos(String idfactura, int idsecuencia, short nivel, String motivo, Double valpendiente){
 	 *	this.idcargo = 0;
 	 *	this.estado = new Estado(0, null);
 	 *	Factura factura = new Factura();
-	 *	factura.setIdgeneracion(idgeneracion);
+	 *	factura.setIdsecuencia(idsecuencia);
 	 *	this.factura = factura;
 	 *	this.usuario = new Usuario();
 	 *	this.empresa = new Empresa();
@@ -165,11 +165,11 @@ public class CargosDAO {
 	public List<Cargos> lisCargosGeneracionNivelImpuestoSum(Session session, int idsecuencia) throws Exception {
 		List<Cargos> lisCargos = null;
 
-		String hql = " select new Cargos(idfactura, factura.idgeneracion, nivel, motivo, sum(valpendiente)) from Cargos ";
+		String hql = " select new Cargos(idfactura, factura.idsecuencia, nivel, motivo, sum(valpendiente)) from Cargos ";
 		hql += " where factura.idsecuencia = :idsecuencia ";
 		hql += " and estado.idestado = :idestado ";
 		hql += " and nivel between :nivel_impuesto_min and :nivel_impuesto_max ";
-		hql += " group by idfactura, factura.idgeneracion, nivel, motivo ";
+		hql += " group by idfactura, factura.idsecuencia, nivel, motivo ";
 		hql += " order by motivo ";
 		
 		Query query = session.createQuery(hql)

@@ -1,5 +1,11 @@
 package dao.datos;
 
+import global.Parametro;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -8,6 +14,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.jdbc.Work;
 
 import pojo.annotations.Factura;
 
@@ -58,12 +65,13 @@ public class FacturaDAO {
 		hql += " where idcuenta = :idcuenta ";
 		hql += " and idfactura is not null ";
 		hql += " and trim(both ' ' from idfactura) <> '' ";
-		hql += " and idestado = :idestado ";
+		hql += " and idestado in(:idestadoPendiente, :idestadoMora) ";
 		hql += " order by idgeneracion ";
 				
 		Query query = session.createQuery(hql)
 		.setInteger("idcuenta", idcuenta)
-		.setInteger("idestado", 3);
+		.setInteger("idestadoPendiente", Parametro.FACTURA_ESTADO_PENDIENTE)
+		.setInteger("idestadoMora", Parametro.FACTURA_ESTADO_MORA);
 		
 		lisFactura = (List<Factura>) query.list();
 		
@@ -129,6 +137,11 @@ public class FacturaDAO {
 		return lisFactura;
 	}
 	
+	public void obtenerRubrosMora(Session session, int idcuenta, Object args[]) throws Exception {
+		ObtenerRubrosMora obtenerRubrosMora = new ObtenerRubrosMora(idcuenta, args);
+		session.doWork(obtenerRubrosMora);
+	}
+	
 	public void actualizarFactura(Session session, Factura factura) throws Exception {
 		session.update(factura);
 	}
@@ -137,5 +150,42 @@ public class FacturaDAO {
 		session.save(factura);
 	}
 	
-	
+	public class ObtenerRubrosMora implements Work {
+		
+		private Object resultado;
+		private int idcuenta;
+		private Object args[];
+		
+		public ObtenerRubrosMora(int idcuenta, Object args[]) {
+			this.idcuenta = idcuenta;
+			this.args = args;
+		}
+
+		@Override
+		public void execute(Connection connection) throws SQLException {
+			String query = "{ call facturacion(?, ?) }";
+			CallableStatement statement = connection.prepareCall(query);
+			statement.setInt(1, idcuenta);
+			statement.setTimestamp(2,
+					new java.sql.Timestamp(new Date().getTime()));
+			statement.execute();
+
+			ResultSet result = statement.getResultSet();
+			if (result != null) {
+				if (result.next()) {
+					args[0] = result.getArray(1).getArray();
+				}
+			}
+
+			statement.close();
+		}
+
+		public Object getResultado() {
+			return resultado;
+		}
+
+		public Object[] getArgs() {
+			return args;
+		}
+	}
 }
