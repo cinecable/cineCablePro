@@ -73,7 +73,9 @@ public class DebitoCreditoBean implements Serializable {
 				
 				creditos.setIdcuenta(idcuenta);
 				
-				ok = creditosBO.grabarDebitoCredito(creditos, idfacturaselected);
+				if(idtipomotivoseleccionado == Parametro.TIPO_MOTIVO_CREDITO){
+					ok = creditosBO.grabarDebitoCredito(creditos, idfacturaselected);
+				}
 				
 				if(ok){
 					FacesUtil facesUtil = new FacesUtil();
