@@ -1,9 +1,7 @@
 package global;
 
-import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-@ManagedBean
 @SessionScoped
 public class Parametro {
 	public static final String FILE_SEPARATOR = "/";//File.separator;
@@ -100,4 +98,11 @@ public class Parametro {
 	//Estados Cuenta Cliente
 	public static final int CUENTA_CLIENTE_IMPAGO = 3;
 	public static final int CUENTA_CLIENTE_PENDIENTE = 2;
+	
+	//Seccion tipo motivo
+	public static final int TIPO_MOTIVO_CREDITO = 2;
+	public static final int TIPO_MOTIVO_MULTAS = 3;
+	public static final int TIPO_MOTIVO_CREDITO_INTERNO = 4;
+	public static final int TIPO_MOTIVO_FACTURA = 5;
+
 }

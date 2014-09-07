@@ -10,22 +10,55 @@
 		<h1 class="title ui-widget-header" style="text-align: center;">Transacciones - N/C N/D</h1>
 		<p:messages id="mensajes" autoUpdate="true" showSummary="true" closable="true" />
 		<p:panel id="panel-content" style="min-height: 300px;margin: 20px 0">
+		
 			<h:link value="Regresar" style="float: right;" outcome="cliente?faces-redirect=true" >
-				<f:param name="idcuenta" value="#{mensajesBean.idcuenta}"></f:param>
+				<f:param name="idcuenta" value="#{debitoCreditoBean.idcuenta}"></f:param>
 			</h:link>
 			<br />
+		
+			<h:panelGrid id="idgridcontenido" style="width: 500px" columns="1">	
+			<h:outputLabel value="Transacción" for="tipoTransaccion" />
+			<p:selectOneRadio id="tipoTransaccion" layout="pageDirection"  
+			value="#{debitoCreditoBean.idtipomotivoseleccionado}">
+				<p:ajax listener="#{debitoCreditoBean.seleccionTransaccion()}" update=":form-contentpage:idlismotivo, :form-contentpage:idlisFactura, :form-contentpage:mensajes" />
+				
+				<f:selectItem itemLabel="Ingresar Nota de Crédito" itemValue="#{debitoCreditoBean.TIPO_MOTIVO_CREDITO}" />
+				<f:selectItem itemLabel="Ingresar Cargos a favor" itemValue="#{debitoCreditoBean.TIPO_MOTIVO_CREDITO_INTERNO}" />
+				<f:selectItem itemLabel="Ingresar Multas y Otros" itemValue="#{debitoCreditoBean.TIPO_MOTIVO_MULTAS}" />
+				<f:selectItem itemLabel="Anular Facturas" itemValue="#{debitoCreditoBean.TIPO_MOTIVO_FACTURA}" />
+				
+			</p:selectOneRadio>
 			
-			<h:selectOneRadio id="tipoTransaccion" layout="pageDirection" value="">
-				<f:selectItem itemLabel="Ingresar Nota de Crédito" itemValue="0" />
-				<f:selectItem itemLabel="Ingresar Cargos a favor" itemValue="1" />
-				<f:selectItem itemLabel="Ingresar Multas y Otros" itemValue="2" />
-				<f:selectItem itemLabel="Anular Facturas" itemValue="3" />
-			</h:selectOneRadio>
+			<p:spacer height="20px"></p:spacer>
+			<h:outputLabel value="Motivo" for="idlismotivo" />
+			<p:selectOneListbox id="idlismotivo" value="#{debitoCreditoBean.creditos.motivos.idmotivo}" >
+				<f:selectItems value="#{debitoCreditoBean.lisMotivos}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idmotivo}" />
+			</p:selectOneListbox>
 			
-			<h:outputLabel value="Motivo" />
-			<!-- <p:selectOneListbox id="idlismotivo" value="#{debitoCreditoBeann.idmotivoSelected}" >
-				<f:selectItems value="#{debitoCreditoBeann.lisMotivos}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idmotivo}" />
-			</p:selectOneListbox> -->
+			<p:spacer height="20px"></p:spacer>
+			<h:outputLabel value="Valor" for="idvalorcredito" />
+			<p:inputText id="idvalorcredito" value="#{debitoCreditoBean.creditos.vacredito}"></p:inputText>
+			
+			<p:spacer height="20px"></p:spacer>
+			<h:outputLabel value="Factura" for="idlisFactura" />
+			<p:selectOneListbox id="idlisFactura" value="#{debitoCreditoBean.idfacturaselected}" >
+				<f:selectItems value="#{debitoCreditoBean.lisFactura}" var="i" itemLabel="#{i.idfactura != null ? i.idfactura : i.idgeneracion}" itemValue="#{i.idsecuencia}" />
+			</p:selectOneListbox>
+			
+			<p:spacer height="20px"></p:spacer>
+			<h:outputLabel value="Observación" for="idObservacion" />
+			<p:inputTextarea id="idObservacion" value="#{debitoCreditoBean.creditos.observaciones}" style="width: 100%" />
+		
+			</h:panelGrid>
+				
+			<p:spacer height="50px"></p:spacer>
+			<center>
+				<p:commandButton value="Grabar" 
+					actionListener="#{debitoCreditoBean.grabar()}"
+					update=":form-contentpage:mensajes" />
+			</center>
+		
+		
 		</p:panel>
 	</h:form>
 </ui:composition>

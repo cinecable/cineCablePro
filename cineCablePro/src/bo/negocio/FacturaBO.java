@@ -137,6 +137,24 @@ public class FacturaBO {
 		
 		return lisFactura;
 	}
+	
+	public List<Factura> lisFacturaGeneracionParaCreditosByIdcuenta(int idcuenta) throws Exception {
+		List<Factura> lisFactura = null;
+		Session session = null;
+		
+		try{
+            session = HibernateUtil.getSessionFactory().openSession();
+            lisFactura = facturaDAO.lisFacturaGeneracionParaCreditosByIdcuenta(session, idcuenta);
+        }
+        catch(Exception ex){
+            throw new Exception(ex);
+        }
+        finally{
+            session.close();
+        }
+		
+		return lisFactura;
+	}
 
 	public boolean procesarFacturasCreditosExcedentes(List<DetalleFacturaPojo> lisDetalleFacturaPojo, List<Tpagos> lisTpagos, int idcuenta) throws Exception {
 		boolean ok = false;

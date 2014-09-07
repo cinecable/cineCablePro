@@ -96,7 +96,7 @@ public class FacturaDAO {
 				
 		Query query = session.createQuery(hql)
 		.setInteger("idcuenta", idcuenta)
-		.setInteger("idestado", 3);
+		.setInteger("idestado", Parametro.FACTURA_ESTADO_PENDIENTE);
 		
 		lisFactura = (List<Factura>) query.list();
 		
@@ -131,6 +131,52 @@ public class FacturaDAO {
 		.setDate("fechaHasta", hasta.getTime())
 		.setMaxResults(10);
 		//.setInteger("idestado", 3);
+		
+		lisFactura = (List<Factura>) query.list();
+		
+		return lisFactura;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Factura> lisFacturaParaCreditosByIdcuenta(Session session, int idcuenta) throws Exception {
+		List<Factura> lisFactura = null;
+		
+		String hql = " from Factura ";
+		hql += " where (idestado <> :idestado ";
+		hql += " or fecha between :fechaDesde and :fechaHasta) ";
+		hql += " and idfactura is not null ";
+		hql += " and trim(both ' ' from idfactura) <> '' ";
+		hql += " and idcuenta = :idcuenta ";
+		hql += " order by idfactura ";
+				
+		Calendar desde = Calendar.getInstance();
+		desde.add(Calendar.MONTH, -1);
+		
+		Calendar hasta = Calendar.getInstance();
+		
+		Query query = session.createQuery(hql)
+		.setInteger("idestado", Parametro.FACTURA_ESTADO_PAGADA)
+		.setDate("fechaDesde", desde.getTime())
+		.setDate("fechaHasta", hasta.getTime())
+		.setInteger("idcuenta", idcuenta);
+		
+		lisFactura = (List<Factura>) query.list();
+		
+		return lisFactura;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Factura> lisFacturaGeneracionParaCreditosByIdcuenta(Session session, int idcuenta) throws Exception {
+		List<Factura> lisFactura = null;
+		
+		String hql = " from Factura ";
+		hql += " where idcuenta = :idcuenta ";
+		hql += " and ( idfactura is null or trim(both ' ' from idfactura) = '' ) ";
+		hql += " and idestado = :idestado ";
+				
+		Query query = session.createQuery(hql)
+		.setInteger("idcuenta", idcuenta)
+		.setInteger("idestado", Parametro.FACTURA_ESTADO_PENDIENTE);
 		
 		lisFactura = (List<Factura>) query.list();
 		

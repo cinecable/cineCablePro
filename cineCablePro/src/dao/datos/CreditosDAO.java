@@ -13,6 +13,15 @@ import pojo.annotations.Creditos;
 
 public class CreditosDAO {
 
+	public int maxIdCreditos(Session session) throws Exception {
+		int max=0;
+		
+		Object object = session.createQuery("select max(idcredito) as max from Creditos ").uniqueResult();
+		max = (object==null?0:Integer.parseInt(object.toString()));
+		
+		return max;
+	}
+	
 	public Creditos getCreditoById(Session session, int idcredito) throws Exception {
 		Creditos creditos = null;
 		
