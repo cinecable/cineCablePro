@@ -119,6 +119,24 @@ public class FacturaBO {
 		
 		return lisFactura;
 	}
+	
+	public List<Factura> lisFacturaParaCreditosByIdcuenta(int idcuenta) throws Exception {
+		List<Factura> lisFactura = null;
+		Session session = null;
+		
+		try{
+            session = HibernateUtil.getSessionFactory().openSession();
+            lisFactura = facturaDAO.lisFacturaParaCreditosByIdcuenta(session, idcuenta);
+        }
+        catch(Exception ex){
+            throw new Exception(ex);
+        }
+        finally{
+            session.close();
+        }
+		
+		return lisFactura;
+	}
 
 	public boolean procesarFacturasCreditosExcedentes(List<DetalleFacturaPojo> lisDetalleFacturaPojo, List<Tpagos> lisTpagos, int idcuenta) throws Exception {
 		boolean ok = false;
@@ -226,7 +244,7 @@ public class FacturaBO {
 							cargoDescuento.setUsuario(usuarioBean.getUsuario());
 							cargoDescuento.setEmpresa(usuarioBean.getUsuario().getEmpresa());
 							
-							//grabo productos en cargos
+							//grabo descuentos en cargos
 							cargosDAO.ingresarCargos(session, cargoDescuento);
 						}
 					}
@@ -247,7 +265,7 @@ public class FacturaBO {
 							cargoImpuesto.setUsuario(usuarioBean.getUsuario());
 							cargoImpuesto.setEmpresa(usuarioBean.getUsuario().getEmpresa());
 							
-							//grabo productos en cargos
+							//grabo impuestos en cargos
 							cargosDAO.ingresarCargos(session, cargoImpuesto);
 						}
 					}
