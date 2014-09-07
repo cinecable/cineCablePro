@@ -39,12 +39,13 @@ public class Cargos implements java.io.Serializable {
 	private Float descuento;
 	private Integer idrubropadre;
 	private String producto;
+	private int idcuenta;
 
 	public Cargos() {
 	}
 
 	public Cargos(int idcargo, Estado estado, Factura factura, Usuario usuario,
-			Empresa empresa, float valcargo, short nivel, String motivo) {
+			Empresa empresa, float valcargo, short nivel, String motivo, int idcuenta) {
 		this.idcargo = idcargo;
 		this.estado = estado;
 		this.factura = factura;
@@ -53,12 +54,13 @@ public class Cargos implements java.io.Serializable {
 		this.valcargo = valcargo;
 		this.nivel = nivel;
 		this.motivo = motivo;
+		this.idcuenta = idcuenta;
 	}
 
 	public Cargos(int idcargo, Estado estado, Factura factura, Usuario usuario,
 			Empresa empresa, String idfactura, float valcargo, short nivel,
 			Date fecha, String motivo, Float valpendiente, Float valbase,
-			Float descuento, Integer idrubropadre, String producto) {
+			Float descuento, Integer idrubropadre, String producto, int idcuenta) {
 		this.idcargo = idcargo;
 		this.estado = estado;
 		this.factura = factura;
@@ -74,6 +76,7 @@ public class Cargos implements java.io.Serializable {
 		this.descuento = descuento;
 		this.idrubropadre = idrubropadre;
 		this.producto = producto;
+		this.idcuenta = idcuenta;
 	}
 	
 	/**
@@ -242,6 +245,15 @@ public class Cargos implements java.io.Serializable {
 
 	public void setProducto(String producto) {
 		this.producto = producto;
+	}
+	
+	@Column(name = "idcuenta")
+	public int getIdcuenta() {
+		return this.idcuenta;
+	}
+
+	public void setIdcuenta(int idcuenta) {
+		this.idcuenta = idcuenta;
 	}
 
 	@Override

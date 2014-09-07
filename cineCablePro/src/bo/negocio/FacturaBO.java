@@ -1642,6 +1642,7 @@ public class FacturaBO {
 					cargosServicio.setValcargo(servicioValor.getServicio().getCostoservicio().getCosto());
 					cargosServicio.setNivel(nivelServicio);
 					cargosServicio.setMotivo(detalleContratoPojo.getProducto().getNombre() + " - " + servicioValor.getServicio().getNombre());
+					cargosServicio.setIdcuenta(idcuenta);
 					Estado estado = new Estado();
 					if(totalFormasPagoCuenta >= totalFactura){
 						//si mi abono es mayor o igual que la factura, mi servicio se graba como pagado
@@ -1684,6 +1685,7 @@ public class FacturaBO {
 						cargosDescuento.setValcargo(servicioValor.getValorDescuento());
 						cargosDescuento.setNivel(nivelDescuento);
 						cargosDescuento.setMotivo(detalleContratoPojo.getProducto().getNombre() + " - " + servicioValor.getNombreDescuento());
+						cargosDescuento.setIdcuenta(idcuenta);
 						if(totalFormasPagoCuenta >= totalFactura){
 							//si mi abono es mayor o igual que la factura, mi descuento se graba como pagado
 							cargosDescuento.setValpendiente(0f);
@@ -1726,6 +1728,7 @@ public class FacturaBO {
 							cargosImpuesto.setValcargo(impuestoValor.getValor());
 							cargosImpuesto.setNivel(nivelImpuesto);
 							cargosImpuesto.setMotivo(detalleContratoPojo.getProducto().getNombre() + " - " + impuestoValor.getImpservicios().getDescripcion() + " " + servicioValor.getServicio().getNombre());
+							cargosImpuesto.setIdcuenta(idcuenta);
 							if(totalFormasPagoCuenta >= totalFactura){
 								//si mi abono es mayor o igual que la factura, mi impuesto se graba como pagado
 								cargosImpuesto.setValpendiente(0f);

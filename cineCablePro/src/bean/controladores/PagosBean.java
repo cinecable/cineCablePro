@@ -547,6 +547,7 @@ public class PagosBean implements Serializable {
 									cargosNivelDetalle.setValbase(valorServicio);
 									cargosNivelDetalle.setDescuento(valorDescuento);
 									cargosNivelDetalle.setIdrubropadre(0);
+									cargosNivelDetalle.setIdcuenta(idcuenta);
 									totalRubrosProductos += valorServicio;
 									
 									lisCargosNivelDetalle.add(cargosNivelDetalle);
@@ -562,6 +563,7 @@ public class PagosBean implements Serializable {
 									cargosNivelDescuento.setValbase(valorServicio);
 									cargosNivelDescuento.setDescuento(0f);
 									cargosNivelDescuento.setIdrubropadre(0);
+									cargosNivelDescuento.setIdcuenta(idcuenta);
 									totalRubrosDescuento += valorDescuento;
 									
 									lisCargosNivelDescuento.add(cargosNivelDescuento);
@@ -580,6 +582,7 @@ public class PagosBean implements Serializable {
 										cargosNivelImpuesto.setValbase(0f);
 										cargosNivelImpuesto.setDescuento(0f);
 										cargosNivelImpuesto.setIdrubropadre(0);
+										cargosNivelImpuesto.setIdcuenta(idcuenta);
 										totalRubrosImpuesto += valorImpuesto;
 										
 										lisCargosNivelImpuesto.add(cargosNivelImpuesto);
