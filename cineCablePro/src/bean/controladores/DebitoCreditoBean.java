@@ -86,6 +86,10 @@ public class DebitoCreditoBean implements Serializable {
 					}else{
 						if(idtipomotivoseleccionado == Parametro.TIPO_MOTIVO_MULTAS){
 							ok = creditosBO.grabarMultas(creditos, idfacturaselected, motivo);
+						}else{
+							if(idtipomotivoseleccionado == Parametro.TIPO_MOTIVO_FACTURA){
+								ok = true;//creditosBO.grabarAnularFactura(creditos, idfacturaselected, motivo);
+							}
 						}
 					}
 				}
