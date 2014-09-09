@@ -67,14 +67,21 @@ public class DebitoCreditoBean implements Serializable {
 			try{
 				
 				boolean ok = false;
-				creditos.setIdcuenta(idcuenta);
 				
 				CreditosBO creditosBO = new CreditosBO();
 				
 				creditos.setIdcuenta(idcuenta);
 				
 				if(idtipomotivoseleccionado == Parametro.TIPO_MOTIVO_CREDITO){
-					ok = creditosBO.grabarDebitoCredito(creditos, idfacturaselected);
+					ok = creditosBO.grabarCredito(creditos, idfacturaselected);
+				}else{
+					if(idtipomotivoseleccionado == Parametro.TIPO_MOTIVO_CREDITO_INTERNO){
+						ok = creditosBO.grabarCargosFavor(creditos, idfacturaselected);
+					}else{
+						if(idtipomotivoseleccionado == Parametro.TIPO_MOTIVO_MULTAS){
+							ok = creditosBO.grabarMultas(creditos, idfacturaselected);
+						}
+					}
 				}
 				
 				if(ok){

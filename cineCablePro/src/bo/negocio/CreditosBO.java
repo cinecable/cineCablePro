@@ -9,6 +9,7 @@ import org.hibernate.Session;
 
 import bean.controladores.UsuarioBean;
 
+import pojo.annotations.Cargos;
 import pojo.annotations.Creditos;
 import pojo.annotations.Estado;
 import pojo.annotations.Factura;
@@ -17,6 +18,7 @@ import pojo.annotations.Pagos;
 import pojo.annotations.Tpagos;
 import util.FacesUtil;
 import util.HibernateUtil;
+import dao.datos.CargosDAO;
 import dao.datos.CreditosDAO;
 import dao.datos.FacturaDAO;
 import dao.datos.PagosDAO;
@@ -148,7 +150,7 @@ public class CreditosBO {
 		return lisCreditos;
 	}
 	
-	public boolean grabarDebitoCredito(Creditos creditos, int idsecuenciafactura) throws Exception {
+	public boolean grabarCredito(Creditos creditos, int idsecuenciafactura) throws Exception {
 		boolean ok = false;
     	Session session = null;
     	
@@ -239,6 +241,132 @@ public class CreditosBO {
 			creditos.setIp(usuarioBean.getIp());
 			
 			creditosDAO.ingresarCreditos(session, creditos);
+			
+    		session.getTransaction().commit();
+			ok = true;
+    	}catch(Exception e){
+    		session.getTransaction().rollback();
+            throw new Exception(e);
+        }finally{
+        	session.close();
+        }
+    	
+    	return ok;
+	}
+	
+	public boolean grabarCargosFavor(Creditos creditos, int idsecuenciafactura) throws Exception {
+		boolean ok = false;
+    	Session session = null;
+    	
+    	try{
+    		session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+			
+			FacturaDAO facturaDAO = new FacturaDAO();
+			CargosDAO cargosDAO = new CargosDAO();
+			
+			Date fecharegistro = new Date();
+			UsuarioBean usuarioBean = (UsuarioBean)new FacesUtil().getSessionBean("usuarioBean");
+			
+			Factura factura = facturaDAO.getFacturaById(session, idsecuenciafactura);
+			
+			//en factura se suma en credito y resto en saldo base
+			float valcreditos = factura.getValcreditos() + creditos.getVacredito();
+			factura.setValcreditos(valcreditos);
+			float valbase = factura.getValbase() - creditos.getVacredito();
+			factura.setValbase(valbase);
+			
+			facturaDAO.actualizarFactura(session, factura);
+			
+			//cargos 
+			Cargos cargos = new Cargos();
+			
+			//Obtengo Secuencia  
+			int idcargo = cargosDAO.maxIdCargos(session)+1;
+			cargos.setIdcargo(idcargo);
+			cargos.setFactura(factura);
+			cargos.setValcargo(creditos.getVacredito());
+			cargos.setNivel(Parametro.CARGO_NIVEL_DESCUENTO_MIN);
+			cargos.setMotivo("Cargos a Favor");
+			cargos.setValpendiente(creditos.getVacredito());
+			cargos.setValbase(creditos.getVacredito());
+			cargos.setDescuento(0f);
+			cargos.setIdrubropadre(0);
+			cargos.setIdcuenta(creditos.getIdcuenta());
+			
+			//Auditoria
+			cargos.setUsuario(usuarioBean.getUsuario());
+			Estado estado = new Estado();
+			estado.setIdestado(Parametro.CARGOS_ESTADO_PENDIENTE);
+			cargos.setEstado(estado);
+			fecharegistro = new Date();
+			cargos.setFecha(fecharegistro);
+			cargos.setEmpresa(usuarioBean.getUsuario().getEmpresa());
+			
+			cargosDAO.ingresarCargos(session, cargos);
+			
+    		session.getTransaction().commit();
+			ok = true;
+    	}catch(Exception e){
+    		session.getTransaction().rollback();
+            throw new Exception(e);
+        }finally{
+        	session.close();
+        }
+    	
+    	return ok;
+	}
+	
+	public boolean grabarMultas(Creditos creditos, int idsecuenciafactura) throws Exception {
+		boolean ok = false;
+    	Session session = null;
+    	
+    	try{
+    		session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+			
+			FacturaDAO facturaDAO = new FacturaDAO();
+			CargosDAO cargosDAO = new CargosDAO();
+			
+			Date fecharegistro = new Date();
+			UsuarioBean usuarioBean = (UsuarioBean)new FacesUtil().getSessionBean("usuarioBean");
+			
+			Factura factura = facturaDAO.getFacturaById(session, idsecuenciafactura);
+			
+			//lo mismo que en cargos a favor pero positivo: en factura se suma en credito y sumo en saldo base
+			float valcreditos = factura.getValcreditos() + creditos.getVacredito();
+			factura.setValcreditos(valcreditos);
+			float valbase = factura.getValbase() - creditos.getVacredito();
+			factura.setValbase(valbase);
+			
+			facturaDAO.actualizarFactura(session, factura);
+			
+			//cargos 
+			Cargos cargos = new Cargos();
+			
+			//Obtengo Secuencia  
+			int idcargo = cargosDAO.maxIdCargos(session)+1;
+			cargos.setIdcargo(idcargo);
+			cargos.setFactura(factura);
+			cargos.setValcargo(creditos.getVacredito());
+			cargos.setNivel(Parametro.CARGO_NIVEL_DESCUENTO_MIN);
+			cargos.setMotivo("Cargos a Favor");
+			cargos.setValpendiente(creditos.getVacredito());
+			cargos.setValbase(creditos.getVacredito());
+			cargos.setDescuento(0f);
+			cargos.setIdrubropadre(0);
+			cargos.setIdcuenta(creditos.getIdcuenta());
+			
+			//Auditoria
+			cargos.setUsuario(usuarioBean.getUsuario());
+			Estado estado = new Estado();
+			estado.setIdestado(Parametro.CARGOS_ESTADO_PENDIENTE);
+			cargos.setEstado(estado);
+			fecharegistro = new Date();
+			cargos.setFecha(fecharegistro);
+			cargos.setEmpresa(usuarioBean.getUsuario().getEmpresa());
+			
+			cargosDAO.ingresarCargos(session, cargos);
 			
     		session.getTransaction().commit();
 			ok = true;
