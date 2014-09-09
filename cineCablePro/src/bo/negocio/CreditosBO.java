@@ -254,7 +254,7 @@ public class CreditosBO {
     	return ok;
 	}
 	
-	public boolean grabarCargosFavor(Creditos creditos, int idsecuenciafactura) throws Exception {
+	public boolean grabarCargosFavor(Creditos creditos, int idsecuenciafactura, String motivo) throws Exception {
 		boolean ok = false;
     	Session session = null;
     	
@@ -276,7 +276,8 @@ public class CreditosBO {
 			float valbase = factura.getValbase() - creditos.getVacredito();
 			factura.setValbase(valbase);
 			
-			facturaDAO.actualizarFactura(session, factura);
+			//Aunque recuerde en lo que es cargos a favor usted ya no va a hacer nada en la factura, solo graba en la tabla cargos
+			//facturaDAO.actualizarFactura(session, factura);
 			
 			//cargos 
 			Cargos cargos = new Cargos();
@@ -285,11 +286,11 @@ public class CreditosBO {
 			int idcargo = cargosDAO.maxIdCargos(session)+1;
 			cargos.setIdcargo(idcargo);
 			cargos.setFactura(factura);
-			cargos.setValcargo(creditos.getVacredito());
-			cargos.setNivel(Parametro.CARGO_NIVEL_DESCUENTO_MIN);
-			cargos.setMotivo("Cargos a Favor");
-			cargos.setValpendiente(creditos.getVacredito());
-			cargos.setValbase(creditos.getVacredito());
+			cargos.setValcargo(creditos.getVacredito() * -1);
+			cargos.setNivel(Parametro.CARGO_NIVEL_SERVICIO_MIN);
+			cargos.setMotivo(motivo);
+			cargos.setValpendiente(creditos.getVacredito() * -1);
+			cargos.setValbase(0f);
 			cargos.setDescuento(0f);
 			cargos.setIdrubropadre(0);
 			cargos.setIdcuenta(creditos.getIdcuenta());
@@ -317,7 +318,7 @@ public class CreditosBO {
     	return ok;
 	}
 	
-	public boolean grabarMultas(Creditos creditos, int idsecuenciafactura) throws Exception {
+	public boolean grabarMultas(Creditos creditos, int idsecuenciafactura, String motivo) throws Exception {
 		boolean ok = false;
     	Session session = null;
     	
@@ -339,20 +340,22 @@ public class CreditosBO {
 			float valbase = factura.getValbase() - creditos.getVacredito();
 			factura.setValbase(valbase);
 			
-			facturaDAO.actualizarFactura(session, factura);
+			//En este tipo de cargos Carlos usted no afecta a la factura solo crea el registro en la tabla cargos,
+			//facturaDAO.actualizarFactura(session, factura);
 			
 			//cargos 
 			Cargos cargos = new Cargos();
 			
+			//asi que el procedimiento es el mismo que en cargos a favor sino que con signo positivo
 			//Obtengo Secuencia  
 			int idcargo = cargosDAO.maxIdCargos(session)+1;
 			cargos.setIdcargo(idcargo);
 			cargos.setFactura(factura);
 			cargos.setValcargo(creditos.getVacredito());
-			cargos.setNivel(Parametro.CARGO_NIVEL_DESCUENTO_MIN);
-			cargos.setMotivo("Cargos a Favor");
+			cargos.setNivel(Parametro.CARGO_NIVEL_SERVICIO_MIN);
+			cargos.setMotivo(motivo);
 			cargos.setValpendiente(creditos.getVacredito());
-			cargos.setValbase(creditos.getVacredito());
+			cargos.setValbase(0f);
 			cargos.setDescuento(0f);
 			cargos.setIdrubropadre(0);
 			cargos.setIdcuenta(creditos.getIdcuenta());

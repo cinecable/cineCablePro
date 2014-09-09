@@ -29,7 +29,7 @@ public class CargosDAO {
 		
 		Criteria criteria = session.createCriteria(Cargos.class)
 				.add( Restrictions.eq("idfactura", idfactura))
-				.add( Restrictions.eq("estado.idestado", 3))
+				.add( Restrictions.eq("estado.idestado", Parametro.CARGOS_ESTADO_PENDIENTE))
 				.add( Restrictions.between("nivel", Parametro.CARGO_NIVEL_SERVICIO_MIN, Parametro.CARGO_NIVEL_SERVICIO_MAX))
 				.addOrder(Order.asc("nivel"));
 				
@@ -44,7 +44,7 @@ public class CargosDAO {
 		
 		Criteria criteria = session.createCriteria(Cargos.class)
 				.add( Restrictions.eq("idfactura", idfactura))
-				.add( Restrictions.eq("estado.idestado", 3))
+				.add( Restrictions.eq("estado.idestado", Parametro.CARGOS_ESTADO_PENDIENTE))
 				.add( Restrictions.between("nivel", Parametro.CARGO_NIVEL_DESCUENTO_MIN, Parametro.CARGO_NIVEL_DESCUENTO_MAX))
 				.addOrder(Order.asc("nivel"));
 				
@@ -59,7 +59,7 @@ public class CargosDAO {
 		
 		Criteria criteria = session.createCriteria(Cargos.class)
 				.add( Restrictions.eq("idfactura", idfactura))
-				.add( Restrictions.eq("estado.idestado", 3))
+				.add( Restrictions.eq("estado.idestado", Parametro.CARGOS_ESTADO_PENDIENTE))
 				.add( Restrictions.between("nivel", Parametro.CARGO_NIVEL_IMPUESTO_MIN, Parametro.CARGO_NIVEL_IMPUESTO_MAX))
 				.addOrder(Order.asc("nivel"));
 				
@@ -81,7 +81,7 @@ public class CargosDAO {
 		
 		Query query = session.createQuery(hql)
 				.setString("idfactura", idfactura)
-				.setInteger("idestado", 3)
+				.setInteger("idestado", Parametro.CARGOS_ESTADO_PENDIENTE)
 				.setShort("nivel_impuesto_min", Parametro.CARGO_NIVEL_IMPUESTO_MIN)
 				.setShort("nivel_impuesto_max", Parametro.CARGO_NIVEL_IMPUESTO_MAX);
 		
@@ -96,7 +96,7 @@ public class CargosDAO {
 		
 		Criteria criteria = session.createCriteria(Cargos.class)
 				.add( Restrictions.eq("factura.idsecuencia", idsecuencia))
-				.add( Restrictions.eq("estado.idestado", 3))
+				.add( Restrictions.eq("estado.idestado", Parametro.CARGOS_ESTADO_PENDIENTE))
 				.add( Restrictions.between("nivel", Parametro.CARGO_NIVEL_SERVICIO_MIN, Parametro.CARGO_NIVEL_SERVICIO_MAX))
 				.addOrder(Order.asc("motivo"));
 				
@@ -111,7 +111,7 @@ public class CargosDAO {
 		
 		Criteria criteria = session.createCriteria(Cargos.class)
 				.add( Restrictions.eq("factura.idsecuencia", idsecuencia))
-				.add( Restrictions.eq("estado.idestado", 3))
+				.add( Restrictions.eq("estado.idestado", Parametro.CARGOS_ESTADO_PENDIENTE))
 				.add( Restrictions.between("nivel", Parametro.CARGO_NIVEL_DESCUENTO_MIN, Parametro.CARGO_NIVEL_DESCUENTO_MAX))
 				.addOrder(Order.asc("motivo"));
 				
@@ -126,7 +126,7 @@ public class CargosDAO {
 		
 		Criteria criteria = session.createCriteria(Cargos.class)
 				.add( Restrictions.eq("factura.idsecuencia", idsecuencia))
-				.add( Restrictions.eq("estado.idestado", 3))
+				.add( Restrictions.eq("estado.idestado", Parametro.CARGOS_ESTADO_PENDIENTE))
 				.add( Restrictions.between("nivel", Parametro.CARGO_NIVEL_IMPUESTO_MIN, Parametro.CARGO_NIVEL_IMPUESTO_MAX))
 				.addOrder(Order.asc("nivel"));
 				
@@ -174,7 +174,7 @@ public class CargosDAO {
 		
 		Query query = session.createQuery(hql)
 				.setInteger("idsecuencia", idsecuencia)
-				.setInteger("idestado", 3)
+				.setInteger("idestado", Parametro.CARGOS_ESTADO_PENDIENTE)
 				.setShort("nivel_impuesto_min", Parametro.CARGO_NIVEL_IMPUESTO_MIN)
 				.setShort("nivel_impuesto_max", Parametro.CARGO_NIVEL_IMPUESTO_MAX);
 		
@@ -189,7 +189,7 @@ public class CargosDAO {
 		
 		Criteria criteria = session.createCriteria(Cargos.class)
 				.add( Restrictions.eq("factura.idsecuencia", idsecuencia))
-				.add( Restrictions.eq("estado.idestado", 3))
+				.add( Restrictions.eq("estado.idestado", Parametro.CARGOS_ESTADO_PENDIENTE))
 				.add( Restrictions.eq("nivel", Parametro.CARGO_NIVEL_IVA_SERVICIOS));
 				
 		lisCargos = (List<Cargos>) criteria.list();
@@ -203,7 +203,7 @@ public class CargosDAO {
 		
 		Criteria criteria = session.createCriteria(Cargos.class)
 				.add( Restrictions.eq("factura.idsecuencia", idsecuencia))
-				.add( Restrictions.eq("estado.idestado", 3))
+				.add( Restrictions.eq("estado.idestado", Parametro.CARGOS_ESTADO_PENDIENTE))
 				.add( Restrictions.eq("nivel", Parametro.CARGO_NIVEL_ICE_SERVICIOS));
 				
 		lisCargos = (List<Cargos>) criteria.list();
@@ -217,7 +217,7 @@ public class CargosDAO {
 		
 		Criteria criteria = session.createCriteria(Cargos.class)
 				.add( Restrictions.eq("factura.idsecuencia", idsecuencia))
-				.add( Restrictions.eq("estado.idestado", 3))
+				.add( Restrictions.eq("estado.idestado", Parametro.CARGOS_ESTADO_PENDIENTE))
 				.addOrder(Order.asc("nivel"));
 				
 		lisCargos = (List<Cargos>) criteria.list();

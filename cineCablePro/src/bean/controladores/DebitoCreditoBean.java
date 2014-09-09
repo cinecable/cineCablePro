@@ -75,11 +75,17 @@ public class DebitoCreditoBean implements Serializable {
 				if(idtipomotivoseleccionado == Parametro.TIPO_MOTIVO_CREDITO){
 					ok = creditosBO.grabarCredito(creditos, idfacturaselected);
 				}else{
+					String motivo = "";
+					for(Motivos motivos : lisMotivos){
+						if(motivos.getIdmotivo() == creditos.getMotivos().getIdmotivo()){
+							motivo = motivos.getNombre();
+						}
+					}
 					if(idtipomotivoseleccionado == Parametro.TIPO_MOTIVO_CREDITO_INTERNO){
-						ok = creditosBO.grabarCargosFavor(creditos, idfacturaselected);
+						ok = creditosBO.grabarCargosFavor(creditos, idfacturaselected, motivo);
 					}else{
 						if(idtipomotivoseleccionado == Parametro.TIPO_MOTIVO_MULTAS){
-							ok = creditosBO.grabarMultas(creditos, idfacturaselected);
+							ok = creditosBO.grabarMultas(creditos, idfacturaselected, motivo);
 						}
 					}
 				}
