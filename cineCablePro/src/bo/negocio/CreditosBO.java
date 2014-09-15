@@ -382,4 +382,39 @@ public class CreditosBO {
     	
     	return ok;
 	}
+	
+	public boolean grabarAnularFactura(int idsecuenciafactura) throws Exception {
+		boolean ok = false;
+    	Session session = null;
+    	
+    	try{
+    		session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+			
+			FacturaDAO facturaDAO = new FacturaDAO();
+			
+			Date fecharegistro = new Date();
+			UsuarioBean usuarioBean = (UsuarioBean)new FacesUtil().getSessionBean("usuarioBean");
+			
+			Factura factura = facturaDAO.getFacturaById(session, idsecuenciafactura);
+			factura.setIdestado(Parametro.FACTURA_ESTADO_ANULADO);
+			
+			//Auditoria
+			factura.setFecha(fecharegistro);
+			factura.setIp(usuarioBean.getIp());
+			factura.setIdusuario(usuarioBean.getUsuario().getIdusuario());
+			
+			facturaDAO.actualizarFactura(session, factura);
+			
+    		session.getTransaction().commit();
+			ok = true;
+    	}catch(Exception e){
+    		session.getTransaction().rollback();
+            throw new Exception(e);
+        }finally{
+        	session.close();
+        }
+    	
+    	return ok;
+	}
 }

@@ -76,6 +76,7 @@ public class Parametro {
 	public static final int FACTURA_ESTADO_PENDIENTE = 3;
 	public static final int FACTURA_ESTADO_PAGADA = 4;
 	public static final int FACTURA_ESTADO_MORA = 5;
+	public static final int FACTURA_ESTADO_ANULADO = 7;
 	
 	//Estados Credito
 	public static final int CREDITO_ESTADO_CONSUMIDO = 4;
