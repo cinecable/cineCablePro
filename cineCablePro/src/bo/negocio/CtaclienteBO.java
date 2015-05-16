@@ -10,11 +10,20 @@ import dao.datos.CtaclienteDAO;
 import dao.datos.CtasprodDAO;
 import dao.datos.DebitosbcoDAO;
 import dao.datos.DireccionDAO;
+import dao.datos.OrdasignacionesDAO;
 import dao.datos.ReferenciadirDAO;
+import dao.datos.TbordenesDAO;
+import dao.datos.TbparamasigordenDAO;
 import dao.datos.TelefonoDAO;
+import global.Parametro;
 
 import java.util.Date;
 import java.util.List;
+
+import net.cinecable.model.base.Ordenes;
+import net.cinecable.model.base.OrdenesAsignaciones;
+import net.cinecable.model.base.ParamAsignacionOrden;
+
 import org.hibernate.Session;
 
 import bean.controladores.UsuarioBean;
@@ -23,11 +32,15 @@ import pojo.annotations.Ctacliente;
 import pojo.annotations.Ctasprod;
 import pojo.annotations.Debitobco;
 import pojo.annotations.Direccion;
+import pojo.annotations.Empresa;
 import pojo.annotations.Estado;
+import pojo.annotations.Motivos;
+import pojo.annotations.Persona;
 import pojo.annotations.Producto;
 import pojo.annotations.Referenciadir;
 import pojo.annotations.Telefono;
 import pojo.annotations.Tipocliente;
+import pojo.annotations.Tipooperacion;
 import pojo.annotations.custom.ProductoId;
 import util.FacesUtil;
 import util.HibernateUtil;
@@ -88,7 +101,7 @@ public class CtaclienteBO {
         return lisCtacliente;
     }
     
-    public boolean grabarCliente(Ctacliente ctacliente, Conyuge conyuge, List<ProductoId> lisProductoId, Direccion direccionInstalacion, Direccion direccionCorrespondencia, Direccion direccionCobranza, Debitobco debitobco, List<Telefono> lisTelefonos, Referenciadir referenciadirInstalacion, Referenciadir referenciadirCorrespondencia, Referenciadir referenciadirCobranza) throws Exception {
+    public boolean grabarCliente(Ctacliente ctacliente, Conyuge conyuge, List<ProductoId> lisProductoId, Direccion direccionInstalacion, Direccion direccionCorrespondencia, Direccion direccionCobranza, Debitobco debitobco, List<Telefono> lisTelefonos, Referenciadir referenciadirInstalacion, Referenciadir referenciadirCorrespondencia, Referenciadir referenciadirCobranza, Ordenes ordenesParam) throws Exception {
     	boolean ok = false;
     	Session session = null;
     	
@@ -100,6 +113,9 @@ public class CtaclienteBO {
     		ReferenciadirDAO referenciadirDAO = new ReferenciadirDAO();
     		DebitosbcoDAO debitosbcoDAO = new DebitosbcoDAO();
     		TelefonoDAO telefonoDAO = new TelefonoDAO();
+    		TbordenesDAO tbordenesDAO = new TbordenesDAO();
+    		OrdasignacionesDAO ordasignacionesDAO = new OrdasignacionesDAO();
+    		TbparamasigordenDAO tbparamasigordenDAO = new TbparamasigordenDAO();
     		
     		session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
@@ -174,6 +190,78 @@ public class CtaclienteBO {
 					
 					//grabar
 					ctasprodDAO.saveCtasprod(session, ctasprod);
+					
+					//ordenes
+					//codigo secuencial
+					Ordenes ordenes = ordenesParam.clonar();
+					int idOrdenes = tbordenesDAO.maxIdordenes(session) + 1;
+					ordenes.setIdOrdenes(Long.valueOf(idOrdenes));
+					
+					//orden por cada ctasprod
+					ordenes.setProducto(ctasprod);
+
+					Motivos motivos = new Motivos();
+					motivos.setIdmotivo(Parametro.MOTIVO_INSTALACION_NUEVA);
+					ordenes.setMotivo(motivos);
+					
+					Tipooperacion tipoOperacion = new Tipooperacion();
+					tipoOperacion.setIdtipooperacion(Parametro.TIPO_OPERACION_INSTALACION_NUEVA);
+					ordenes.setTipoOperacion(tipoOperacion);
+					
+					ordenes.setEmpresa(usuarioBean.getUsuario().getEmpresa());
+					ordenes.setCuentaCliente(ctacliente);
+					
+					Estado estadoOrden = new Estado();
+					estadoOrden.setIdestado(Parametro.ESTADO_PENDIENTE);
+					ordenes.setEstado(estadoOrden);
+					
+					ordenes.setIdproductoprincipal(productoId.getIdproductoprincipal());
+					
+					//Auditoria
+					ordenes.setIp(usuarioBean.getIp());
+					ordenes.setUsuario(usuarioBean.getUsuario());
+					
+					//grabar ordenes
+					tbordenesDAO.ingresarOrdenes(session, ordenes);
+					
+					//ordasignaciones
+					OrdenesAsignaciones ordenesAsignaciones = new OrdenesAsignaciones();
+					ordenesAsignaciones.setEstado(8);//TODO estado
+					
+					Empresa empresa = new Empresa();
+					empresa.setIdempresa(usuarioBean.getUsuario().getEmpresa().getIdempresa());
+					ordenesAsignaciones.setEmpresa(empresa);
+
+					ordenesAsignaciones.setFechaAsignacion(ordenes.getFechaEjecucion());
+					ordenesAsignaciones.setIp(usuarioBean.getIp());
+					ordenesAsignaciones.setOrden(ordenes);
+					
+					Persona personaSupervisor = new Persona();
+					personaSupervisor.setIdpersona(-1);
+					ordenesAsignaciones.setSupervisor(personaSupervisor);
+
+					Persona personaTecnico = new Persona();
+					personaTecnico.setIdpersona(-1);
+					ordenesAsignaciones.setTecnico(personaTecnico);
+
+					ordenesAsignaciones.setUsuario(usuarioBean.getUsuario());
+					
+					//grabar ordasignaciones
+					ordasignacionesDAO.ingresarOrdasignaciones(session, ordenesAsignaciones);
+					
+					//tbparamasigOrden
+					ParamAsignacionOrden paramAsignacionOrden = new ParamAsignacionOrden();
+					
+					//consultar la asignacion
+					paramAsignacionOrden = tbparamasigordenDAO.consultarPorFechaTipoOperacion(session, ordenes.getFechaEjecucion(), ordenes.getTipoOperacion().getIdtipooperacion());
+					
+					//disminuir en 1 numero de asignaciones
+					if(paramAsignacionOrden != null && paramAsignacionOrden.getNoasignaciones() >0){
+						paramAsignacionOrden.setNoasignaciones(paramAsignacionOrden.getNoasignaciones()-1);
+						
+						//grabar tbparamasigOrden
+						tbparamasigordenDAO.actualizarTbparamasigorden(session, paramAsignacionOrden);
+					}
 				}
 			}
 			
@@ -182,7 +270,10 @@ public class CtaclienteBO {
 			direccionInstalacion.setIddireccion(maxIddireccioninstalacion);
 			direccionInstalacion.setCorrespondencia("I");
 			direccionInstalacion.setCtacliente(ctacliente);
-			direccionInstalacion.setIdestado(1);
+			
+			Estado estado = new Estado();
+			estado.setIdestado(1);
+			direccionInstalacion.setEstado(estado);
 			
 			//grabar
 			direccionDAO.saveDireccion(session, direccionInstalacion);
@@ -204,7 +295,8 @@ public class CtaclienteBO {
 			direccionCorrespondencia.setIddireccion(maxIddireccioncorrespondencia);
 			direccionCorrespondencia.setCorrespondencia("C");
 			direccionCorrespondencia.setCtacliente(ctacliente);
-			direccionCorrespondencia.setIdestado(1);
+			
+			direccionCorrespondencia.setEstado(estado);
 			
 			//grabar
 			direccionDAO.saveDireccion(session, direccionCorrespondencia);
@@ -226,7 +318,7 @@ public class CtaclienteBO {
 			direccionCobranza.setIddireccion(maxIddireccioncobranza);
 			direccionCobranza.setCorrespondencia("B");
 			direccionCobranza.setCtacliente(ctacliente);
-			direccionCobranza.setIdestado(1);
+			direccionCobranza.setEstado(estado);
 			
 			//grabar
 			direccionDAO.saveDireccion(session, direccionCobranza);
@@ -252,6 +344,9 @@ public class CtaclienteBO {
 			//grabar
 			debitosbcoDAO.saveDebitobco(session, debitobco);
 			
+			//actualizar iddebito de cuentacliente
+			ctacliente.setDebitobco(debitobco);
+			ctaclienteDAO.actualizarCtacliente(session, ctacliente);
 			
 			//telefono
 			for(Telefono telefono : lisTelefonos){
@@ -285,7 +380,7 @@ public class CtaclienteBO {
     	return ok;
     }
     
-    public boolean grabarCuenta(Ctacliente ctacliente, List<ProductoId> lisProductoId, Direccion direccionInstalacion, Direccion direccionCorrespondencia, Direccion direccionCobranza, Debitobco debitobco, List<Telefono> lisTelefonos, Referenciadir referenciadirInstalacion, Referenciadir referenciadirCorrespondencia, Referenciadir referenciadirCobranza) throws Exception {
+    public boolean grabarCuenta(Ctacliente ctacliente, List<ProductoId> lisProductoId, Direccion direccionInstalacion, Direccion direccionCorrespondencia, Direccion direccionCobranza, Debitobco debitobco, List<Telefono> lisTelefonos, Referenciadir referenciadirInstalacion, Referenciadir referenciadirCorrespondencia, Referenciadir referenciadirCobranza, Ordenes ordenesParam) throws Exception {
     	boolean ok = false;
     	Session session = null;
     	
@@ -295,6 +390,9 @@ public class CtaclienteBO {
     		ReferenciadirDAO referenciadirDAO = new ReferenciadirDAO();
     		DebitosbcoDAO debitosbcoDAO = new DebitosbcoDAO();
     		TelefonoDAO telefonoDAO = new TelefonoDAO();
+    		TbordenesDAO tbordenesDAO = new TbordenesDAO();
+    		OrdasignacionesDAO ordasignacionesDAO = new OrdasignacionesDAO();
+    		TbparamasigordenDAO tbparamasigordenDAO = new TbparamasigordenDAO();
     		
     		session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
@@ -346,6 +444,78 @@ public class CtaclienteBO {
 					
 					//grabar
 					ctasprodDAO.saveCtasprod(session, ctasprod);
+					
+					//ordenes
+					//codigo secuencial
+					Ordenes ordenes = ordenesParam.clonar();
+					int idOrdenes = tbordenesDAO.maxIdordenes(session) + 1;
+					ordenes.setIdOrdenes(Long.valueOf(idOrdenes));
+					
+					//orden por cada ctasprod
+					ordenes.setProducto(ctasprod);
+
+					Motivos motivos = new Motivos();
+					motivos.setIdmotivo(Parametro.MOTIVO_INSTALACION_NUEVA);
+					ordenes.setMotivo(motivos);
+					
+					Tipooperacion tipoOperacion = new Tipooperacion();
+					tipoOperacion.setIdtipooperacion(Parametro.TIPO_OPERACION_INSTALACION_NUEVA);
+					ordenes.setTipoOperacion(tipoOperacion);
+					
+					ordenes.setEmpresa(usuarioBean.getUsuario().getEmpresa());
+					ordenes.setCuentaCliente(ctacliente);
+					
+					Estado estadoOrden = new Estado();
+					estadoOrden.setIdestado(Parametro.ESTADO_PENDIENTE);
+					ordenes.setEstado(estadoOrden);
+					
+					ordenes.setIdproductoprincipal(productoId.getIdproductoprincipal());
+					
+					//Auditoria
+					ordenes.setIp(usuarioBean.getIp());
+					ordenes.setUsuario(usuarioBean.getUsuario());
+					
+					//grabar ordenes
+					tbordenesDAO.ingresarOrdenes(session, ordenes);
+					
+					//ordasignaciones
+					OrdenesAsignaciones ordenesAsignaciones = new OrdenesAsignaciones();
+					ordenesAsignaciones.setEstado(8);//TODO estado
+					
+					Empresa empresa = new Empresa();
+					empresa.setIdempresa(usuarioBean.getUsuario().getEmpresa().getIdempresa());
+					ordenesAsignaciones.setEmpresa(empresa);
+
+					ordenesAsignaciones.setFechaAsignacion(ordenes.getFechaEjecucion());
+					ordenesAsignaciones.setIp(usuarioBean.getIp());
+					ordenesAsignaciones.setOrden(ordenes);
+					
+					Persona personaSupervisor = new Persona();
+					personaSupervisor.setIdpersona(-1);
+					ordenesAsignaciones.setSupervisor(personaSupervisor);
+
+					Persona personaTecnico = new Persona();
+					personaTecnico.setIdpersona(-1);
+					ordenesAsignaciones.setTecnico(personaTecnico);
+
+					ordenesAsignaciones.setUsuario(usuarioBean.getUsuario());
+					
+					//grabar ordasignaciones
+					ordasignacionesDAO.ingresarOrdasignaciones(session, ordenesAsignaciones);
+					
+					//tbparamasigOrden
+					ParamAsignacionOrden paramAsignacionOrden = new ParamAsignacionOrden();
+					
+					//consultar la asignacion
+					paramAsignacionOrden = tbparamasigordenDAO.consultarPorFechaTipoOperacion(session, ordenes.getFechaEjecucion(), ordenes.getTipoOperacion().getIdtipooperacion());
+					
+					//disminuir en 1 numero de asignaciones
+					if(paramAsignacionOrden != null && paramAsignacionOrden.getNoasignaciones() >0){
+						paramAsignacionOrden.setNoasignaciones(paramAsignacionOrden.getNoasignaciones()-1);
+						
+						//grabar tbparamasigOrden
+						tbparamasigordenDAO.actualizarTbparamasigorden(session, paramAsignacionOrden);
+					}
 				}
 			}
 			
@@ -354,7 +524,10 @@ public class CtaclienteBO {
 			direccionInstalacion.setIddireccion(maxIddireccioninstalacion);
 			direccionInstalacion.setCorrespondencia("I");
 			direccionInstalacion.setCtacliente(ctacliente);
-			direccionInstalacion.setIdestado(1);
+			
+			Estado estado = new Estado();
+			estado.setIdestado(1);
+			direccionInstalacion.setEstado(estado);
 			
 			//grabar
 			direccionDAO.saveDireccion(session, direccionInstalacion);
@@ -376,7 +549,7 @@ public class CtaclienteBO {
 			direccionCorrespondencia.setIddireccion(maxIddireccioncorrespondencia);
 			direccionCorrespondencia.setCorrespondencia("C");
 			direccionCorrespondencia.setCtacliente(ctacliente);
-			direccionCorrespondencia.setIdestado(1);
+			direccionCorrespondencia.setEstado(estado);
 			
 			//grabar
 			direccionDAO.saveDireccion(session, direccionCorrespondencia);
@@ -398,7 +571,7 @@ public class CtaclienteBO {
 			direccionCobranza.setIddireccion(maxIddireccioncobranza);
 			direccionCobranza.setCorrespondencia("B");
 			direccionCobranza.setCtacliente(ctacliente);
-			direccionCobranza.setIdestado(1);
+			direccionCobranza.setEstado(estado);
 			
 			//grabar
 			direccionDAO.saveDireccion(session, direccionCobranza);
@@ -424,6 +597,9 @@ public class CtaclienteBO {
 			//grabar
 			debitosbcoDAO.saveDebitobco(session, debitobco);
 			
+			//actualizar iddebito de cuentacliente
+			ctacliente.setDebitobco(debitobco);
+			ctaclienteDAO.actualizarCtacliente(session, ctacliente);
 			
 			//telefono
 			for(Telefono telefono : lisTelefonos){

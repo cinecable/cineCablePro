@@ -2,6 +2,8 @@ package bo.negocio;
 
 import java.util.List;
 
+import net.cinecable.enums.TipoPersona;
+
 import org.hibernate.Session;
 
 import pojo.annotations.Persona;
@@ -33,6 +35,24 @@ public class PersonaBO {
         }
 		
 		return persona;
+	}
+	
+	public List<Persona> getListaPersonasbyCargo(TipoPersona tipoPersona)  throws Exception {
+		List<Persona> lisPersona = null;
+		Session session = null;
+		
+		try{
+            session = HibernateUtil.getSessionFactory().openSession();
+            lisPersona = personaDAO.getPersonaCargo(session, tipoPersona);
+        }
+        catch(Exception ex){
+            throw new Exception(ex);
+        }
+        finally{
+            session.close();
+        }
+		
+		return lisPersona;
 	}
 	
 	public List<Persona> lisPersonaByPage(String[] nombres, int idarea, int pageSize, int pageNumber, int args[]) throws RuntimeException{

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:my="http://java.sun.com/jsf/composite/components/paginas">
+
+	<h:form id="form-contentpage">
+		<p:growl id="mensajes" showDetail="true" />
+		<h1 class="title ui-widget-header" style="text-align: center;">Impresion
+			de ordenes</h1>
+		<p:panel id="panel-content" style="min-height: 300px;margin: 20px 0">
+			<h:link value="Regresar" style="float: right;" outcome="gridclientes?faces-redirect=true" >
+			</h:link>
+			<br />
+			<p:focus for="idcmbtoperacion" />
+			<p:panelGrid id="pnlcabecera" columns="4" style="width: 100%">
+
+				<f:facet name="header">Parámetros de Impresion</f:facet>
+
+				<h:outputLabel value="Operacion *:" for="idcmbtoperacion" />
+				<p:selectOneMenu id="idcmbtoperacion"
+					value="#{impOrdenesBean.TOperacionSelected.idtipooperacion}"
+					style="width: 150px">
+					<f:selectItems value="#{impOrdenesBean.lisTOperacion}" var="i"
+						itemLabel="#{i.nombre} " itemValue="#{i.idtipooperacion}" />
+				</p:selectOneMenu>
+
+				<h:outputLabel value="Tecnico *:" for="idcmbtecnico" />
+				<p:selectOneMenu id="idcmbtecnico"
+					value="#{impOrdenesBean.personaSelected.idpersona}"
+					style="width: 150px">
+					<f:selectItems value="#{impOrdenesBean.lisPersona}" var="tec"
+						itemLabel="#{tec.apellido1} #{tec.apellido2} #{tec.nombre1}"
+						itemValue="#{tec.idpersona}" />
+				</p:selectOneMenu>
+
+				<h:outputLabel value="Sector *:" for="idcmbsector" />
+				<p:selectOneMenu id="idcmbsector"
+					value="#{impOrdenesBean.sectorSelected.idsector}"
+					style="width: 150px">
+					<f:selectItems value="#{impOrdenesBean.lisSector}" var="sec"
+						itemLabel="#{sec.nombre}" itemValue="#{sec.idsector}" />
+				</p:selectOneMenu>
+				<h:outputLabel value="Identidad " for="ididenti" />
+				<p:inputText id="ididenti" value="#{impOrdenesBean.idClientes}" />
+				<p:column>
+					<h:outputLabel value="Fecha Solicitud Desde"
+						for="idFSolicitudDesde" />
+				</p:column>
+				<p:column>
+					<p:calendar id="idFSolicitudDesde"
+						value="#{impOrdenesBean.fDesde}"
+						yearRange="c-50:c" locale="es" pattern="dd/MM/yyyy"
+						navigator="true" />
+				</p:column>
+				
+				<p:column>
+					<h:outputLabel value="Fecha Solicitud Hasta"
+						for="idFSolicitudHasta" />
+				</p:column>
+				<p:column>
+					<p:calendar id="idFSolicitudHasta"
+						value="#{impOrdenesBean.fHasta}"
+						yearRange="c-50:c" locale="es" pattern="dd/MM/yyyy"
+						navigator="true" />
+				</p:column>
+			</p:panelGrid>
+			<br />
+			<p:commandButton id="btnConsultar" value="Consultar"
+				style="float: right;" update=":form-contentpage:idTablaOpe, :form-contentpage:mensajes" >
+				<f:setPropertyActionListener target="#{impOrdenesBean.isconsultaejecutada}" value="true"></f:setPropertyActionListener>
+			</p:commandButton>
+
+			<br />
+			<br />
+			<br />
+			<p:dataTable id="idTablaOpe"
+				value="#{impOrdenesBean.lisOrdenesAsignaciones}" var="asigOrd"
+				rowKey="#{asigOrd.idOrdAsignacion}" widgetVar="vartablaOpe"
+				paginator="true" rows="10"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				selection="#{impOrdenesBean.ordenesAsignacionesSelected}"
+				selectionMode="single" emptyMessage="No se encontraron registros"
+				lazy="true">
+
+				<p:ajax event="rowSelect" update=":form-contentpage:iddialogeditor" oncomplete="eventDialog.show();" />
+
+				<f:facet name="header">
+					Operaciones de Tecnicos
+				</f:facet>
+
+				<p:column id="idCodOpeHeader" headerText="CodOpe">
+					<h:outputText
+						value="#{asigOrd.orden.idOrdenes}" />
+				</p:column>
+				<p:column id="Operacion" headerText="Operacion">
+					<h:outputText
+						value="#{asigOrd.orden.tipoOperacion.nombre}" />
+				</p:column>
+				<p:column id="fe_Solicitud" headerText="fechaSol">
+					<h:outputText
+						value="#{asigOrd.orden.fechaEjecucion}" />
+				</p:column>
+				<p:column id="fe_Ejecucion" headerText="fechaEje">
+					<h:outputText
+						value="#{asigOrd.orden.fechaAsignacion}" />
+				</p:column>
+				<p:column id="Tecnico" headerText="Tecnico">
+					<h:outputText
+						value="#{asigOrd.tecnico.apellido1} #{asigOrd.tecnico.apellido2} #{asigOrd.tecnico.nombre1}"/>
+				</p:column>
+				<p:column id="estado" headerText="Estado">
+					<h:outputText
+						value="#{asigOrd.orden.estado.nombre}" />
+				</p:column>
+				<p:column id="idsector" headerText="Sector">
+					<h:outputText
+						value="#{asigOrd.orden.cuentaCliente.direccion.sector.nombre}" />
+				</p:column>
+				<p:column id="idcuenta" headerText="Cuenta">
+					<h:outputText
+						value="#{asigOrd.orden.cuentaCliente.idcuenta}" />
+				</p:column>
+				<p:column id="ident" headerText="Identificacion">
+					<h:outputText
+						value="#{asigOrd.orden.cuentaCliente.clientes.identificacion}" />
+				</p:column>
+			</p:dataTable>
+			<br />
+			
+			<p:commandLink id="btnImprimir" value="Imprimir"
+				oncomplete="window.open('./report.xhtml', 'popupWindowName', 'dependent=yes, menubar=no, toolbar=no, width=600, height=400'); return true"
+				style="float: right;" 
+				actionListener="#{impOrdenesBean.imprimir()}" update=":form-contentpage:mensajes" />
+
+			<p:spacer height="50px"></p:spacer>
+			<center></center>
+
+		</p:panel>
+		
+		<p:dialog id="iddialogeditor" header="Detalle de Operaciones"
+			closable="true" widgetVar="eventDialog" modal="true"
+			showEffect="fade" hideEffect="fade" width="600">
+			<p:dataTable value="#{impOrdenesBean.ordenesAsignacionesSelected}" var="varOrdenAsigSelected">
+				<p:column>
+					<f:facet name="header">Fecha Asignacion</f:facet>
+					<h:outputText value="#{varOrdenAsigSelected.orden.fechaAsignacion}">
+						<f:convertDateTime pattern="dd-MM-yyyy mm:ss" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">Fecha Ejecucion</f:facet>
+					<h:outputText value="#{varOrdenAsigSelected.orden.fechaEjecucion}">
+						<f:convertDateTime pattern="dd-MM-yyyy mm:ss" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">Fecha Finalizacion</f:facet>
+					<h:outputText value="#{varOrdenAsigSelected.orden.fechaFinalizacion}">
+						<f:convertDateTime pattern="dd-MM-yyyy mm:ss" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">Fecha Monitoreo</f:facet>
+					<h:outputText value="#{varOrdenAsigSelected.orden.fechaMonitoreo}">
+						<f:convertDateTime pattern="dd-MM-yyyy mm:ss" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">Usuario de Ingreso</f:facet>
+					<h:outputText value="#{varOrdenAsigSelected.orden.usuario.nombre}" />
+				</p:column>
+			</p:dataTable>
+		</p:dialog>
+	</h:form>
+</ui:composition>

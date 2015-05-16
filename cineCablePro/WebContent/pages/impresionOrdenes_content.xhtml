@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<h:form id="form-contentpage">
+		<p:growl showDetail="true" id="messages"></p:growl>
+		<h1 class="title ui-widget-header" style="text-align: center;">
+			<h:outputText value="Impresión Ordenes" />
+		</h1>
+		<p:dataTable value="#{imprimirReporteDm.listOrdenes}" var="ordenes"
+			emptyMessage="No hay Ordenes Pendientes de emitir">
+			<p:column headerText="Nro Orden">
+				<h:outputText value="#{ordenes.idOrdenes}" />
+			</p:column>
+			<p:column headerText="Cliente">
+				<h:outputText
+					value="#{ordenes.cuentaCliente.clientes.apellido1} #{ordenes.cuentaCliente.clientes.apellido2} #{ordenes.cuentaCliente.clientes.nombre1}" />
+			</p:column>
+			<p:column headerText="Cuenta">
+				<h:outputText value="#{ordenes.cuentaCliente.nombre}" />
+			</p:column>
+			<p:column headerText="Operacion">
+				<h:outputText value="#{ordenes.tipoOperacion.nombre}" />
+			</p:column>
+			<p:column headerText="Motivo">
+				<h:outputText value="#{ordenes.motivo.nombre}" />
+			</p:column>
+		</p:dataTable>
+
+	</h:form>
+	<p:separator></p:separator>
+	<div align="right">
+		<p:commandButton value="Imprimir"
+			action="#{imprimirReporteController.showReport()}"
+			oncomplete="window.open('./report.xhtml', 'popupWindowName', 'dependent=yes, menubar=no, toolbar=no, width=600, height=400'); return true" />
+		<h:outputText value="&#160;&#160;&#160;" />
+		<p:commandButton value="Regresar" onclick="history.back();"
+			immediate="true" />
+	</div>
+</ui:composition>

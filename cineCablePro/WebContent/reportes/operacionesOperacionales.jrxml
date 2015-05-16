@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="operacionesOperacionales" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8152059c-1fe8-472d-90cb-e91b697c8b23">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fechadesde" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaHasta" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="toperacion" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="estado" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="idtec" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tipoOperacion" class="java.lang.String"/>
+	<parameter name="est" class="java.lang.String"/>
+	<parameter name="tecnico" class="java.lang.String"/>
+	<parameter name="nodoid" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nodo" class="java.lang.String"/>
+	<parameter name="usuario" class="java.lang.String"/>
+	<parameter name="url" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select z.idcliente, (z.nombre1 || ' ' || z.nombre2 || ' ' || z.apellido1 || ' ' || z.apellido2) nombreCliente,pro.nombre producto,cpr.nombre || ' ' || csc.nombre direccion,
+to_char(now(),'dd-MM-yyyy') fecha ,est.nombre idestado,nod.nombre nodo
+from tbordenes x
+inner join ctacliente y on x.idcuenta=y.idcuenta
+inner join clientes z on y.idcliente=z.idcliente
+inner join ctasprod pr on pr.idprodcuentas=x.idctaprod
+inner join producto pro on pro.idproducto=pr.idproducto
+left join direccion dir on dir.idcuenta=x.idcuenta and idtipodireccion=3 and dir.idestado=1
+left join calleprincipal cpr on cpr.idcalleprincipal=dir.idcalleprincipal
+left join callesecundaria csc on csc.idcallesecundaria=dir.idcallesecundaria
+left join nodos nod on nod.idnodo=dir.idnodo
+left join estado est on est.idestado=x.idestado
+left join ordasignaciones oas on oas.idordenes = x.idordenes
+left join persona per on per.idpersona=oas.idpersona
+where ((x.fechaejecucion>=to_date($P{fechadesde},'yyyy-MM-dd') or $P{fechadesde} is null)
+        and (x.fechaejecucion<=to_date($P{fechaHasta},'yyyy-MM-dd') or $P{fechadesde} is null))
+      and (x.idtipooperacion=$P{toperacion} or $P{toperacion}=0)
+      and (x.idestado=$P{estado} or $P{estado}=0)
+      and (per.idpersona=$P{idtec} or $P{idtec}=0)
+      and (nod.idnodo=$P{nodoid} or $P{nodoid}=0)]]>
+	</queryString>
+	<field name="idcliente" class="java.lang.String"/>
+	<field name="nombrecliente" class="java.lang.String"/>
+	<field name="producto" class="java.lang.String"/>
+	<field name="direccion" class="java.lang.String"/>
+	<field name="fecha" class="java.lang.String"/>
+	<field name="idestado" class="java.lang.String"/>
+	<field name="nodo" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="183" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="47" width="555" height="23" uuid="789b462f-17ba-4c9d-a3b3-70ba511c73a3"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORDENES OPERACIONALES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="146" y="95" width="69" height="15" uuid="b44b44bf-6d32-4648-be59-91dcb201ffba"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Desde:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="311" y="95" width="69" height="15" uuid="55fa6d1d-5205-4864-8276-55e443a6af4d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Hasta:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="124" y="110" width="91" height="15" uuid="696ce8d8-d9f1-4891-9e40-27deee0d6bc1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo de operacion:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="138" y="125" width="77" height="15" uuid="fc206350-0b47-464d-ba49-aa2bb445e4a9"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estado solicitd:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="169" y="140" width="46" height="15" uuid="0d7bf62a-667a-4d17-86de-cfc0e229d6d9"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Técnico:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="215" y="95" width="80" height="15" uuid="bc68c24d-3329-4ae6-befa-578398a2bea7"/>
+				<textFieldExpression><![CDATA[$P{fechadesde}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="95" width="80" height="15" uuid="610f7801-933d-450f-95a7-7c1d8870b665"/>
+				<textFieldExpression><![CDATA[$P{fechaHasta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="215" y="110" width="245" height="15" uuid="7c190d0b-e154-4237-aa55-4eb5005e7b89"/>
+				<textFieldExpression><![CDATA[$P{tipoOperacion}==null ? "TODOS":$P{tipoOperacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="215" y="125" width="245" height="15" uuid="23ec06b2-c524-4643-90d3-98d47a5c9bdc"/>
+				<textFieldExpression><![CDATA[$P{est}==null ? "TODOS":$P{est}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="215" y="140" width="245" height="15" uuid="d83c9875-9865-498d-9927-a80679fdf39d"/>
+				<textFieldExpression><![CDATA[$P{tecnico}==null ? "TODOS":$P{tecnico}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="176" y="155" width="36" height="15" uuid="7b66b2dc-6341-4a1e-9d51-15b8ba433bc8"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nodos:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="215" y="155" width="245" height="15" uuid="1f8ca445-d0fc-405b-a9ac-4effa0195f1b"/>
+				<textFieldExpression><![CDATA[$P{nodo}==null ? "TODOS":$P{nodo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="435" y="0" width="46" height="15" uuid="e64702fc-d81f-4fbd-9c7e-70ab986e2062"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="435" y="15" width="46" height="15" uuid="f9f84796-f7a2-4a1c-9e7a-c730f18aeb6f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hora:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="435" y="30" width="46" height="15" uuid="ec2fd8b9-a7e0-4df9-808f-bc06e1da190a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Usuario:]]></text>
+			</staticText>
+			<textField pattern="yyyy-MM-dd">
+				<reportElement x="481" y="0" width="64" height="15" uuid="fb8c2345-9bc4-42bd-8f1c-38de035cf749"/>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm">
+				<reportElement x="481" y="15" width="64" height="15" uuid="4680254d-1431-4d5f-a944-85fcc7effc39"/>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="481" y="30" width="64" height="15" uuid="06c73553-4ef8-468f-91b5-dadda93682f3"/>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="0" width="100" height="45" uuid="76314062-391a-49f6-957f-28f5bf93915e"/>
+				<imageExpression><![CDATA[$P{url}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="15" splitType="Stretch">
+			<staticText>
+				<reportElement x="24" y="0" width="62" height="15" uuid="805c925d-1798-4a48-be92-f793978f3d89"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Id Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="86" y="0" width="83" height="15" uuid="23fc5f13-5ce8-4889-aba6-38f5dae4351a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="169" y="0" width="62" height="15" uuid="f04dc7fe-d543-4d40-976d-a0e6c7214434"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Producto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="233" y="0" width="78" height="15" uuid="256ff348-cba1-47f3-ac4e-1bb9a9b7d031"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dir. Instalación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="311" y="0" width="62" height="15" uuid="3106ece9-1c71-42c2-8d71-8924c4c88775"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nodo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="373" y="0" width="62" height="15" uuid="28d2cb1c-bc0f-4d1a-aff7-5443e38869d7"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="435" y="0" width="62" height="15" uuid="bcd1c007-2328-4d05-b23b-2f7520b5d33b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estado]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="24" y="0" width="62" height="15" uuid="fda746a8-3bd2-418a-bb4f-b3450a05b65e"/>
+				<textFieldExpression><![CDATA[$F{idcliente}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="86" y="0" width="83" height="15" uuid="011780a9-dec1-4402-b5fa-993e361fc402"/>
+				<textFieldExpression><![CDATA[$F{nombrecliente}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="169" y="0" width="64" height="15" uuid="98657a49-b6bd-4176-b68d-bc3cac79a637"/>
+				<textFieldExpression><![CDATA[$F{producto}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="233" y="0" width="78" height="15" uuid="00e09b28-6a96-44ec-9dd3-c46bf2ebd5a3"/>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="311" y="0" width="62" height="15" uuid="ff66b1e0-b3a1-44a3-9fc2-4c20f6e74b1d"/>
+				<textFieldExpression><![CDATA[$F{nodo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="373" y="0" width="62" height="15" uuid="8677343c-c4ca-4caa-95dd-180095687e19"/>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="435" y="0" width="62" height="15" uuid="39ed9755-8f27-4a7f-a037-98460b14bbf2"/>
+				<textFieldExpression><![CDATA[$F{idestado}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

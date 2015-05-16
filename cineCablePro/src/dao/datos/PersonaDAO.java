@@ -2,13 +2,15 @@ package dao.datos;
 
 import java.util.List;
 
+import net.cinecable.enums.Estados;
+import net.cinecable.enums.TipoPersona;
+
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-
 import pojo.annotations.Persona;
 
 public class PersonaDAO {
@@ -32,7 +34,7 @@ public class PersonaDAO {
 		List<Persona> lisPersona = null;
 		
 		Criteria criteria = session.createCriteria(Persona.class)
-		.add( Restrictions.eq("idarea", idarea));
+		.add( Restrictions.eq("area.idarea", idarea));
 		
 		if(nombres != null && nombres.length > 0){
 			String query = "(";
@@ -63,7 +65,7 @@ public class PersonaDAO {
 		if(lisPersona != null && lisPersona.size() > 0){
 			Criteria criteriaCount = session.createCriteria(Persona.class)
 			.setProjection( Projections.rowCount())
-			.add( Restrictions.eq("idarea", idarea));
+			.add( Restrictions.eq("area.idarea", idarea));
 			
 			if(nombres != null && nombres.length > 0){
 				String query = "(";
@@ -91,4 +93,21 @@ public class PersonaDAO {
 		
 		return lisPersona;
 	}
-}
+	
+	@SuppressWarnings("unchecked")
+	public List<Persona> getPersonaCargo(Session session, TipoPersona tipoPersona) throws Exception {
+		List<Persona> lisPersona = null;
+		
+		Criteria criteria = session.createCriteria(Persona.class)
+            
+                .add( Restrictions.eq("estado.idestado", Estados.ACTIVO.getDescription()));
+		
+        
+        if(tipoPersona != null){
+            criteria.add( Restrictions.like("cargo", tipoPersona+"%").ignoreCase());
+        }
+				
+        lisPersona = (List<Persona>) criteria.list();
+							
+		return lisPersona;
+	}}

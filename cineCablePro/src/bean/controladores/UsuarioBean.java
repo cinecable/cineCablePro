@@ -105,7 +105,7 @@ public class UsuarioBean implements Serializable{
 			facesUtil.logout();
 			FileUtil fileUtil = new FileUtil();
 			strRedirect = fileUtil.getPropertyValue("login");
-			//facesUtil.redirect(strLogin);
+			facesUtil.redirect(strRedirect);
 		}catch(Exception re){
 			re.printStackTrace();
 			new MessageUtil().showFatalMessage("Esto es Vergonzoso!", "Ha ocurrido un error inesperado. Comunicar al Webmaster!");

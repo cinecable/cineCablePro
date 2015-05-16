@@ -4,8 +4,10 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
+		
 	<h:form id="form-contentpage">
 		<p:growl id="mensajes" showDetail="true" />
 		<div class="ui-messages ui-widget" style="font-size: 12px;display: #{clienteBean.mostrarMensaje ? 'inline':'none'}">
@@ -23,18 +25,23 @@
 			</div>
 		</div>
 		<h1 class="title ui-widget-header" style="text-align: center;">#{clienteBean.ctacliente.clientes.nombre1} #{clienteBean.ctacliente.clientes.apellido1} Cta ##{clienteBean.ctacliente.idcuenta}</h1>
-		<p:tabView id="idDatosCliente" > 
+		<p:tabView id="idDatosCliente" >
+		
+		
 		    <p:tab id="idTabDato1" title="Datos Generales">
 		        <h:panelGrid id="idpanelDatosGenerales" columns="2" > 
 		        
-		        	<h:outputLabel value="Identidad " for="ididenti" style="font-weight: bold;" />
-		            <h:outputText id="ididenti" value="#{clienteBean.ctacliente.clientes.idcliente}" />
+		        	<h:outputLabel value="Identidad " for="ididenti" style="font-weight: bold;" />		          
+		             <h:outputText id="ididenti" value="#{clienteBean.ctacliente.clientes.idcliente}" />
 		            
 		            <h:outputLabel value="Tipo Identidad " for="idtidenti" style="font-weight: bold;" />
-		            <h:outputText id="idtidenti" value="#{clienteBean.ctacliente.clientes.idtipoidentificacion}" />
+		            <h:outputText id="idtidenti" value="#{clienteBean.ctacliente.clientes.tipoidentidad.descripcion}" />
+		            
+		            <h:outputLabel value="Número Identidad " for="idnumidentidad" style="font-weight: bold;" />
+		            <h:outputText id="idnumidentidad" value="#{clienteBean.ctacliente.clientes.identificacion}" />
 		            
 		             <h:outputLabel value="Tipo Persona " for="idtidpersona" style="font-weight: bold;" />
-		            <h:outputText id="idtidpersona" value="#{clienteBean.ctacliente.clientes.idtipopersona}" />
+		            <h:outputText id="idtidpersona" value="#{clienteBean.tipopersona}" />
 		            
 		        	<h:outputLabel value="Nombres: " for="idNombres" style="font-weight: bold;" />
 		            <h:outputText id="idNombres" value="#{clienteBean.ctacliente.clientes.nombre1} #{clienteBean.ctacliente.clientes.nombre2}" />
@@ -47,21 +54,294 @@
 		            
 		            <h:outputLabel value="Fecha de Nacimiento: " for="idFechaNacimiento" style="font-weight: bold;" />
 		            <h:outputText id="idFechaNacimiento" value="#{clienteBean.ctacliente.clientes.fechanacimiento}" >
-	                   	<f:convertDateTime pattern="dd/MM/yyyy" />
-	                   </h:outputText>
+                   	<f:convertDateTime pattern="dd/MM/yyyy" />
+                   </h:outputText>
 	                   
-	                   <h:outputLabel value="Email: " for="idEmail" style="font-weight: bold;" />
+                   <h:outputLabel value="Email: " for="idEmail" style="font-weight: bold;" />
 		            <h:outputText id="idEmail" value="#{clienteBean.ctacliente.clientes.email}" />
 		            
 		            <h:outputLabel value="Género: " for="idGenero" style="font-weight: bold;" />
-		            <h:outputText id="idGenero" value="#{clienteBean.ctacliente.clientes.genero}" />
+		            <h:outputText id="idGenero" value="#{clienteBean.genero}" />
 		        
 	                   <h:outputLabel value="Estado Civil " for="idECivil" style="font-weight: bold;" />
-		            <h:outputText id="idECivil" value="#{clienteBean.ctacliente.clientes.estadocivil}" />
+		            <h:outputText id="idECivil" value="#{clienteBean.ctacliente.clientes.estadocivil.nombre}" />
 		        
 		 	        <h:outputLabel value="Tipo Cliente " for="idTipoCli" style="font-weight: bold;" />
-		            <h:outputText id="idTipoCli" value="#{clienteBean.ctacliente.clientes.idcliente}" />
+		            <h:outputText id="idTipoCli" value="#{clienteBean.ctacliente.clientes.tipocliente.nombre}" />
 		            
+		            <h:outputLabel value="Estado Cuenta " for="idEstadoCuenta" style="font-weight: bold;" />
+		            <h:outputText id="idEstadoCuenta" value="#{clienteBean.estadoCuenta}" />
+		            
+				</h:panelGrid>
+			</p:tab>
+			 
+			<p:tab id="idTabDato5" title="Servicios">
+				<h:panelGrid id="idpanelServicios" columns="2" > 
+					<h2>Detalle de Productos del cliente</h2>
+					  <h:outputText  value="  "  />
+						   <h:outputText  value=" Producto "  style="font-weight: bold;" />
+						   <h:outputText  value=" Estado "  style="font-weight: bold;" />
+						<c:forEach items="#{clienteBean.lisCtasprod}" var="varCtasprod">				
+							
+					    	
+		      		      <h:outputText value="#{varCtasprod.producto.nombre}" />
+		         		  <h:outputText value="#{varCtasprod.estado.nombre}" />
+								
+							
+						</c:forEach>										
+					
+				</h:panelGrid>
+			</p:tab>
+			
+			<p:tab id="idTabDato2" title="Direccion">
+				<h:panelGrid id="idpanelDireccion" columns="8" > 
+					<h:outputLabel value="Dir. Instalacion" for="idir1" style="font-weight: bold;color:blue;" />
+					<h:outputText id="idir1" value=" "  />
+		            <h:outputText  value="  "  />
+					
+					<h:outputLabel value="Dir. Correspondencia" for="idir2" style="font-weight: bold;color:blue;" />
+					<h:outputText id="idir2" value=" "  />
+		            <h:outputText  value="  "  />
+		            
+		            <h:outputLabel value="Dir. Cobranza" for="idir3" style="font-weight: bold;color:blue;" />
+					<h:outputText id="idir3" value=" "  />
+		          
+		            
+					<h:outputLabel value="Pais " for="ipais" style="font-weight: bold;" />
+		            <h:outputText id="ipais" value="#{consultaDirBean.paisI.nombre}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Pais " for="ipaisC" style="font-weight: bold;" />
+		            <h:outputText id="ipaisC" value="#{consultaDirBean.paisC.nombre}" />
+		              <h:outputText  value="  "  />
+		            <h:outputLabel value="Pais " for="ipaisB" style="font-weight: bold;" />		
+		            <h:outputText id="ipaisB" value="#{consultaDirBean.paisB.nombre}"  />
+		            
+		            <h:outputLabel value="Provincia " for="iprovI" style="font-weight: bold;" />
+		            <h:outputText id="iprovI" value="#{consultaDirBean.provinciaI.nombre}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Provincia " for="iprovC" style="font-weight: bold;" />
+		            <h:outputText id="iprovC" value="#{consultaDirBean.provinciaC.nombre}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Provincia " for="iprovB" style="font-weight: bold;" />		
+		            <h:outputText id="iprovB" value="#{consultaDirBean.provinciaC.nombre}"  />
+		            
+		            <h:outputLabel value="Ciudad " for="iciudadI" style="font-weight: bold;" />
+		            <h:outputText id="iciudadI" value="#{consultaDirBean.ciudadI.nombre}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Ciudad " for="iciudadC" style="font-weight: bold;" />
+		            <h:outputText id="iciudadC" value="#{consultaDirBean.ciudadC.nombre}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Ciudad " for="iciudadB" style="font-weight: bold;" />		
+		            <h:outputText id="iciudadB" value="#{consultaDirBean.ciudadB.nombre}"  />
+		            
+		            <h:outputLabel value="Sector " for="isectorI" style="font-weight: bold;" />
+		            <h:outputText id="isectorI" value="#{consultaDirBean.direccionI.sector.nombre}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Sector " for="isectorC" style="font-weight: bold;" />
+		            <h:outputText id="isectorC" value="#{consultaDirBean.direccionC.sector.nombre}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Sector " for="isectorB" style="font-weight: bold;" />		
+		            <h:outputText id="isectorB" value="#{consultaDirBean.direccionB.sector.nombre}"  />
+		            
+		            <h:outputLabel value="Ubicacion " for="iubicacionI" style="font-weight: bold;" />
+		            <h:outputText id="iubicacionI" value="#{consultaDirBean.direccionI.tiposector.nombre}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Ubicacion " for="iubicacionC" style="font-weight: bold;" />
+		            <h:outputText id="iubicacionC" value="#{consultaDirBean.direccionC.tiposector.nombre}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Ubicacion " for="iubicacionB" style="font-weight: bold;" />		
+		            <h:outputText id="iubicacionB" value="#{consultaDirBean.direccionB.tiposector.nombre}"  />
+		            
+		            <h:outputLabel value="Calle Principal " for="icpI" style="font-weight: bold;" />
+		            <h:outputText id="icpI" value="#{consultaDirBean.direccionI.calleprincipal.nombre}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Calle Principal " for="icpC" style="font-weight: bold;" />
+		            <h:outputText id="icpC" value="#{consultaDirBean.direccionC.calleprincipal.nombre}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Calle Principal " for="icpB" style="font-weight: bold;" />		
+		            <h:outputText id="icpB" value="#{consultaDirBean.direccionB.calleprincipal.nombre}"  />
+		            
+		            <h:outputLabel value="Calle Secundaria " for="icsI" style="font-weight: bold;" />
+		            <h:outputText id="icsI" value="#{consultaDirBean.direccionI.callesecundaria.nombre}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Calle Secundaria " for="icsC" style="font-weight: bold;" />
+		            <h:outputText id="icsC"  value="#{consultaDirBean.direccionC.callesecundaria.nombre}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Calle Secundaria " for="icsB" style="font-weight: bold;" />		
+		            <h:outputText id="icsB" value="#{consultaDirBean.direccionB.callesecundaria.nombre}"  />
+		            
+		            <h:outputLabel value="Urbanizacion " for="iurbI" style="font-weight: bold;" />
+		            <h:outputText id="iurbI" value="#{consultaDirBean.direccionI.ubicacion.nombre}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Urbanizacion " for="iurbC" style="font-weight: bold;" />
+		            <h:outputText id="iurbC"  value="#{consultaDirBean.direccionC.ubicacion.nombre}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Urbanizacion " for="iurbB" style="font-weight: bold;" />		
+		            <h:outputText id="iurbB" value="#{consultaDirBean.direccionB.ubicacion.nombre}"  />
+		            
+		            <h:outputLabel value="Edificio " for="iedifI" style="font-weight: bold;" />
+		            <h:outputText id="iedifI" value="#{consultaDirBean.direccionI.edificio.nombre}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Edificio " for="iedifC" style="font-weight: bold;" />
+		            <h:outputText id="iedifC" value="#{consultaDirBean.direccionC.edificio.nombre}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Edificio " for="iedifB" style="font-weight: bold;" />		
+		            <h:outputText id="iedifB" value="#{consultaDirBean.direccionB.edificio.nombre}"  />
+		            
+		            
+		            <h:outputLabel value="Nodo " for="inodoI" style="font-weight: bold;" />
+		            <h:outputText id="inodoI" value="#{consultaDirBean.direccionI.nodos.nombre}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Nodo " for="inodoC" style="font-weight: bold;" />
+		            <h:outputText id="inodoC"  value="#{consultaDirBean.direccionC.nodos.nombre}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Nodo " for="inodoB" style="font-weight: bold;" />		
+		            <h:outputText id="inodoB" value="#{consultaDirBean.direccionB.nodos.nombre}"  />
+		            
+		             <h:outputLabel value="Numero " for="inumeroI" style="font-weight: bold;" />
+		            <h:outputText id="inumeroI" value="#{consultaDirBean.direccionI.numero}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Numero " for="inumeroC" style="font-weight: bold;" />
+		            <h:outputText id="inumeroC"  value="#{consultaDirBean.direccionC.numero}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Numero " for="inumeroB" style="font-weight: bold;" />		
+		            <h:outputText id="inumeroB" value="#{consultaDirBean.direccionB.numero}"  />
+		            
+		            <h:outputLabel value="Solar " for="isolarI" style="font-weight: bold;" />
+		            <h:outputText id="isolarI" value="#{consultaDirBean.direccionI.solar}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Solar " for="isolarC" style="font-weight: bold;" />
+		            <h:outputText id="isolarC"  value="#{consultaDirBean.direccionC.solar}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Solar " for="isolarB" style="font-weight: bold;" />		
+		            <h:outputText id="isolarB" value="#{consultaDirBean.direccionB.solar}"  />
+		            
+		            <h:outputLabel value="Vineta " for="ivinetaI" style="font-weight: bold;" />
+		            <h:outputText id="ivinetaI" value="#{consultaDirBean.direccionI.vineta}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Vineta " for="ivinetaC" style="font-weight: bold;" />
+		            <h:outputText id="ivinetaC"  value="#{consultaDirBean.direccionC.vineta}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Vineta " for="ivinetaB" style="font-weight: bold;" />		
+		            <h:outputText id="ivinetaB" value="#{consultaDirBean.direccionB.vineta}"  />
+		            
+		            <h:outputLabel value="Poste " for="iposteI" style="font-weight: bold;" />
+		            <h:outputText id="iposteI" value="#{consultaDirBean.direccionI.poste}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Poste " for="iposteC" style="font-weight: bold;" />
+		            <h:outputText id="iposteC"  value="#{consultaDirBean.direccionC.poste}"  />
+		              <h:outputText  value="  "  />
+		            <h:outputLabel value="Poste " for="iposteB" style="font-weight: bold;" />		
+		            <h:outputText id="iposteB" value="#{consultaDirBean.direccionB.poste}"  />
+		            
+		            <h:outputLabel value="Departamento " for="idepI" style="font-weight: bold;" />
+		            <h:outputText id="idepI" value="#{consultaDirBean.direccionI.departamento}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Departamento " for="idepC" style="font-weight: bold;" />
+		            <h:outputText id="idepC"  value="#{consultaDirBean.direccionC.departamento}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Departamento " for="idepB" style="font-weight: bold;" />		
+		            <h:outputText id="idepB" value="#{consultaDirBean.direccionB.departamento}"  />
+		            
+		            <h:outputLabel value="Piso " for="ipisoI" style="font-weight: bold;" />
+		            <h:outputText id="ipisoI" value="#{consultaDirBean.direccionI.piso}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Piso " for="ipisoC" style="font-weight: bold;" />
+		            <h:outputText id="ipisoC"  value="#{consultaDirBean.direccionC.piso}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Piso " for="ipisoB" style="font-weight: bold;" />		
+		            <h:outputText id="ipisoB" value="#{consultaDirBean.direccionB.piso}"  />
+		            
+		            <h:outputLabel value="Tab " for="iTabI" style="font-weight: bold;" />
+		            <h:outputText id="iTabI" value="#{consultaDirBean.direccionI.idtab}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Tab " for="iTabC" style="font-weight: bold;" />
+		            <h:outputText id="iTabC"  value="#{consultaDirBean.direccionC.idtab}"  />
+		            <h:outputText  value="  "  />
+		            <h:outputLabel value="Tab " for="iTabB" style="font-weight: bold;" />		
+		            <h:outputText id="iTabB" value="#{consultaDirBean.direccionB.idtab}"  />
+		            
+		            
+				</h:panelGrid>
+			</p:tab>
+			
+			
+			<p:tab id="idTabDato4" title="Conyuge">
+				<h:panelGrid id="idpanelConyuge" columns="2" > 
+				
+			   		<h:outputLabel value="Identificacion Conyuge   " for="iforC1" style="font-weight: bold;" />
+		            <h:outputText id="iforC1" value="#{clienteBean.conyuge.identificacion}"  />
+				
+					<h:outputLabel value="Nombres: " for="iforC2" style="font-weight: bold;" />
+		            <h:outputText id="iforC2" value="#{clienteBean.conyuge.nombre1} #{clienteBean.conyuge.nombre2}" />
+		            
+		            <h:outputLabel value="Apellidos: " for="iforC3" style="font-weight: bold;"/>
+		            <h:outputText id="iforC3" value="#{clienteBean.conyuge.apellido1} #{clienteBean.conyuge.apellido2}" />
+				
+				</h:panelGrid>
+			</p:tab>
+			
+			
+			<p:tab id="idTabDato6" title="Telefonos">
+				<h:panelGrid id="idpanelTelefonos" columns="2" > 
+					<c:forEach items="#{telefonosBean.lisTelefonos}" var="varTelefonos">				
+							
+					    	
+		      		      <h:outputText value="#{varTelefonos.nombre}" />
+		         		  <h:outputText value="#{varTelefonos.numero}" />
+								
+							
+						</c:forEach>	
+				
+				</h:panelGrid>
+			</p:tab>
+			<p:tab id="idTabDato3" title="Bancarios">
+				<h:panelGrid id="idpanelBancarios" columns="2" > 
+					<h:outputLabel value="Forma de Pago " for="ifor1" style="font-weight: bold;" />
+		            <h:outputText id="ifor1" value="#{debitosBancariosBean.debitobco.tipodebito.nombre}"  />
+		            
+		            <h:outputLabel value="Banco / Tarjeta " for="ifor2" style="font-weight: bold;" />
+		            <h:outputText id="ifor2" value="#{debitosBancariosBean.debitobco.bancos.nombre}"  />
+		            
+		            <h:outputLabel value="Tipo Cuenta Bancaria " for="ifor3" style="font-weight: bold;" />
+		            <h:outputText id="ifor3" value="#{debitosBancariosBean.tipoCtaBanco}"  />
+		            
+		            <h:outputLabel value="Banco Emisor Tarjeta " for="ifor4" style="font-weight: bold;" />
+		            <h:outputText id="ifor4" value="#{debitosBancariosBean.debitobco.bancosEmisor.nombre}"  />
+		            
+		            <h:outputLabel value="Nro.Cuenta/Tarjeta " for="ifor5" style="font-weight: bold;" />
+		            <h:outputText id="ifor5" value="#{debitosBancariosBean.debitobco.nrodebito}"  />
+		            
+		            <h:outputLabel value="Propietario " for="ifor6" style="font-weight: bold;" />
+		            <h:outputText id="ifor6" value="#{debitosBancariosBean.debitobco.propietario}"  />
+		            
+		            <h:outputLabel value="Identificacion Propietario   " for="ifor7" style="font-weight: bold;" />
+		            <h:outputText id="ifor7" value="#{debitosBancariosBean.debitobco.identificacion}"  />
+		            
+				</h:panelGrid>
+			</p:tab>
+			
+			<p:tab id="idTabDato7" title="Ref.Direccion">
+				<h:panelGrid id="idpanelRefDireccion" columns="6" > 
+				
+					<h:outputLabel value="Referencia Dir. Instalacion____" for="irdir1" style="font-weight: bold;color:blue;" />
+					<h:outputText id="irdir1" value=" "  />
+					
+					<h:outputLabel value="Referencia Dir. Correspondencia" for="irdir2" style="font-weight: bold;color:blue;" />
+					<h:outputText id="irdir2" value=" "  />
+		            
+		            <h:outputLabel value="Referencia Dir. Cobranza______" for="irdir3" style="font-weight: bold;color:blue;" />
+					<h:outputText id="irdir3" value=" "  />
+				
+					 <h:inputTextarea value="#{consultaDirBean.referenciadirI.referencia}" rows="10" cols="2" disabled="true"   style="width: 100%"/>
+			   	     <h:outputText  value="  "  />
+			   	     
+			   	      <h:inputTextarea value="#{consultaDirBean.referenciadirB.referencia}" rows="10" cols="2" disabled="true"   style="width: 100%" />
+			   	     <h:outputText  value="  "  />
+			   	     
+			   	      <h:inputTextarea value="#{consultaDirBean.referenciadirC.referencia}"  rows="10" cols="2" disabled="true"   style="width: 100%"/>
+			   	     <h:outputText  value="  "  />
+			   	     
 				</h:panelGrid>
 			</p:tab>
 		</p:tabView>

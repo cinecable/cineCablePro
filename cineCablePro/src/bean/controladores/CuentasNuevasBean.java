@@ -5,17 +5,28 @@ import global.Parametro;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
+import net.cinecable.dao.IMotivosDao;
+import net.cinecable.enums.TipoSolicitudes;
+import net.cinecable.model.base.Ordenes;
+
 import pojo.annotations.Clientes;
 import pojo.annotations.Ctacliente;
+import pojo.annotations.Ctasprod;
 import pojo.annotations.Empresa;
+import pojo.annotations.Estado;
+import pojo.annotations.Motivos;
 import pojo.annotations.Persona;
+import pojo.annotations.Tipooperacion;
+import pojo.annotations.Usuario;
 
 import bo.negocio.CtaclienteBO;
 import bo.negocio.PersonaBO;
@@ -52,6 +63,14 @@ public class CuentasNuevasBean implements Serializable{
 	
 	private int idcuenta;
 	private int activeIndex;
+	@ManagedProperty(value = "#{calendarOrdenesBean}")
+	private CalendarOrdenesBean calendarOrdenesBean;
+	private int mes;
+	private int anio;
+	private Ordenes ordenes;
+	private List<Motivos> lisMotivosHorarios;
+	@EJB
+	private IMotivosDao iMotivoDao;
 
 	public CuentasNuevasBean() {
 		ctacliente = new Ctacliente(0, new Empresa(), new Clientes(), null, null, 0);
@@ -63,10 +82,25 @@ public class CuentasNuevasBean implements Serializable{
 		idcuenta = 0;
 		
 		activeIndex = 0;
+		mes = 0;
+		anio = Calendar.getInstance().get(Calendar.YEAR);
+		ordenes = new Ordenes();
+		ordenes.setCuentaCliente(new Ctacliente());
+		ordenes.setEmpresa(new Empresa());
+		ordenes.setEstado(new Estado());
+		ordenes.setHorario(new Motivos());
+		ordenes.setMotivo(new Motivos());
+		ordenes.setProducto(new Ctasprod());
+		ordenes.setTipoOperacion(new Tipooperacion());
+		ordenes.setUsuario(new Usuario());
+		lisMotivosHorarios = new ArrayList<Motivos>();
 	}
 	
 	@PostConstruct
 	public void initCuentasNuevasBean() {
+		calendarOrdenesBean.inicializarAnios();
+		calendarOrdenesBean.inicializarMeses();
+		llenarHorarios();
 		FacesUtil facesUtil = new FacesUtil();
 		idcuenta = Integer
 				.parseInt(facesUtil.getParametroUrl("idcuenta") != null ? facesUtil
@@ -75,6 +109,28 @@ public class CuentasNuevasBean implements Serializable{
 		if (idcuenta > 0) {
 			//consultarProductos();
 		}
+	}
+	
+	public void muestraCalendario(){
+		if(mes > 0){
+			//Si he seleccionado un mes, busco fechas del mes y muestro calendario
+			Calendar fecha = Calendar.getInstance();
+			fecha.set(anio,mes-1,1,0,0,0);
+			calendarOrdenesBean.setFecha(fecha.getTime());
+			
+			calendarOrdenesBean.mostrarEventosAgendados(TipoSolicitudes.InstNueva.getDescripcion(), mes);
+			
+			calendarOrdenesBean.setMostrarCalendar(true);
+		}else{
+			//si no he seleccionado mes oculto calendario
+			calendarOrdenesBean.setMostrarCalendar(false);
+			calendarOrdenesBean.setFecha(null);
+		}
+	}
+	
+	public void llenarHorarios() {
+		lisMotivosHorarios = new ArrayList<Motivos>();
+		lisMotivosHorarios = iMotivoDao.getMotivosByTipoOperacion(TipoSolicitudes.Horarios.getDescripcion());
 	}
 
 	public void direccionCorrespondenciaIgual(){
@@ -125,82 +181,91 @@ public class CuentasNuevasBean implements Serializable{
 				if(validacionDireccionOk()){
 					if(validacionDebitoBcoOk()){
 						if(validacionTelefonoOk()){
-							try{
-								CtaclienteBO ctaclienteBO = new CtaclienteBO();
-								
-								//Asignamos data a ctacliente
-								if(cobrador != null && cobrador.getIdpersona() > 0){
-									ctacliente.setIdcobrador(cobrador.getIdpersona());
+							if(validacionOrden()){
+								try{
+									CtaclienteBO ctaclienteBO = new CtaclienteBO();
+									
+									//Asignamos data a ctacliente
+									if(cobrador != null && cobrador.getIdpersona() > 0){
+										ctacliente.setIdcobrador(cobrador.getIdpersona());
+									}
+									if(vendedor != null && vendedor.getIdpersona() > 0){
+										ctacliente.setIdvendedor(vendedor.getIdpersona());
+									}
+									ctacliente.setIdcuenta(idcuenta);
+									
+									//Calles
+									if(direccionInstalacionBean.getDireccion().getCalleprincipal() != null && direccionInstalacionBean.getDireccion().getCalleprincipal().getIdcalleprincipal() == 0){
+										direccionInstalacionBean.getDireccion().setCalleprincipal(null);
+									}
+									if(direccionInstalacionBean.getDireccion().getCallesecundaria() != null && direccionInstalacionBean.getDireccion().getCallesecundaria().getIdcallesecundaria() == 0){
+										direccionInstalacionBean.getDireccion().setCallesecundaria(null);
+									}
+									if(direccionCorrespondenciaBean.getDireccion().getCalleprincipal() != null && direccionCorrespondenciaBean.getDireccion().getCalleprincipal().getIdcalleprincipal() == 0){
+										direccionCorrespondenciaBean.getDireccion().setCalleprincipal(null);
+									}
+									if(direccionCorrespondenciaBean.getDireccion().getCallesecundaria() != null && direccionCorrespondenciaBean.getDireccion().getCallesecundaria().getIdcallesecundaria() == 0){
+										direccionCorrespondenciaBean.getDireccion().setCallesecundaria(null);
+									}
+									if(direccionConbranzaBean.getDireccion().getCalleprincipal() != null && direccionConbranzaBean.getDireccion().getCalleprincipal().getIdcalleprincipal() == 0){
+										direccionConbranzaBean.getDireccion().setCalleprincipal(null);
+									}
+									if(direccionConbranzaBean.getDireccion().getCallesecundaria() != null && direccionConbranzaBean.getDireccion().getCallesecundaria().getIdcallesecundaria() == 0){
+										direccionConbranzaBean.getDireccion().setCallesecundaria(null);
+									}
+									
+									//Ubicacion
+									if(direccionInstalacionBean.getDireccion().getUbicacion() != null && direccionInstalacionBean.getDireccion().getUbicacion().getIdubicacion() == 0){
+										direccionInstalacionBean.getDireccion().setUbicacion(null);
+									}
+									if(direccionCorrespondenciaBean.getDireccion().getUbicacion() != null && direccionCorrespondenciaBean.getDireccion().getUbicacion().getIdubicacion() == 0){
+										direccionCorrespondenciaBean.getDireccion().setUbicacion(null);
+									}
+									if(direccionConbranzaBean.getDireccion().getUbicacion() != null && direccionConbranzaBean.getDireccion().getUbicacion().getIdubicacion() == 0){
+										direccionConbranzaBean.getDireccion().setUbicacion(null);
+									}
+									
+									//Edificio
+									if(direccionInstalacionBean.getDireccion().getEdificio() != null && direccionInstalacionBean.getDireccion().getEdificio().getIdedificio() == 0){
+										direccionInstalacionBean.getDireccion().setEdificio(null);
+									}
+									if(direccionCorrespondenciaBean.getDireccion().getEdificio() != null && direccionCorrespondenciaBean.getDireccion().getEdificio().getIdedificio() == 0){
+										direccionCorrespondenciaBean.getDireccion().setEdificio(null);
+									}
+									if(direccionConbranzaBean.getDireccion().getEdificio() != null && direccionConbranzaBean.getDireccion().getEdificio().getIdedificio() == 0){
+										direccionConbranzaBean.getDireccion().setEdificio(null);
+									}
+									
+									//referencia
+									if(direccionInstalacionBean.getReferenciadir() != null && direccionInstalacionBean.getReferenciadir().getReferencia() != null && direccionInstalacionBean.getReferenciadir().getReferencia().trim().length() == 0){
+										direccionInstalacionBean.setReferenciadir(null);
+									}
+									if(direccionCorrespondenciaBean.getReferenciadir() != null && direccionCorrespondenciaBean.getReferenciadir().getReferencia() != null && direccionCorrespondenciaBean.getReferenciadir().getReferencia().trim().length() == 0){
+										direccionCorrespondenciaBean.setReferenciadir(null);
+									}
+									if(direccionConbranzaBean.getReferenciadir() != null && direccionConbranzaBean.getReferenciadir().getReferencia() != null && direccionConbranzaBean.getReferenciadir().getReferencia().trim().length() == 0){
+										direccionConbranzaBean.setReferenciadir(null);
+									}
+									
+									//orden
+									ordenes.setFechaEjecucion(calendarOrdenesBean.getFecha());
+									
+									if(ordenes.getCuentaCliente() != null && ordenes.getCuentaCliente().getIdcuenta() == 0){
+										ordenes.setCuentaCliente(null);
+									}
+									
+									ctaclienteBO.grabarCuenta(ctacliente, productosBean.getLisProductosId(), direccionInstalacionBean.getDireccion(), direccionCorrespondenciaBean.getDireccion(), direccionConbranzaBean.getDireccion(), debitosBancariosBean.getDebitobco(), telefonosBean.getLisTelefonos(), direccionInstalacionBean.getReferenciadir(), direccionCorrespondenciaBean.getReferenciadir(), direccionConbranzaBean.getReferenciadir(), ordenes);
+									
+									FacesUtil facesUtil = new FacesUtil();
+									try {
+										facesUtil.redirect("cliente.jsf?faces-redirect=true&idcuenta="+idcuenta);
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+								} catch(Exception re) {
+									re.printStackTrace();
+									new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", null);
 								}
-								if(vendedor != null && vendedor.getIdpersona() > 0){
-									ctacliente.setIdvendedor(vendedor.getIdpersona());
-								}
-								ctacliente.setIdcuenta(idcuenta);
-								
-								//Calles
-								if(direccionInstalacionBean.getDireccion().getCalleprincipal() != null && direccionInstalacionBean.getDireccion().getCalleprincipal().getIdcalleprincipal() == 0){
-									direccionInstalacionBean.getDireccion().setCalleprincipal(null);
-								}
-								if(direccionInstalacionBean.getDireccion().getCallesecundaria() != null && direccionInstalacionBean.getDireccion().getCallesecundaria().getIdcallesecundaria() == 0){
-									direccionInstalacionBean.getDireccion().setCallesecundaria(null);
-								}
-								if(direccionCorrespondenciaBean.getDireccion().getCalleprincipal() != null && direccionCorrespondenciaBean.getDireccion().getCalleprincipal().getIdcalleprincipal() == 0){
-									direccionCorrespondenciaBean.getDireccion().setCalleprincipal(null);
-								}
-								if(direccionCorrespondenciaBean.getDireccion().getCallesecundaria() != null && direccionCorrespondenciaBean.getDireccion().getCallesecundaria().getIdcallesecundaria() == 0){
-									direccionCorrespondenciaBean.getDireccion().setCallesecundaria(null);
-								}
-								if(direccionConbranzaBean.getDireccion().getCalleprincipal() != null && direccionConbranzaBean.getDireccion().getCalleprincipal().getIdcalleprincipal() == 0){
-									direccionConbranzaBean.getDireccion().setCalleprincipal(null);
-								}
-								if(direccionConbranzaBean.getDireccion().getCallesecundaria() != null && direccionConbranzaBean.getDireccion().getCallesecundaria().getIdcallesecundaria() == 0){
-									direccionConbranzaBean.getDireccion().setCallesecundaria(null);
-								}
-								
-								//Ubicacion
-								if(direccionInstalacionBean.getDireccion().getUbicacion() != null && direccionInstalacionBean.getDireccion().getUbicacion().getIdubicacion() == 0){
-									direccionInstalacionBean.getDireccion().setUbicacion(null);
-								}
-								if(direccionCorrespondenciaBean.getDireccion().getUbicacion() != null && direccionCorrespondenciaBean.getDireccion().getUbicacion().getIdubicacion() == 0){
-									direccionCorrespondenciaBean.getDireccion().setUbicacion(null);
-								}
-								if(direccionConbranzaBean.getDireccion().getUbicacion() != null && direccionConbranzaBean.getDireccion().getUbicacion().getIdubicacion() == 0){
-									direccionConbranzaBean.getDireccion().setUbicacion(null);
-								}
-								
-								//Edificio
-								if(direccionInstalacionBean.getDireccion().getEdificio() != null && direccionInstalacionBean.getDireccion().getEdificio().getIdedificio() == 0){
-									direccionInstalacionBean.getDireccion().setEdificio(null);
-								}
-								if(direccionCorrespondenciaBean.getDireccion().getEdificio() != null && direccionCorrespondenciaBean.getDireccion().getEdificio().getIdedificio() == 0){
-									direccionCorrespondenciaBean.getDireccion().setEdificio(null);
-								}
-								if(direccionConbranzaBean.getDireccion().getEdificio() != null && direccionConbranzaBean.getDireccion().getEdificio().getIdedificio() == 0){
-									direccionConbranzaBean.getDireccion().setEdificio(null);
-								}
-								
-								//referencia
-								if(direccionInstalacionBean.getReferenciadir() != null && direccionInstalacionBean.getReferenciadir().getReferencia() != null && direccionInstalacionBean.getReferenciadir().getReferencia().trim().length() == 0){
-									direccionInstalacionBean.setReferenciadir(null);
-								}
-								if(direccionCorrespondenciaBean.getReferenciadir() != null && direccionCorrespondenciaBean.getReferenciadir().getReferencia() != null && direccionCorrespondenciaBean.getReferenciadir().getReferencia().trim().length() == 0){
-									direccionCorrespondenciaBean.setReferenciadir(null);
-								}
-								if(direccionConbranzaBean.getReferenciadir() != null && direccionConbranzaBean.getReferenciadir().getReferencia() != null && direccionConbranzaBean.getReferenciadir().getReferencia().trim().length() == 0){
-									direccionConbranzaBean.setReferenciadir(null);
-								}
-								
-								ctaclienteBO.grabarCuenta(ctacliente, productosBean.getLisProductosId(), direccionInstalacionBean.getDireccion(), direccionCorrespondenciaBean.getDireccion(), direccionConbranzaBean.getDireccion(), debitosBancariosBean.getDebitobco(), telefonosBean.getLisTelefonos(), direccionInstalacionBean.getReferenciadir(), direccionCorrespondenciaBean.getReferenciadir(), direccionConbranzaBean.getReferenciadir());
-								
-								FacesUtil facesUtil = new FacesUtil();
-								try {
-									facesUtil.redirect("cliente.jsf?faces-redirect=true&idcuenta="+idcuenta);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							} catch(Exception re) {
-								re.printStackTrace();
-								new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", null);
 							}
 						}
 					}
@@ -553,7 +618,7 @@ public class CuentasNuevasBean implements Serializable{
 			
 			VerificarId verificarId  = new VerificarId();
 			
-			if(debitosBancariosBean.getDebitobco().getIdtipodebito() > 0){
+			if(debitosBancariosBean.getDebitobco().getTipodebito().getIdtipodebito() > 0){
 				ok = true;
 			}else{
 				activeIndex = 2;
@@ -561,7 +626,7 @@ public class CuentasNuevasBean implements Serializable{
 			}
 			
 			if(ok){
-				if(debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_BANCARIO || debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_TARJETA){
+				if(debitosBancariosBean.getDebitobco().getTipodebito().getIdtipodebito() == Parametro.TIPO_DEBITO_BANCARIO || debitosBancariosBean.getDebitobco().getTipodebito().getIdtipodebito() == Parametro.TIPO_DEBITO_TARJETA){
 					if(debitosBancariosBean.getDebitobco().getBancos().getIdbanco() > 0){
 						if(debitosBancariosBean.getDebitobco().getNrodebito() != null && debitosBancariosBean.getDebitobco().getNrodebito().trim().length() > 0){
 							if(debitosBancariosBean.getDebitobco().getPropietario() != null && debitosBancariosBean.getDebitobco().getPropietario().trim().length() > 0){
@@ -585,7 +650,7 @@ public class CuentasNuevasBean implements Serializable{
 			}
 			
 			if(ok){
-				if(debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_BANCARIO){
+				if(debitosBancariosBean.getDebitobco().getTipodebito().getIdtipodebito() == Parametro.TIPO_DEBITO_BANCARIO){
 					if(debitosBancariosBean.getDebitobco().getIdtipocuenta() > 0){
 						ok = true;
 					}else{
@@ -633,6 +698,27 @@ public class CuentasNuevasBean implements Serializable{
 		}else{
 			activeIndex = 3;
 			new MessageUtil().showWarnMessage("Debe agregar al menos un telefono en seccion Telefonos Cliente", null);
+		}
+		
+		return ok;
+	}
+	
+	private boolean validacionOrden(){
+		boolean ok = false;
+		
+		if(calendarOrdenesBean.getFecha() != null){
+			ok = true;
+		}else{
+			activeIndex = 4;
+			new MessageUtil().showWarnMessage("Debe seleccionar la fecha de Instalacion en seccion Ordenes de Instalacion", null);
+		}
+		
+		if(ok && ordenes.getHorario().getIdmotivo() > 0){
+			ok = true;
+		}else{
+			ok = false;
+			activeIndex = 4;
+			new MessageUtil().showWarnMessage("Debe seleccionar el horario en seccion Ordenes de Instalacion", null);
 		}
 		
 		return ok;
@@ -762,5 +848,45 @@ public class CuentasNuevasBean implements Serializable{
 
 	public void setActiveIndex(int activeIndex) {
 		this.activeIndex = activeIndex;
+	}
+
+	public CalendarOrdenesBean getCalendarOrdenesBean() {
+		return calendarOrdenesBean;
+	}
+
+	public void setCalendarOrdenesBean(CalendarOrdenesBean calendarOrdenesBean) {
+		this.calendarOrdenesBean = calendarOrdenesBean;
+	}
+
+	public int getMes() {
+		return mes;
+	}
+
+	public void setMes(int mes) {
+		this.mes = mes;
+	}
+
+	public int getAnio() {
+		return anio;
+	}
+
+	public void setAnio(int anio) {
+		this.anio = anio;
+	}
+
+	public Ordenes getOrdenes() {
+		return ordenes;
+	}
+
+	public void setOrdenes(Ordenes ordenes) {
+		this.ordenes = ordenes;
+	}
+
+	public List<Motivos> getLisMotivosHorarios() {
+		return lisMotivosHorarios;
+	}
+
+	public void setLisMotivosHorarios(List<Motivos> lisMotivosHorarios) {
+		this.lisMotivosHorarios = lisMotivosHorarios;
 	}
 }

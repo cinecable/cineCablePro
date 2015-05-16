@@ -109,18 +109,7 @@ public class DireccionBean implements Serializable{
 		}
 	}
 	
-	//consultar data de la tabla de direcciones
-	//List<Direccion> lisDireccion = direccionBO.consultarDireccionesPorCuenta(idcuenta);
-	//llenar combo pais y setear el selected
-	//llenar el combo provincia segun pais y setear el selected
-	//llenar el combo ciudad segun provincia y setear el selected
-	//llenar el combo sector segun ciudad y setear el selected
-	//llenar el combo tipo sector y setear el seleccionado
-	//calle principal setear el consultado
-	//calle secundaria setear el consultado
-	//ubicacion consultar
-	//edificio consultar
-	//referenciadir consultar
+	
 	public void consultarDireccionPorTipo(int idcuenta, String tipo){
 		try{
 			DireccionBO direccionBO = new DireccionBO();

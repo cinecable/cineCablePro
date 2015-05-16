@@ -24,6 +24,7 @@ public class Costoservicio implements java.io.Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -622098153114633473L;
+	//private int idcostoservicio;
 	private int idservicio;
 	private Servicio servicio;
 	private float costo;
@@ -43,9 +44,23 @@ public class Costoservicio implements java.io.Serializable {
 		this.ip = ip;
 	}
 
+	//@GenericGenerator(name = "generator", strategy = "foreign", parameters = @Parameter(name = "property", value = "servicio"))
+	//@Id
+	//@GeneratedValue(generator = "generator")
+	
+	/*@Column(name = "idcostoservicio")
+	public int getIdcostoservicio() {
+		return idcostoservicio;
+	}
+
+	public void setIdcostoservicio(int idcostoservicio) {
+		this.idcostoservicio = idcostoservicio;
+	}*/
+	
 	@GenericGenerator(name = "generator", strategy = "foreign", parameters = @Parameter(name = "property", value = "servicio"))
 	@Id
 	@GeneratedValue(generator = "generator")
+	
 	@Column(name = "idservicio", unique = true, nullable = false)
 	public int getIdservicio() {
 		return this.idservicio;
@@ -56,6 +71,7 @@ public class Costoservicio implements java.io.Serializable {
 	}
 
 	@OneToOne(fetch = FetchType.LAZY)
+	//@JoinColumn(name = "idservicio")
 	@PrimaryKeyJoinColumn
 	public Servicio getServicio() {
 		return this.servicio;

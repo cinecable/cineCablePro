@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<h:form id="form-sidepage">
+		<p:growl id="msg" showDetail="true"></p:growl>
+		<p:remoteCommand name="init" autoRun="true"
+			action="#{debitoController.init()}">
+		</p:remoteCommand>
+		<h1 align="center">Consulta Debito Bancario</h1>
+		<hr noshade="noshade" />
+		<h:inputText value="#{debitoBancarioDM.fechaActual}" disabled="true"
+			style="width:100%">
+			Fecha debito : <f:convertDateTime pattern="MM-yyyy" />
+		</h:inputText>
+		<br />
+		<br />
+		<p:panel header="Consulta" style="width:100%" toggleable="true">
+			<p:panelGrid columns="2" style="width:100%">
+		Todos:
+			<p:selectBooleanCheckbox value="#{debitoBancarioDM.seleccionTodos}">
+					<p:ajax update="form-sidepage" />
+				</p:selectBooleanCheckbox>
+				<h:outputText value="Seleccione Banco: "
+					rendered="#{!debitoBancarioDM.seleccionTodos}" />
+				<h:selectOneMenu id="cmbBanco" value="#{debitoBancarioDM.banco}"
+					converter="bancos" style="width:95%"
+					rendered="#{!debitoBancarioDM.seleccionTodos}">
+					<f:selectItems value="#{paramDebitoController.bancos}" var="bancos"
+						itemLabel="#{bancos.nombre}" itemValue="#{bancos}"></f:selectItems>
+				</h:selectOneMenu>
+			</p:panelGrid>
+			<p:separator></p:separator>
+			<div align="center" style="width: 100%">
+				<p:commandButton value="Consultar"
+					action="#{debitoController.consultaBancos()}"
+					update=":form-contentpage">
+				</p:commandButton>
+				<p:commandButton value="Procesar" ajax="false">
+					<p:fileDownload value="#{debitoController.fileDownload}"></p:fileDownload>
+				</p:commandButton>
+			</div>
+			<br />
+			<div align="center">
+				<h:outputText value="¿Descargar con todos los debitos?" />
+				<p:spacer width="20"></p:spacer>
+				<p:selectBooleanButton value="#{debitoBancarioDM.descargaTodo}"
+					onLabel="Si" offLabel="No"></p:selectBooleanButton>
+			</div>
+		</p:panel>
+		<p:panel header="Generación" style="width:100%" toggleable="true">
+			<h:outputText value="Seleccione Banco: " />
+			<h:selectOneMenu id="cmbBancoGen"
+				value="#{debitoBancarioDM.bancoGeneracion}" converter="bancos"
+				style="width:95%">
+				<f:selectItems value="#{paramDebitoController.bancos}" var="bancos"
+					itemLabel="#{bancos.nombre}" itemValue="#{bancos}"></f:selectItems>
+			</h:selectOneMenu>
+			<br />
+			<br />
+			<div align="center">
+				<p:fileUpload fileUploadListener="#{debitoController.fileUpload}"
+					label="Seleccione" oncomplete="alert('Subido exitosamente')"
+					mode="advanced" auto="true" allowTypes="/(\.|\/)(txt)$/"
+					description="Seleccione" />
+			</div>
+			<p:separator></p:separator>
+			<div align="center" style="width: 100%">
+				<p:commandButton value="Consultar"
+					action="#{debitoController.consultarSubida()}"
+					update=":form-contentpage">
+				</p:commandButton>
+				<p:commandButton value="Procesar"
+					action="#{debitoController.procesarSubida()}" update="msg">
+				</p:commandButton>
+			</div>
+		</p:panel>
+
+	</h:form>
+</ui:composition>

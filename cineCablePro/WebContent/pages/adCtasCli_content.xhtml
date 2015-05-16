@@ -9,7 +9,7 @@
 
 	<h:form id="form-contentpage">
 		<h1 class="title ui-widget-header" style="text-align: center;">Cuentas
-			Nuevos</h1>
+			Nuevas</h1>
 		<p:messages id="mensajes" autoUpdate="true" showSummary="true" closable="true" />
 		<p:panel id="panel-content" style="min-height: 300px;margin: 20px 0">
 			<h:link value="Regresar" style="float: right;" outcome="cliente?faces-redirect=true" >
@@ -93,7 +93,34 @@
 							rutaPadre=":form-contentpage:acc:idcomponentetelefono"></my:telefonos_component>
 					</h:panelGrid>
 				</p:tab>
-
+				<p:tab title="Ordenes de Instalación" titleStyleClass="tabStyle">
+					<h:panelGrid columns="4" cellpadding="5px" style="width: 100%">
+						<h:panelGrid>
+						<h:outputText value="Fecha de Instalación" />
+						<p:selectOneMenu id="idAnio" value="#{cuentasNuevasBean.anio}" style="width:80px">
+							<f:selectItems value="#{cuentasNuevasBean.calendarOrdenesBean.lisAnio}"></f:selectItems>
+							<p:ajax update="idcontrolcalendar" listener="#{cuentasNuevasBean.muestraCalendario()}"></p:ajax>
+						</p:selectOneMenu>
+						<p:selectOneMenu id="idMes" value="#{cuentasNuevasBean.mes}" style="width:80px">
+							<f:selectItem itemLabel="Mes" itemValue="0" />
+							<f:selectItems value="#{cuentasNuevasBean.calendarOrdenesBean.lisMes}"></f:selectItems>
+							<p:ajax update="idcontrolcalendar" listener="#{cuentasNuevasBean.muestraCalendario()}"></p:ajax>
+						</p:selectOneMenu>
+						</h:panelGrid>
+						<my:calendarOrdenes_component id="idcontrolcalendar"></my:calendarOrdenes_component>
+						<h:outputText value="Horarios" style="width:200px" />
+						<p:selectOneMenu value="#{cuentasNuevasBean.ordenes.horario.idmotivo}" style="width:200px">
+							<f:selectItem itemLabel="Seleccione un horario" itemValue="0" />
+							<f:selectItems value="#{cuentasNuevasBean.lisMotivosHorarios}" var="motivo"
+								itemLabel="#{motivo.nombre}" itemValue="#{motivo.idmotivo}"></f:selectItems>
+						</p:selectOneMenu>
+						<h:outputText value="Observacion" style="width:200px" />
+						<p:inputTextarea value="#{cuentasNuevasBean.ordenes.observacion}"
+							style="width:200px" maxlength="255" autoResize="false" ></p:inputTextarea>
+						<h:panelGroup id="panelCancelacion">
+					</h:panelGroup>    
+					</h:panelGrid>
+				</p:tab>
 
 			</p:accordionPanel>
 			<p:spacer height="50px"></p:spacer>

@@ -2,6 +2,8 @@ package dao.datos;
 
 import java.util.List;
 
+import net.cinecable.model.base.OrdenesAsignaciones;
+
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -82,6 +84,33 @@ public class DireccionDAO {
 				.setInteger("idcuenta", idcuenta)
 				.setInteger("idestado", 1)
 				.setString("correspondencia", corresp);
+		direccion = (Direccion) query.uniqueResult();
+		
+		return direccion;
+	}
+	
+	public Direccion dirxCuentaxSector(Session session,int idcuenta, int idsector) throws Exception {
+		Direccion direccion = null;
+		String corresp ="I";
+		
+		String hql = " from Direccion as d left join fetch d.sector as sec ";
+		hql += " where d.ctacliente.idcuenta = :idcuenta ";
+		hql += " and d.estado.idestado = :idestado ";
+		hql += " and d.correspondencia = :correspondencia ";
+		
+		if(idsector > 0){
+			hql += " and sec.idsector = :idsector ";
+		}
+		
+		Query query = session.createQuery(hql)
+				.setInteger("idcuenta", idcuenta)
+				.setInteger("idestado", 1)
+				.setString("correspondencia", corresp);
+		
+		if(idsector > 0){
+			query.setInteger("idsector", idsector);
+		}
+		
 		direccion = (Direccion) query.uniqueResult();
 		
 		return direccion;

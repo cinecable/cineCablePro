@@ -46,6 +46,7 @@ public class MenuBean implements Serializable {
 
 	
 
+	@SuppressWarnings("unused")
 	private DefaultMenuModel armarMenu(int idtipomenu) {
 		DefaultMenuModel menu = new DefaultMenuModel();
 		String strParametrosUrl = new FacesUtil().getParametrosUrl();

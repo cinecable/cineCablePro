@@ -32,7 +32,7 @@ public class Factura implements java.io.Serializable, Cloneable {
 	private int idgeneracion;
 	private String idfactura;
 	private String nombre;
-	private String idcliente;
+	//private String idcliente;
 	private String idcinecable;
 	private String dircliente;
 	private String dircinecable;
@@ -52,6 +52,8 @@ public class Factura implements java.io.Serializable, Cloneable {
 	private Float valpendiente;
 	private String ip;
 	private Float valorexcedentes;
+	private Clientes clientes;
+	private Debitobco debitobco;
 	
 	//Atributos personalizados
 	private String textoFactura;
@@ -60,7 +62,7 @@ public class Factura implements java.io.Serializable, Cloneable {
 	}
 
 	public Factura(int idsecuencia, Empresa empresa, int idgeneracion,
-			String nombre, String idcliente, String idcinecable,
+			String nombre, Clientes clientes, String idcinecable,
 			String dircliente, String dircinecable, int idusuario, Date fecha,
 			float valbruto, float valtotal, Date fcaducidad,
 			String idautorizacion, int idestado, int idcuenta) {
@@ -68,7 +70,7 @@ public class Factura implements java.io.Serializable, Cloneable {
 		this.empresa = empresa;
 		this.idgeneracion = idgeneracion;
 		this.nombre = nombre;
-		this.idcliente = idcliente;
+		this.clientes = clientes;
 		this.idcinecable = idcinecable;
 		this.dircliente = dircliente;
 		this.dircinecable = dircinecable;
@@ -83,7 +85,7 @@ public class Factura implements java.io.Serializable, Cloneable {
 	}
 
 	public Factura(int idsecuencia, Empresa empresa, int idgeneracion,
-			String idfactura, String nombre, String idcliente,
+			String idfactura, String nombre, Clientes clientes,
 			String idcinecable, String dircliente, String dircinecable,
 			int idusuario, Date fecha, float valbruto, Float valdescuentos,
 			Float valcreditos, Float valbase, Float valimpuestos,
@@ -95,7 +97,7 @@ public class Factura implements java.io.Serializable, Cloneable {
 		this.idgeneracion = idgeneracion;
 		this.idfactura = idfactura;
 		this.nombre = nombre;
-		this.idcliente = idcliente;
+		this.clientes = clientes;
 		this.idcinecable = idcinecable;
 		this.dircliente = dircliente;
 		this.dircinecable = dircinecable;
@@ -164,14 +166,14 @@ public class Factura implements java.io.Serializable, Cloneable {
 		this.nombre = nombre;
 	}
 
-	@Column(name = "idcliente", nullable = false, length = 20)
+	/*@Column(name = "idcliente", nullable = false, length = 20)
 	public String getIdcliente() {
 		return this.idcliente;
 	}
 
 	public void setIdcliente(String idcliente) {
 		this.idcliente = idcliente;
-	}
+	}*/
 
 	@Column(name = "idcinecable", nullable = false, length = 20)
 	public String getIdcinecable() {
@@ -345,6 +347,16 @@ public class Factura implements java.io.Serializable, Cloneable {
 	public void setValorexcedentes(Float valorexcedentes) {
 		this.valorexcedentes = valorexcedentes;
 	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "idcliente", nullable = false)
+	public Clientes getClientes() {
+		return this.clientes;
+	}
+
+	public void setClientes(Clientes clientes) {
+		this.clientes = clientes;
+	}
 
 	@Transient
 	public String getTextoFactura() {
@@ -380,6 +392,16 @@ public class Factura implements java.io.Serializable, Cloneable {
 		this.textoFactura = textoFactura;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "iddebitobco", nullable = false)
+	public Debitobco getDebitobco() {
+		return debitobco;
+	}
+
+	public void setDebitobco(Debitobco debitobco) {
+		this.debitobco = debitobco;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -396,8 +418,7 @@ public class Factura implements java.io.Serializable, Cloneable {
 				+ ((idautorizacion == null) ? 0 : idautorizacion.hashCode());
 		result = prime * result
 				+ ((idcinecable == null) ? 0 : idcinecable.hashCode());
-		result = prime * result
-				+ ((idcliente == null) ? 0 : idcliente.hashCode());
+		result = prime * result + ((clientes == null) ? 0 : clientes.getIdcliente().hashCode());
 		result = prime * result + idcuenta;
 		result = prime * result + idestado;
 		result = prime * result
@@ -469,10 +490,10 @@ public class Factura implements java.io.Serializable, Cloneable {
 				return false;
 		} else if (!idcinecable.equals(other.idcinecable))
 			return false;
-		if (idcliente == null) {
-			if (other.idcliente != null)
+		if (clientes == null) {
+			if (other.clientes != null)
 				return false;
-		} else if (!idcliente.equals(other.idcliente))
+		} else if (!clientes.getIdcliente().equals(other.clientes.getIdcliente()))
 			return false;
 		if (idcuenta != other.idcuenta)
 			return false;

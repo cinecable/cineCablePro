@@ -4,7 +4,6 @@ package pojo.annotations;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -43,8 +42,8 @@ public class Prodservicio implements java.io.Serializable {
 	public void setIdprodservicio(int idprodservicio) {
 		this.idprodservicio = idprodservicio;
 	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
+//(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "idservicio", nullable = false)
 	public Servicio getServicio() {
 		return this.servicio;
@@ -53,8 +52,8 @@ public class Prodservicio implements java.io.Serializable {
 	public void setServicio(Servicio servicio) {
 		this.servicio = servicio;
 	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
+//(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "idproducto", nullable = false)
 	public Producto getProducto() {
 		return this.producto;

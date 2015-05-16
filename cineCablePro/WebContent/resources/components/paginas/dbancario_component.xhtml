@@ -18,7 +18,7 @@
 			<h:panelGrid id="idpDebitos" columns="5" style="width: 100%">
 				<h:outputLabel value="Forma Cobro :" for="idComboTipodb" />
 				<p:selectOneMenu id="idComboTipodb"
-					value="#{debitosBancariosBean.debitobco.idtipodebito}" style="width: 150px">
+					value="#{debitosBancariosBean.debitobco.tipodebito.idtipodebito}" style="width: 150px">
 					<f:selectItems value="#{debitosBancariosBean.lisTipodebito}"
 						var="i" itemLabel="#{i.nombre}" itemValue="#{i.idtipodebito}" />
 					<p:ajax listener="#{debitosBancariosBean.cargaBcoTar()}" process="idComboTipodb"
@@ -39,7 +39,7 @@
 
 				<h:outputLabel value="Emisor Tarjeta :" for="idComboTarEmi" />
 				<p:selectOneMenu id="idComboTarEmi"
-					value="#{debitosBancariosBean.debitobco.idbancotar}" style="width: 150px">
+					value="#{debitosBancariosBean.debitobco.bancosEmisor.idbanco}" style="width: 150px">
 					<f:selectItems value="#{debitosBancariosBean.lisTarjetas}" var="i"
 						itemLabel="#{i.nombre}" itemValue="#{i.idbanco}" />
 					<p:ajax process="idComboTarEmi"></p:ajax>

@@ -18,14 +18,13 @@ function setSelectedToHidden(selectedId, hiddenId){
  */
 function specialDateStyle(date, specialDates) {
 	var arrSpecialDates = specialDates.split(",");
-	
 	for(var i=0; i < arrSpecialDates.length; i++){
-		if(date.getUTCDate() == arrSpecialDates[i]){
+		if(date.getTime() == new Date(arrSpecialDates[i]).getTime()){
 			return [true, 'special_day'];
 		}
 	}
 
-	return [true, ''];
+	return [false, ''];
 }
 
 function redirect(url){

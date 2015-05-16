@@ -28,6 +28,8 @@ public class CtaclienteDAO {
 		Criteria criteria = session.createCriteria(Ctacliente.class)
 				.add( Restrictions.eq("idcuenta", idcuenta))
 				.createAlias("clientes", "cli")
+				.createAlias("cli.estadocivil", "ec")
+				.createAlias("cli.tipoidentidad", "ti")
 				.createAlias("cli.tipocliente", "tc");
 		
 		ctacliente = (Ctacliente) criteria.uniqueResult();
@@ -93,27 +95,27 @@ public class CtaclienteDAO {
 	            .createAlias("clientes", "cli");
 			
 			if(nombre1 != null && nombre1.trim().length() > 0){
-	            criteria.add( Restrictions.like("cli.nombre1", "%"+nombre1.replaceAll(" ", "%")+"%").ignoreCase());
+				criteriaCount.add( Restrictions.like("cli.nombre1", "%"+nombre1.replaceAll(" ", "%")+"%").ignoreCase());
 	        }
 	        
 	        if(nombre2 != null && nombre2.trim().length() > 0){
-	            criteria.add( Restrictions.like("cli.nombre2", "%"+nombre2.replaceAll(" ", "%")+"%").ignoreCase());
+	        	criteriaCount.add( Restrictions.like("cli.nombre2", "%"+nombre2.replaceAll(" ", "%")+"%").ignoreCase());
 	        }
 	        
 	        if(apellido1 != null && apellido1.trim().length() > 0){
-	            criteria.add( Restrictions.like("cli.apellido1", "%"+apellido1.replaceAll(" ", "%")+"%").ignoreCase());
+	        	criteriaCount.add( Restrictions.like("cli.apellido1", "%"+apellido1.replaceAll(" ", "%")+"%").ignoreCase());
 	        }
 	        
 	        if(apellido2 != null && apellido2.trim().length() > 0){
-	            criteria.add( Restrictions.like("cli.apellido2", "%"+apellido2.replaceAll(" ", "%")+"%").ignoreCase());
+	        	criteriaCount.add( Restrictions.like("cli.apellido2", "%"+apellido2.replaceAll(" ", "%")+"%").ignoreCase());
 	        }
 	        
 	        if(numeroIdentificacion != null && numeroIdentificacion.trim().length() > 0){
-	            criteria.add( Restrictions.like("cli.idcliente", "%"+numeroIdentificacion.replaceAll(" ", "%")+"%").ignoreCase());
+	        	criteriaCount.add( Restrictions.like("cli.idcliente", "%"+numeroIdentificacion.replaceAll(" ", "%")+"%").ignoreCase());
 	        }
 	        
 	        if(empresa != null && empresa.trim().length() > 0){
-	            criteria.add( Restrictions.like("cli.empresa_1", "%"+empresa.replaceAll(" ", "%")+"%").ignoreCase());
+	        	criteriaCount.add( Restrictions.like("cli.empresa_1", "%"+empresa.replaceAll(" ", "%")+"%").ignoreCase());
 	        }
 		
 			criteriaCount.setMaxResults(pageSize)

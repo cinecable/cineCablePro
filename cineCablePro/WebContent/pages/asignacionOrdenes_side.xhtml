@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="form-contentside">
+		<p:panel header="Consulta de Ordenes" styleClass="full-lenght">
+			<p:panelGrid id="pnlParametros" columns="1" width="100%"
+				styleClass="full-lenght">
+				<h:outputText value="Tipo de Orden" />
+				<h:selectOneMenu style="width:99%"
+					value="#{opAsignacionController.tipoOperaciones.codOperacionSeleccionada}">
+					<f:selectItem itemLabel="Seleccione" itemValue="0" />
+					<f:selectItems
+						value="#{opAsignacionController.tipoOperaciones.tipoOperaciones}"
+						var="tOP" itemLabel="#{tOP.nombre}"
+						itemValue="#{tOP.idtipooperacion}"></f:selectItems>
+				</h:selectOneMenu>
+				<h:outputText value="Estado de Ordenes a Consultar" />
+				<p:outputPanel>
+					<p:selectOneRadio id="customEstado" layout="custom"
+						value="#{opAsignacionController.asignacionOperaciones.estadoOrden}">
+						<f:selectItem itemLabel="Nuevas" itemValue="EN" />
+						<f:selectItem itemLabel="Asignadas" itemValue="EA" />
+						<p:ajax event="valueChange"
+							update=":form-contentside,:form-contentpage"
+							listener="#{opAsignacionController.consultarValor()}" />
+					</p:selectOneRadio>
+
+					<p:panelGrid columns="2">
+						<p:radioButton id="opnueva" for="customEstado" itemIndex="0" />
+						<h:outputLabel for="opnueva" value="Nuevas" />
+						<p:radioButton id="opreasigna" for="customEstado" itemIndex="1" />
+						<h:outputLabel for="opreasigna" value="Asignadas" />
+					</p:panelGrid>
+				</p:outputPanel>
+				<h:outputText value="Operación a Ejecuar" />
+				<p:outputPanel>
+					<p:selectOneRadio id="customOper" layout="custom"
+						value="#{opAsignacionController.asignacionOperaciones.tipoOperacion}">
+						<f:selectItem itemLabel="Consulta" itemValue="OC" />
+						<f:selectItem itemLabel="Asignación" itemValue="OA" />
+					</p:selectOneRadio>
+
+					<p:panelGrid columns="2">
+						<p:radioButton id="opcon" for="customOper" itemIndex="0" />
+						<h:outputLabel for="opcon" value="Consulta" />
+
+						<p:radioButton id="opasig" for="customOper" itemIndex="1"
+							disabled="#{asignacionOperacionesDM.estadoOrden eq 'EA'}" />
+						<h:outputLabel for="opasig" value="Asignación" />
+					</p:panelGrid>
+				</p:outputPanel>
+			</p:panelGrid>
+			<p:separator></p:separator>
+			<div align="center">
+				<p:commandButton value="Ejecutar"
+					action="#{opAsignacionController.consultarCoincidencia()}"
+					update=":form-contentpage">
+				</p:commandButton>
+			</div>
+		</p:panel>
+	</h:form>
+</ui:composition>

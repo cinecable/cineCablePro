@@ -105,5 +105,37 @@ public class Parametro {
 	public static final int TIPO_MOTIVO_MULTAS = 3;
 	public static final int TIPO_MOTIVO_CREDITO_INTERNO = 4;
 	public static final int TIPO_MOTIVO_FACTURA = 5;
+	
+	//Seccion motivo
+	public static final int MOTIVO_INSTALACION_NUEVA = 5;
+	
+	//Seccion Tipo Operacion
+	public static final int TIPO_OPERACION_INSTALACION_NUEVA = 25;
+	
+	//Seccion Estados
+	public static final int ESTADO_ACTIVO = 1;
+	public static final int ESTADO_INACTIVO = 2;
+	public static final int ESTADO_PENDIENTE = 3;
+	public static final int ESTADO_REALIZADA = 4;
+	public static final int ESTADO_EN_ESPERA = 5;
+	public static final int ESTADO_MONITOREO = 6;
+	public static final int ESTADO_PROCESO = 7;
+	public static final int ESTADO_ASIGNADA = 8;
+	public static final int ESTADO_BLOQUEADO = 9;
+	public static final int ESTADO_INGRESADO_CONTRATO_PAGADO = 10;
+	public static final int ESTADO_MONITOREADA = 11;
+	public static final int ESTADO_ORDEN_IMPRESA = 12;
+	
+	//Seccion de Generos
+	public static final int GENERO_MASCULINO = 1;
+	public static final int GENERO_FEMENINO = 2;
+	public static final int GENERO_OTRO = 3;
+	
+	//Seccion Tipo de Cliente
+	public static final int TIPO_CLIENTE_NORMAL = 1;
+	
+	//Varios
+	public static final int PERFIL_ADMINISTRADOR = 1;
+	public static final int PERFIL_TECNICO = 20;
 
 }

@@ -15,7 +15,9 @@
 			</h:link>
 			<br /><br />
 			<p:accordionPanel id="acc" widgetVar="widgetVarAcordion" activeIndex="#{clientesNuevosBean.activeIndex}">
-
+				
+				<p:ajax event="tabChange" listener="#{clientesNuevosBean.onChange}" immediate="true"  />
+				
 				<p:tab title="Datos Basicos" titleStyleClass="tabStyle">
 					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
 						<my:dBasicosCli_component id="idcomponentedbasicos"
@@ -23,12 +25,14 @@
 					</h:panelGrid>
 				</p:tab>
 
-				<p:tab title="Productos Cliente " titleStyleClass="tabStyle">
+				<p:tab id="idProductoCliente" title="Productos Cliente " titleStyleClass="tabStyle">
 					<br />
 					<h:panelGrid id="pnlcabeceraProducto" columns="2" style="width: 100%">
 						<h:outputLabel value="Nombre de Cuenta *: " for="idtxncta" />
 						<p:inputText id="idtxncta" size="45"
-							value="#{clientesNuevosBean.ctacliente.nombre}" style="width: 250px" required="true" requiredMessage="Ingrese Nombre de la Cuenta en la Seccion de Productos" />
+							value="#{clientesNuevosBean.ctacliente.nombre}" style="width: 250px" required="true" requiredMessage="Ingrese Nombre de la Cuenta en la Seccion de Productos">
+							<p:ajax process="idtxncta"> </p:ajax>
+						</p:inputText>
 							
 						<h:outputLabel value="Nombre Cobrador *: " for="txtnombrecobrador" />
 						<p:autoComplete id="txtnombrecobrador" size="80" value="#{clientesNuevosBean.cobrador}" completeMethod="#{clientesNuevosBean.buscarCobrador}" 
@@ -37,12 +41,14 @@
 							<p:ajax event="itemSelect" update=":form-contentpage:mensajes"></p:ajax>
 						</p:autoComplete>
 						
+						
 						<h:outputLabel value="Nombre Vendedor *: " for="txtnombrevendedor" />
 						<p:autoComplete id="txtnombrevendedor" size="80" value="#{clientesNuevosBean.vendedor}" completeMethod="#{clientesNuevosBean.buscarVendedor}" 
 						var="v" itemLabel="#{v.nombre1} #{v.nombre2} #{v.apellido1} #{v.apellido2}" itemValue="#{v}" converter="persona" minQueryLength="1" required="true" 
 						requiredMessage="Ingrese Nombre Vendedor en la Seccion de Productos" forceSelection="true" >
 							<p:ajax event="itemSelect" update=":form-contentpage:mensajes"></p:ajax>
 						</p:autoComplete>
+							
 					</h:panelGrid>
 					
 					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
@@ -71,7 +77,7 @@
 						</p:fieldset>
 					</h:panelGrid>
 				</p:tab>
-				<p:tab title="Debito Bancario" titleStyleClass="tabStyle">
+				<p:tab id="idDebitoBancario" title="Debito Bancario" titleStyleClass="tabStyle">
 					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
 
 						<my:dbancario_component id="idcomponentedbancario" ></my:dbancario_component>
@@ -79,11 +85,37 @@
 				</p:tab>
 				<p:tab title="Telefonos Cliente" titleStyleClass="tabStyle">
 					<h:panelGrid columns="1" cellpadding="10" style="width: 100%">
-
 						<my:telefonos_component id="idcomponentetelefono" formPadre=":form-contentpage" rutaPadre=":form-contentpage:acc:idcomponentetelefono"></my:telefonos_component>
 					</h:panelGrid>
 				</p:tab>
-
+				<p:tab id="idOrdenInstalacion" title="Ordenes de Instalación" titleStyleClass="tabStyle">
+					<h:panelGrid columns="4" cellpadding="5px" style="width: 100%">
+						<h:panelGrid>
+						<h:outputText value="Fecha de Instalación" />
+						<p:selectOneMenu id="idAnio" value="#{clientesNuevosBean.anio}" style="width:80px">
+							<f:selectItems value="#{clientesNuevosBean.calendarOrdenesBean.lisAnio}"></f:selectItems>
+							<p:ajax update="idcontrolcalendar" listener="#{clientesNuevosBean.muestraCalendario()}"></p:ajax>
+						</p:selectOneMenu>
+						<p:selectOneMenu id="idMes" value="#{clientesNuevosBean.mes}" style="width:80px">
+							<f:selectItem itemLabel="Mes" itemValue="0" />
+							<f:selectItems value="#{clientesNuevosBean.calendarOrdenesBean.lisMes}"></f:selectItems>
+							<p:ajax update="idcontrolcalendar" listener="#{clientesNuevosBean.muestraCalendario()}"></p:ajax>
+						</p:selectOneMenu>
+						</h:panelGrid>
+						<my:calendarOrdenes_component id="idcontrolcalendar"></my:calendarOrdenes_component>
+						<h:outputText value="Horarios" style="width:200px" />
+						<p:selectOneMenu value="#{clientesNuevosBean.ordenes.horario.idmotivo}" style="width:200px">
+							<f:selectItem itemLabel="Seleccione un horario" itemValue="0" />
+							<f:selectItems value="#{clientesNuevosBean.lisMotivosHorarios}" var="motivo"
+								itemLabel="#{motivo.nombre}" itemValue="#{motivo.idmotivo}"></f:selectItems>
+						</p:selectOneMenu>
+						<h:outputText value="Observacion" style="width:200px" />
+						<p:inputTextarea value="#{clientesNuevosBean.ordenes.observacion}"
+							style="width:200px" maxlength="255" autoResize="false" ></p:inputTextarea>
+						<h:panelGroup id="panelCancelacion">
+					</h:panelGroup>    
+					</h:panelGrid>
+				</p:tab>
 
 			</p:accordionPanel>
 			<p:spacer height="50px"></p:spacer>

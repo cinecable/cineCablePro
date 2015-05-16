@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<h:form id="form-contentpage">
+		<h1 class="title ui-widget-header" style="text-align: center;">
+			<h:outputText value="Ingreso de Materiales" />
+		</h1>
+		<p:growl id="mensajes" showDetail="true" sticky="true" />
+		<h:panelGrid columns="4" style="width:100%" id="panelGeneral"
+			rendered="#{materialesController.materialesDm.codOp==0}">
+			<h:outputText value="Tipo Material" />
+			<p:selectOneMenu value="#{materialesdm.codTipoMaterial}">
+				<f:selectItems
+					value="#{materialesController.materialesDm.tipoMateriales}"
+					var="material" itemValue="#{material.idTipMaterial}"
+					itemLabel="#{material.descripcion}">
+				</f:selectItems>
+				<p:ajax event="valueChange" update="form-contentpage"
+					listener="#{materialesController.cambioSeleccion}"></p:ajax>
+			</p:selectOneMenu>
+			<h:outputText value="Cantidad" />
+			<p:inputText value="#{materialesdm.material.cantidad}"
+				disabled="#{materialesdm.opDes==0}"></p:inputText>
+			<h:outputText value="Estado Material/Unidad" />
+			<p:selectOneMenu value="#{materialesdm.estadoMaterial}">
+				<f:selectItems
+					value="#{materialesController.materialesDm.estadosUnidad}"
+					var="material" itemValue="#{material.value}"
+					itemLabel="#{material.value}">
+				</f:selectItems>
+			</p:selectOneMenu>
+			<h:outputText value="Nro. Serie" />
+			<p:inputText value="#{materialesdm.material.nroSerie}"></p:inputText>
+			<h:outputText value="Unidad Medida" />
+			<p:selectOneMenu value="#{materialesdm.unidadMedida}"
+				disabled="#{materialesdm.opDes==0}">
+				<f:selectItems
+					value="#{materialesController.materialesDm.unidadesMedida}"
+					var="material" itemValue="#{material.value}"
+					itemLabel="#{material.value}">
+				</f:selectItems>
+			</p:selectOneMenu>
+			<h:outputText value="Mac" />
+			<p:inputText value="#{materialesdm.material.macAddres}"
+				disabled="#{materialesdm.codTipoMaterial==1}"></p:inputText>
+			<h:outputText value="Valor Limite" />
+			<p:inputText value="#{materialesdm.material.valorPorLimite}"></p:inputText>
+			<h:outputText value="Valor Material/Equipo" />
+			<p:inputText value="#{materialesdm.material.valorUnidad}"></p:inputText>
+		</h:panelGrid>
+		<br />
+		<div align="left">
+			<p:commandButton value="Agregar Material/Equipo"
+				rendered="#{materialesController.materialesDm.codOp==0}"
+				action="#{materialesController.agregar()}"
+				update=":form-contentpage"></p:commandButton>
+
+		</div>
+		<br />
+		<br />
+		<div align="right">
+			<p:commandButton value="Guardar Materiales/Equipos"
+				update="mensajes,form-contentpage,:form-sidepage"
+				rendered="#{materialesController.materialesDm.codOp==1}"
+				action="#{materialesController.guardarDeclarados()}"></p:commandButton>
+		</div>
+		<p:dataTable style="width:100%"
+			rendered="#{materialesController.materialesDm.codOp==0}"
+			selection="#{materialesdm.materialSeleccionado}"
+			value="#{materialesdm.materialesAgregados}" var="material"
+			selectionMode="single" rowKey="#{material.key}"
+			emptyMessage="No se han Ingresado Materiales/Equipos">
+			<p:column headerText="Serie">
+				<h:outputText value="#{material.nroSerie}" />
+			</p:column>
+			<p:column headerText="Mac">
+				<h:outputText value="#{material.macAddres}" />
+			</p:column>
+			<p:column headerText="Cantidad">
+				<h:outputText value="#{material.cantidad}" />
+			</p:column>
+			<p:column headerText="Estado">
+				<h:outputText value="#{material.estadoUnidad.value}" />
+			</p:column>
+			<p:column headerText="Tipo Material">
+				<h:outputText value="#{material.tipoMaterial.descripcion}" />
+			</p:column>
+		</p:dataTable>
+		<h:panelGrid columns="2"
+			rendered="#{materialesController.materialesDm.codOp==1}">
+			<h:outputLabel value="Técnico"
+				rendered="#{materialesController.materialesDm.codOp==1}" />
+			<h:selectOneMenu id="cmbTec" value="#{materialesdm.codTecnico}"
+				style="width:100%"
+				rendered="#{materialesController.materialesDm.codOp==1}">
+				<f:selectItem itemLabel="Seleccione un Tecnico" itemValue="0" />
+				<f:selectItems value="#{materialesController.materialesDm.tecnicos}"
+					var="tecn"
+					itemLabel="#{tecn.apellido1} #{tecn.apellido2} #{tecn.nombre1}"
+					itemValue="#{tecn.idpersona}">
+				</f:selectItems>
+			</h:selectOneMenu>
+			<h:outputText value="Serie/Mac" />
+			<h:inputText value="#{materialesdm.serieOmac}" />
+			<p:commandButton value="Buscar"
+				action="#{materialesController.buscarDeclarado()}"
+				update=":form-contentpage" />
+			<p:commandButton value="Quitar"
+				action="#{materialesController.removerDeclarado()}"
+				update=":form-contentpage" />
+		</h:panelGrid>
+		<p:dataTable rendered="#{materialesController.materialesDm.codOp==1}"
+			value="#{materialesdm.materialesDeclarados}" var="material"
+			selection="#{materialesdm.materialSeleccionadoDeclarado}"
+			selectionMode="single" rowKey="#{material.key}"
+			emptyMessage="No se han Ingresado los Materiales/Equipos">
+			<p:column headerText="Serie">
+				<h:outputText value="#{material.material.nroSerie}" />
+			</p:column>
+			<p:column headerText="Mac">
+				<h:outputText value="#{material.material.macAddres}" />
+			</p:column>
+			<p:column headerText="Cantidad">
+				<h:inputText value="#{material.cantidad}"
+					disabled="#{material.cantidad==1}" />
+			</p:column>
+			<p:column headerText="Tipo Equipo">
+				<h:outputText
+					value="#{material.material.tipoMaterial.tipEquipoMaterial.value}" />
+			</p:column>
+			<p:column headerText="Unidad de Unidad">
+				<h:outputText value="#{material.material.estadoUnidad.value}" />
+			</p:column>
+			<p:column headerText="Unidad de Medida">
+				<h:outputText value="#{material.material.tipoUnidad.value}" />
+			</p:column>
+			<p:column headerText="Tipo Material">
+				<h:outputText value="#{material.material.tipoMaterial.descripcion}" />
+			</p:column>
+		</p:dataTable>
+		<br></br>
+		<div align="right">
+			<p:commandButton value="Remover Seleccionado"
+				rendered="#{materialesController.materialesDm.codOp==0}"
+				action="#{materialesController.remover()}"
+				update=":form-contentpage"></p:commandButton>
+		</div>
+	</h:form>
+	<p:separator></p:separator>
+
+	<p:commandButton value="
+				Regresar" style="float: right;"
+		onclick="history.back();" immediate="true" />
+	<p:commandButton value="Guardar Materiales/Equipos"
+		style="float: right;"
+		rendered="#{materialesController.materialesDm.codOp==0}"
+		update=":form-contentpage:mensajes,:form-contentpage"
+		action="#{materialesController.guardar()}"></p:commandButton>
+</ui:composition>

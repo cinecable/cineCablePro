@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<h:form id="form-contentpage">
+		<p:growl showDetail="true" id="messages"></p:growl>
+		<h1 class="title ui-widget-header" style="text-align: center;">
+			<h:outputText value="Baja Ordenes de Tecnico" />
+		</h1>
+		<div align="right">
+			<p:commandButton value="Dar de Baja"
+				update="messages,:form-sidepage,form-contentpage"
+				action="#{bajaOrdenesController.guardarBaja()}">
+			</p:commandButton>
+		</div>
+		<p:separator></p:separator>
+		<p:panelGrid style="width:100%" id="panelGeneral">
+			<p:row>
+				<p:column>
+					<h:outputLabel value="Nombres" />
+				</p:column>
+				<p:column colspan="3">
+					<p:inputText style="width:98%" readonly="true"
+						value="#{bajaOrdenesDm.ordenSeleccionada.cuentaCliente.clientes.nombre1} #{bajaOrdenesDm.ordenSeleccionada.cuentaCliente.clientes.nombre2} #{bajaOrdenesDm.ordenSeleccionada.cuentaCliente.clientes.apellido1} #{bajaOrdenesDm.ordenSeleccionada.cuentaCliente.clientes.apellido2}"></p:inputText>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column>
+					<h:outputLabel value="Identificación del Cliente" />
+				</p:column>
+				<p:column>
+					<p:inputText readonly="true" styleClass="full-lenght"
+						value="#{bajaOrdenesDm.ordenSeleccionada.cuentaCliente.clientes.identificacion}"></p:inputText>
+				</p:column>
+				<p:column>
+					<h:outputLabel value="Cuenta" />
+				</p:column>
+				<p:column>
+					<p:inputText readonly="true" styleClass="full-lenght"
+						value="#{bajaOrdenesDm.ordenSeleccionada.cuentaCliente.nombre}"></p:inputText>
+				</p:column>
+			</p:row>
+			<br />
+		</p:panelGrid>
+		<p:panel header="Datos de la solicitud" id="panelSolicitud"
+			rendered="#{bajaOrdenesDm.ordenSeleccionada!=null}">
+			<h:panelGrid columns="4" style="width:800px">
+				<h:outputText value="operacion" />
+
+				<p:selectOneMenu disabled="true"
+					value="#{bajaOrdenesDm.ordenSeleccionada.tipoOperacion.idtipooperacion}">
+					<f:selectItem itemLabel="Seleccione un item" itemValue="0" />
+
+					<f:selectItems value="#{ordenesController.tipoOperaciones}"
+						var="tOperaciones" itemLabel="#{tOperaciones.nombre}"
+						itemValue="#{tOperaciones.idtipooperacion}">
+					</f:selectItems>
+
+					<!-- <p:ajax update="motivo" event="valueChange"
+						listener="#{oordenesController.controlFecha()}"></p:ajax> -->
+				</p:selectOneMenu>
+				<h:outputText value="Fecha" />
+				<p:calendar id="fecha" pattern="dd/MM/yyyy" disabled="true"
+					value="#{bajaOrdenesDm.ordenSeleccionada.fechaEjecucion}">
+				</p:calendar>
+				<h:outputText value="Motivo" />
+				<p:selectOneMenu disabled="true"
+					value="#{bajaOrdenesDm.ordenSeleccionada.motivo.idmotivo}"
+					id="motivo">
+					<f:selectItem itemLabel="Seleccione un item" itemValue="0" />
+
+					<f:selectItems value="#{ordenesController.motivos}" var="motivo"
+						itemLabel="#{motivo.nombre}" itemValue="#{motivo.idmotivo}">
+					</f:selectItems>
+
+				</p:selectOneMenu>
+				<h:outputText value="Observacion" />
+				<p:inputText value="#{bajaOrdenesDm.ordenSeleccionada.observacion}"
+					readonly="true" size="60" maxlength="255"></p:inputText>
+			</h:panelGrid>
+			<p:separator></p:separator>
+			<h:outputText value="Observación de la baja" />
+			<p:inputTextarea rows="3" cols="145" counter="totalcar"
+				value="#{bajaOrdenesDm.observacionBaja}" style="width:98%"
+				maxlength="300" counterTemplate="{0} characters remaining."
+				autoResize="false"></p:inputTextarea>
+			<h:outputText id="totalcar" />
+		</p:panel>
+		<p:panel header="Información de cambio de dirección"
+			rendered="#{bajaOrdenesDm.ordenSeleccionada.tipoOperacion.idtipooperacion==30}">
+			<h:outputLabel value="Nodo" />
+			<h:selectOneMenu id="cmbNodo"
+				value="#{bajaOrdenesDm.codNodoSeleccionado}" style="width:95%">
+				<f:selectItem itemLabel="Seleccione un Nodo" itemValue="0" />
+				<f:selectItems value="#{bajaOrdenesDm.listaNodos}" var="nod"
+					itemLabel="#{nod.nombre}" itemValue="#{nod.idnodo}">
+				</f:selectItems>
+			</h:selectOneMenu>
+		</p:panel>
+		<p:panel header="Observaciones de Baja"
+			rendered="#{not empty bajaOrdenesDm.observacionesBaja}">
+			<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+				<p:outputLabel for="obs" value="Observaciones:" />
+				<p:selectOneRadio id="obs"
+					value="#{bajaOrdenesDm.codBajaObservacion}" layout="grid"
+					columns="1">
+					<f:selectItems value="#{bajaOrdenesDm.observacionesBaja}" var="ob"
+						itemLabel="#{ob.bajaObservacion.value}"
+						itemValue="#{ob.idBajaOrdenObservacion}" />
+				</p:selectOneRadio>
+			</h:panelGrid>
+		</p:panel>
+		<p:panel header="Equipos de Técnico y Cliente">
+			<p:panelGrid style="width:100%" id="panelequipos">
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Listado de Equipos del Técnico"></p:outputLabel>
+						<p:dataTable var="mat" value="#{bajaOrdenesDm.materialTecnico}"
+							id="datatablemattec" rowKey="#{mat.idReservacionBodegaMaterial}"
+							selectionMode="single" selection="#{bajaOrdenesDm.utilUsados}">
+							<p:column headerText="Serie">
+								<h:outputText value="#{mat.material.nroSerie}" />
+							</p:column>
+							<p:column headerText="Desc. Material">
+								<h:outputText value="#{mat.material.tipoMaterial.descripcion}" />
+							</p:column>
+							<p:column headerText="Cant. Defecto" width="60">
+								<h:outputText value="#{mat.cantidad}" />
+							</p:column>
+						</p:dataTable>
+						<p:separator></p:separator>
+						<p:commandButton value="Material Utilizado en visita"
+							action="#{bajaOrdenesController.hit()}"
+							oncomplete="additem.show()" update=":form-contentpage:dial"></p:commandButton>
+					</p:column>
+					<p:column>
+						<p:outputLabel value="Listado de Equipos del Cliente"></p:outputLabel>
+						<p:dataTable var="mat" value="#{bajaOrdenesDm.materialCliente}"
+							id="datatablematcli">
+							<p:column headerText="Serie">
+								<h:outputText value="#{mat.material.nroSerie}" />
+							</p:column>
+							<p:column headerText="Desc. Material">
+								<h:outputText value="#{mat.material.tipoMaterial.descripcion}" />
+							</p:column>
+							<p:column headerText="Cant. Defecto" width="60">
+								<h:outputText value="#{mat.cantidad}" />
+							</p:column>
+							<p:column headerText="Cant. Usada" width="60">
+								<p:inputText value="#{mat.cantidadAgregada}" style="width:100%"
+									disabled="#{mat.material.tipoMaterial.tipMaterialGen.value eq 'EQUIPOS'}">
+									<p:ajax event="blur" update=":form-contentpage:panelequipos"
+										listener="#{bajaOrdenesController.calculoTotal}"></p:ajax>
+								</p:inputText>
+							</p:column>
+							<p:column headerText="Total">
+								<h:outputText value="#{mat.cantidadTotal}" />
+							</p:column>
+							<p:column headerText="Pagar">
+								<h:outputText value="#{mat.valorPagarMaterialExtra}" />
+							</p:column>
+						</p:dataTable>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:panel>
+	
+		<p:dialog header="Selección de materiales" widgetVar="additem"
+			id="dial" modal="true" closable="true" resizable="false"
+			appendToBody="@(body)">
+				<h:panelGrid columns="2" id="pnladd">
+					<h:outputText value="Serie: " />
+					<h:outputText value="#{bajaOrdenesDm.utilUsados.material.nroSerie}" />
+					<h:outputText value="Añadir Todo: " />
+					<p:selectBooleanCheckbox value="#{bajaOrdenesDm.seleccionTodo}">
+						<p:ajax update="pnladd" />
+					</p:selectBooleanCheckbox>
+					<h:outputText value="Cantidad" />
+					<h:inputText value="#{bajaOrdenesDm.cantidadInsertada}"
+						disabled="#{bajaOrdenesDm.seleccionTodo==true}" />
+					<p:commandButton value="Aceptar" oncomplete="additem.hide()"
+						update=":form-contentpage:datatablemattec,:form-contentpage:datatablematcli,:form-contentpage:messages"
+						action="#{bajaOrdenesController.materialUsadosaCliente()}"></p:commandButton>
+				</h:panelGrid>
+		</p:dialog>
+		<p:separator></p:separator>
+		<p:commandButton value="Regresar" style="float: right;"
+			onclick="history.back();" immediate="true" />
+	</h:form>
+</ui:composition>

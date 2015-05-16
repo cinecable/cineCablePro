@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:define name="content">
+		<h:body>
+			<f:facet name="last">
+				<h:outputStylesheet name="css/style.css" />
+			</f:facet>
+		</h:body>
+	</ui:define>
+	<h:form id="form-sidepage">
+		<h1 align="center">Consultas:</h1>
+		<h:outputText value="Tecnico" styleClass="fuente-media-marcada" />
+		<br />
+		<h:selectOneMenu id="cmbTec"
+			value="#{controlBodegaController.controlBodegaDM.codTecnicoSeleccionado}"
+			style="width:95%">
+			<f:selectItem itemLabel="Seleccione un Tecnico" itemValue="0" />
+			<f:selectItems value="#{controlBodegaDM.listaTecnico}" var="tecn"
+				itemLabel="#{tecn.apellido1} #{tecn.apellido2} #{tecn.nombre1}"
+				itemValue="#{tecn.idpersona}">
+			</f:selectItems>
+		</h:selectOneMenu>
+		<br />
+		<br />
+		<div align="center">
+			<p:commandButton value="Consultar"
+				action="#{controlBodegaController.consultar()}"
+				update=":form-contentpage:mensajes,:form-contentpage">
+			</p:commandButton>
+		</div>
+		<p:separator></p:separator>
+		<br />
+		<div align="center">
+			<p:commandButton value="Consultar Ordenes en Reporte"
+				action="#{controlBodegaController.consultarReporte()}"
+				update=":form-contentpage:mensajes,:form-contentpage"></p:commandButton>
+		</div>
+		<br />
+		<div align="center">
+			<p:commandLink value="imprimir visitas"
+				oncomplete="window.open('./report.xhtml', 'popupWindowName', 'dependent=yes, menubar=no, toolbar=no, width=600, height=400'); return true"
+				style="font-size:14px"
+				action="#{controlBodegaController.showReport()}" />
+		</div>
+		<br />
+		<br />
+		<br />
+		<h:outputText value="Opciones de Modificación de Ordenes" />
+		<p:separator></p:separator>
+		<p:commandButton value="Consulta emisiones de bodega de Técnico"
+			action="#{controlBodegaController.modificarControl()}"
+			update=":form-contentpage:mensajes,:form-contentpage"></p:commandButton>
+		<p:confirmDialog message="¿Esta seguro de guardar los cambios?"
+			header="mensaje de confirmación" widgetVar="confguarda">
+			<p:commandButton value="Si"
+				update=":form-contentpage:mensajes,:form-contentpage"
+				onclick="savebtn.disable()" oncomplete="confguarda.hide()"
+				widgetVar="savebtn"
+				actionListener="#{controlBodegaController.guardarReservarOrdenBodega()}" />
+			<p:commandButton value="No" onclick="confguarda.hide()" type="button" />
+		</p:confirmDialog>
+	</h:form>
+</ui:composition>

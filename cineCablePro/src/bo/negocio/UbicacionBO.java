@@ -69,4 +69,21 @@ public class UbicacionBO {
 	        
 	        return lisUbicacion;
 	    }
+	    public List<Ubicacion> ConsultarUbicacionxid(int idUbicacion) throws Exception {
+	        List<Ubicacion> lisUbicacion = null;
+	        Session session = null;
+	        
+	        try{
+	            session = HibernateUtil.getSessionFactory().openSession();
+	            lisUbicacion = ubicacionDAO.liUbicacionById(session, idUbicacion);
+	        }
+	        catch(Exception ex){
+	            throw new Exception(ex);
+	        }
+	        finally{
+	            session.close();
+	        }
+	        
+	        return lisUbicacion;
+	    }
 }

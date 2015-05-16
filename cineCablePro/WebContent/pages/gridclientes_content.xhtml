@@ -23,27 +23,27 @@
 				
 				<p:outputLabel value="Segundo Nombre:" for="txtnombre2" />
 				<p:inputText id="txtnombre2" value="#{clientesBean.nombre2}" >
-				    <f:ajax event="keyup" render="idTablaClientes"></f:ajax>
+				    <p:ajax event="keyup" update="idTablaClientes"></p:ajax>
 				</p:inputText>
 				
 				<p:outputLabel value="Primer Apellido:" for="txtapellido1" />
 				<p:inputText id="txtapellido1" value="#{clientesBean.apellido1}" >
-				    <f:ajax event="keyup" render="idTablaClientes"></f:ajax>
+				    <p:ajax event="keyup" update="idTablaClientes"></p:ajax>
 				</p:inputText>
 				
 				<p:outputLabel value="Segundo Apellido:" for="txtapellido2" />
 				<p:inputText id="txtapellido2" value="#{clientesBean.apellido2}" >
-				    <f:ajax event="keyup" render="idTablaClientes"></f:ajax>
+				    <p:ajax event="keyup" update="idTablaClientes"></p:ajax>
 				</p:inputText>
 				
 				<p:outputLabel value="Identificación:" for="txtidentificacion" />
 				<p:inputText id="txtidentificacion" value="#{clientesBean.numeroIdentificacion}" >
-				    <f:ajax event="keyup" render="idTablaClientes"></f:ajax>
+				    <p:ajax event="keyup" update="idTablaClientes"></p:ajax>
 				</p:inputText>
 				
 				<p:outputLabel value="Empresa:" for="txtempresa" />
 				<p:inputText id="txtempresa" value="#{clientesBean.empresa}" >
-				    <f:ajax event="keyup" render="idTablaClientes"></f:ajax>
+				    <p:ajax event="keyup" update="idTablaClientes"></p:ajax>
 				</p:inputText>
             </p:panelGrid>
 			<br /><br /> 

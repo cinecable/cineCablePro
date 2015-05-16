@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="form-contentpage">
+		<p:growl id="mensajes" showDetail="true" />
+		<h1 class="title ui-widget-header" style="text-align: center;">Reporte de ordenes
+		</h1>
+		<h:panelGrid columns="4" style="width:800px">
+			<h:outputText value="Fecha inicio visita:" />
+			<p:calendar value="#{reporteMonitoreoController.reporteDM.fechaDesde}" pattern="dd/MM/yyyy" style="width:200px"></p:calendar>
+			<h:outputText value="Fecha fin visita:" />
+			<p:calendar value="#{reporteMonitoreoController.reporteDM.fechaHasta}" pattern="dd/MM/yyyy" style="width:200px"></p:calendar>
+			<h:outputText value="Operación:" />
+			<p:selectOneMenu value="#{reporteMonitoreoController.reporteDM.tipooperacion}" style="width:200px">
+				<f:selectItem itemLabel="Todos" itemValue="0"/>
+				<f:selectItems value="#{reporteMonitoreoController.toperaciones}" var="op" itemLabel="#{op.nombre}" itemValue="#{op.idtipooperacion}"/>
+				<p:ajax listener="#{reporteMonitoreoController.reporteDM.tOperacion(op.nombre)}"></p:ajax>
+			</p:selectOneMenu>
+			<h:outputText value="Supervisor:" />
+			<p:selectOneMenu value="#{reporteMonitoreoController.reporteDM.supervisor}" style="width:200px">
+				<f:selectItem itemLabel="Todos" itemValue="0"/>
+				<f:selectItems value="#{reporteMonitoreoController.supervisor}" var="tecnico" itemLabel="#{tecnico.nombre1} #{tecnico.nombre2} #{tecnico.apellido1} #{tecnico.apellido2}" itemValue="#{tecnico.idpersona}"/>
+			</p:selectOneMenu>
+			
+			
+			<h:outputText value="Tecnico" />
+			<p:selectOneMenu value="#{reporteMonitoreoController.reporteDM.tecnico}" style="width:200px">
+				<f:selectItem itemLabel="Todos" itemValue="0"/>
+				<f:selectItems value="#{reporteMonitoreoController.tecnico}" var="tecnico" itemLabel="#{tecnico.nombre1} #{tecnico.nombre2} #{tecnico.apellido1} #{tecnico.apellido2}" itemValue="#{tecnico.idpersona}"/>
+			</p:selectOneMenu>
+		</h:panelGrid>	
+		<p:commandLink value="imprimir" 
+				oncomplete="window.open('./report.xhtml', 'popupWindowName', 'dependent=yes, menubar=no, toolbar=no'); return true"
+				style="font-size:14px; float: right;"
+				action="#{reporteMonitoreoController.showReport()}" />
+		<p:commandButton value="Regresar" style="float: left;"
+			onclick="history.back();" immediate="true" />	
+	</h:form>
+
+</ui:composition>

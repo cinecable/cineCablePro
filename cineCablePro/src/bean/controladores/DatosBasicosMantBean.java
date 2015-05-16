@@ -78,7 +78,7 @@ public class DatosBasicosMantBean implements Serializable{
 				boolean ok = false;
 				
 				if(dbasCliBean.getIdcuenta() > 0){
-					if(dbasCliBean.getClientes().getEstadocivil() != Parametro.ESTADO_CIVIL_CASADO && dbasCliBean.getClientes().getEstadocivil() != Parametro.ESTADO_CIVIL_UNION_LIBRE){
+					if(dbasCliBean.getClientes().getEstadocivil().getIdestadocivil() != Parametro.ESTADO_CIVIL_CASADO && dbasCliBean.getClientes().getEstadocivil().getIdestadocivil() != Parametro.ESTADO_CIVIL_UNION_LIBRE){
 						dbasCliBean.getConyuge().setNombre1(null);
 						dbasCliBean.getConyuge().setNombre2(null);
 						dbasCliBean.getConyuge().setApellido1(null);
@@ -114,13 +114,13 @@ public class DatosBasicosMantBean implements Serializable{
 		
 			VerificarId verificarId  = new VerificarId();
 			
-			if(dbasCliBean.getClientes().getIdtipoidentificacion() > 0){
-				if(dbasCliBean.getClientes().getIdtipoidentificacion() == Parametro.TIPO_IDENTIFICACION_OTRO || verificarId.verificarId(dbasCliBean.getClientes().getIdcliente())){
+			if(dbasCliBean.getClientes().getTipoidentidad().getIdtidentidad() > 0){
+				if(dbasCliBean.getClientes().getTipoidentidad().getIdtidentidad() == Parametro.TIPO_IDENTIFICACION_OTRO || verificarId.verificarId(dbasCliBean.getClientes().getIdcliente())){
 					if(dbasCliBean.getClientes().getIdtipopersona() > 0){
 						if(dbasCliBean.getClientes().getNombre1() != null && dbasCliBean.getClientes().getNombre1().trim().length() > 0){
 							if(dbasCliBean.getClientes().getApellido1() != null && dbasCliBean.getClientes().getApellido1().trim().length() > 0){
 								if(dbasCliBean.getClientes().getEmail() != null && dbasCliBean.getClientes().getEmail().trim().length() > 0){
-									if(dbasCliBean.getClientes().getEstadocivil()  > 0){
+									if(dbasCliBean.getClientes().getEstadocivil().getIdestadocivil()  > 0){
 										if(dbasCliBean.getClientes().getGenero()  > 0){
 											if(dbasCliBean.getClientes().getTipocliente().getIdtipocliente() > 0){
 												ok = true;
@@ -153,7 +153,7 @@ public class DatosBasicosMantBean implements Serializable{
 			}
 			
 			if(ok){
-				if(dbasCliBean.getClientes().getEstadocivil() == Parametro.ESTADO_CIVIL_CASADO || dbasCliBean.getClientes().getEstadocivil() == Parametro.ESTADO_CIVIL_UNION_LIBRE){
+				if(dbasCliBean.getClientes().getEstadocivil().getIdestadocivil() == Parametro.ESTADO_CIVIL_CASADO || dbasCliBean.getClientes().getEstadocivil().getIdestadocivil() == Parametro.ESTADO_CIVIL_UNION_LIBRE){
 					if(dbasCliBean.getConyuge().getNombre1() == null || dbasCliBean.getConyuge().getNombre1().trim().length() == 0){
 						ok = false;
 						new MessageUtil().showWarnMessage("Ingresar el Primer Nombre del Cónyugue en seccion Datos Basicos", null);
@@ -176,7 +176,7 @@ public class DatosBasicosMantBean implements Serializable{
 			}
 			
 			if(ok){
-				if(dbasCliBean.getClientes().getIdtipoidentificacion() == Parametro.TIPO_IDENTIFICACION_RUC &&  dbasCliBean.getClientes().getIdtipopersona() == Parametro.TIPO_PERSONA_JURIDICO){
+				if(dbasCliBean.getClientes().getTipoidentidad().getIdtidentidad() == Parametro.TIPO_IDENTIFICACION_RUC &&  dbasCliBean.getClientes().getIdtipopersona() == Parametro.TIPO_PERSONA_JURIDICO){
 					if(dbasCliBean.getClientes().getEmpresa_1() == null || dbasCliBean.getClientes().getEmpresa_1().trim().length() == 0){
 						ok = false;
 						new MessageUtil().showWarnMessage("Ingresar Nombre Empresa en seccion Datos Basicos", null);

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="../templates/default.xhtml">
+
+	<ui:define name="title">Cliente</ui:define>
+	
+	<ui:define name="head">
+		<style type="text/css">
+			.special_day a.ui-state-default 
+			{
+				font-weight: bolder;  
+				text-decoration: underline;
+			}
+			#form-contentpage\:idcontrolcalendar\:form-calendarcomponent\:idcalendarorden .ui-datepicker-prev, #form-contentpage\:idcontrolcalendar\:form-calendarcomponent\:idcalendarorden .ui-datepicker-next {
+				display: none;
+			}
+		</style>
+		<script type="text/javascript">
+			function specialDate(date) {
+				var fechasMes = document.getElementById('form-contentpage:idcontrolcalendar:form-calendarcomponent:idhidden').value;
+				return specialDateStyle(date, fechasMes);
+			}
+		</script>
+	</ui:define>
+	
+	<f:view contentType="text/html">
+		<f:metadata>
+		  	<f:viewParam name="idcuenta" value="#{clienteBean.idcuenta}"/>
+		</f:metadata>
+		<f:metadata>
+		  	<f:viewParam name="idcuenta" value="#{dirConsultasBean.idcuenta}"/>
+		</f:metadata>
+	</f:view>
+	
+	<ui:define name="side_page">
+		<ui:include src="../pages/ordenes_side.xhtml"></ui:include>
+	</ui:define>
+	<ui:define name="content_page">
+		<ui:include src="../pages/ordenes_content.xhtml"></ui:include>
+	</ui:define>
+
+</ui:composition>

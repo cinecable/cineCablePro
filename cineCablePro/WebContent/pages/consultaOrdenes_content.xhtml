@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="form-contentpage">
+		<p:growl id="mensajes" showDetail="true" />
+		<h1 class="title ui-widget-header" style="text-align: center;">#{consultaOrdenesBean.ctacliente.clientes.nombre1} #{consultaOrdenesBean.ctacliente.clientes.apellido1} Cta ##{consultaOrdenesBean.ctacliente.idcuenta}</h1>
+		<p:panel id="pnlOrdenes" styleClass="hidepanel">
+			<h:link value="Regresar" style="float: right;" outcome="cliente?faces-redirect=true" >
+				<f:param name="idcuenta" value="#{consultaOrdenesBean.idcuenta}"></f:param>
+			</h:link>
+			<br />
+			<p:dataTable id="idTablaOpe"
+				value="#{consultaOrdenesBean.lisOrdenesAsignaciones}" var="asigOrd"
+				rowKey="#{asigOrd.idOrdAsignacion}" widgetVar="vartablaOpe"
+				paginator="true" rows="10"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				selection="#{consultaOrdenesBean.ordenesAsignacionesSelected}"
+				selectionMode="single" emptyMessage="No se encontraron registros" lazy="true">
+
+				<p:ajax event="rowSelect" update=":form-contentpage:iddialogeditor" oncomplete="eventDialog.show();" />
+
+				<f:facet name="header">
+					Ordenes del cliente
+				</f:facet>
+
+				<p:column id="idCodOpeHeader" headerText="CodOpe">
+					<h:outputText value="#{asigOrd.orden.idOrdenes}" />
+				</p:column>
+				<p:column id="idNomCliente" headerText="Nombre Cliente">
+					<h:outputText value="#{asigOrd.orden.cuentaCliente.clientes.nombre1} #{asigOrd.orden.cuentaCliente.clientes.apellido1} #{asigOrd.orden.cuentaCliente.clientes.apellido2}" />
+				</p:column>
+				<p:column id="Operacion" headerText="Operacion">
+					<h:outputText value="#{asigOrd.orden.tipoOperacion.nombre}" />
+				</p:column>
+				<p:column id="fe_Solicitud" headerText="fechaSol">
+					<h:outputText value="#{asigOrd.orden.fechaEjecucion}" />
+				</p:column>
+				<p:column id="fe_Ejecucion" headerText="fechaEje">
+					<h:outputText value="#{asigOrd.orden.fechaAsignacion}" />
+				</p:column>
+				<p:column id="Tecnico" headerText="Tecnico">
+					<h:outputText
+						value="#{asigOrd.tecnico.apellido1} #{asigOrd.tecnico.apellido2} #{asigOrd.tecnico.nombre1}" />
+				</p:column>
+				<p:column id="estado" headerText="Estado">
+					<h:outputText value="#{asigOrd.orden.estado.nombre}" />
+				</p:column>
+				<p:column id="idsector" headerText="Sector">
+					<h:outputText
+						value="#{asigOrd.orden.cuentaCliente.direccion.sector.nombre}" />
+				</p:column>
+				<p:column id="idcuenta" headerText="Cuenta">
+					<h:outputText value="#{asigOrd.orden.cuentaCliente.idcuenta}" />
+				</p:column>
+				<p:column id="ident" headerText="Identificacion">
+					<h:outputText
+						value="#{asigOrd.orden.cuentaCliente.clientes.identificacion}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+		<p:dialog id="iddialogeditor" header="Detalle de Orden"
+			closable="true" widgetVar="eventDialog" modal="true"
+			showEffect="fade" hideEffect="fade" width="600">
+			<p:dataTable value="#{consultaOrdenesBean.ordenesAsignacionesSelected}" var="varOrdenAsigSelected">
+				<p:column>
+					<f:facet name="header">Fecha Asignacion</f:facet>
+					<h:outputText value="#{varOrdenAsigSelected.orden.fechaAsignacion}">
+						<f:convertDateTime pattern="dd-MM-yyyy mm:ss" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">Fecha Ejecucion</f:facet>
+					<h:outputText value="#{varOrdenAsigSelected.orden.fechaEjecucion}">
+						<f:convertDateTime pattern="dd-MM-yyyy mm:ss" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">Fecha Finalizacion</f:facet>
+					<h:outputText value="#{varOrdenAsigSelected.orden.fechaFinalizacion}">
+						<f:convertDateTime pattern="dd-MM-yyyy mm:ss" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">Fecha Monitoreo</f:facet>
+					<h:outputText value="#{varOrdenAsigSelected.orden.fechaMonitoreo}">
+						<f:convertDateTime pattern="dd-MM-yyyy mm:ss" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">Usuario de Ingreso</f:facet>
+					<h:outputText value="#{varOrdenAsigSelected.orden.usuario.nombre}" />
+				</p:column>
+			</p:dataTable>
+		</p:dialog>
+	</h:form>
+</ui:composition>

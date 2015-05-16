@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import bean.controladores.UsuarioBean;
 
 import pojo.annotations.Pagos;
+import pojo.annotations.custom.IngresosCierreCaja;
 import util.FacesUtil;
 import util.HibernateUtil;
 import dao.datos.PagosDAO;
@@ -96,5 +97,25 @@ public class PagosBO {
         }
 		
 		return lisPagos;
+	}
+	
+	public List<IngresosCierreCaja> lisIngresosCierreCaja(int idusuario, Date fechaDesde, Date fechaHasta) throws RuntimeException {
+		List<IngresosCierreCaja> lisIngresosCierreCaja = null;
+		Session session = null;
+		
+		try{
+            session = HibernateUtil.getSessionFactory().openSession();
+            UsuarioBean usuarioBean = (UsuarioBean)new FacesUtil().getSessionBean("usuarioBean");
+            int idempresa = usuarioBean.getUsuario().getEmpresa().getIdempresa();
+            lisIngresosCierreCaja = pagosDAO.lisSumIngresosByFechas(session, idusuario, idempresa, fechaDesde, fechaHasta);
+        }
+        catch(Exception ex){
+            throw new RuntimeException(ex);
+        }
+        finally{
+            session.close();
+        }
+		
+		return lisIngresosCierreCaja;
 	}
 }

@@ -52,6 +52,7 @@ public class TelefonosBean implements Serializable {
 			if (idcuenta > 0) {
 				CtaclienteBO ctaclienteBO = new CtaclienteBO();
 				ctacliente = ctaclienteBO.getCtaclienteById(idcuenta);
+				consultarTelefonos();
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -59,7 +60,7 @@ public class TelefonosBean implements Serializable {
 		}
 	}
 	
-	public void consultarTelefonos(){
+	private void consultarTelefonos(){
 		if(this.idcuenta > 0){
 			try {
 				TelefonoBO telefonoBO = new TelefonoBO();

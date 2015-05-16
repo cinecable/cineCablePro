@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:form id="form-contentpage">
+		<p:growl id="mensajes" showDetail="true" />
+		<h1 class="title ui-widget-header" style="text-align: center;">Usuario Menu</h1>
+		<br />
+		<p:panel header="Datos de ingreso">
+				<h:panelGrid columns="4" width="800px" id="idpanelDatosGenerales"   >
+					<h:outputText value="Usuario" />
+					<p:selectOneMenu style="width:200px" value="#{usuarioMenuController.usuarioMenuDM.usuarioSeleccionado.idusuario}">
+						<f:selectItem itemLabel="Seleccione un usuario" itemValue="0"/>
+						<f:selectItems value="#{usuarioMenuController.usuarios}" var="usuarios" itemLabel="#{usuarios.nombre}" itemValue="#{usuarios.idusuario}"></f:selectItems>
+						<p:ajax  listener="#{usuarioMenuController.SelectionUsuario}" update="tree" ></p:ajax>
+					</p:selectOneMenu>
+					<h:outputText value="Tipo de menu" />
+					<p:selectOneMenu style="width:200px" value="#{usuarioMenuController.usuarioMenuDM.tMenuSeleccionado.idtipomenu}">
+						<f:selectItem itemLabel="Seleccione un tipo de menu" itemValue="0"/>
+						<f:selectItems value="#{usuarioMenuController.tipoMenu}" var="tmenu" itemLabel="#{tmenu.nombre}" itemValue="#{tmenu.idtipomenu}"></f:selectItems>
+						<p:ajax  listener="#{usuarioMenuController.SelectionTipoMenu}" update="SelectModulo,SelectSubMenu,SelectProceso,tree" ></p:ajax>
+					</p:selectOneMenu>
+					<h:outputText value="Modulo" />
+					<p:selectOneMenu  id="SelectModulo" style="width:200px"  value="#{usuarioMenuDM.moduloSeleccionado.idmenu}">
+						<f:selectItem itemLabel="Seleccione un modulo" itemValue="0"/>
+						<f:selectItems value="#{usuarioMenuController.modulos}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idmenu}"></f:selectItems>
+						<p:ajax update="SelectSubMenu,SelectProceso" listener="#{usuarioMenuController.SelectionModulo}" ></p:ajax>
+					</p:selectOneMenu>
+					<h:outputText value="Sub-Menu"/>
+					<p:selectOneMenu  id="SelectSubMenu" style="width:200px" value="#{usuarioMenuDM.subMenuSeleccionado.idmenu}" >
+						<f:selectItem itemLabel="Seleccione un Sub-menu" itemValue="0"/>
+						<f:selectItems value="#{usuarioMenuController.submenus}" var="x" itemLabel="#{x.nombre}" itemValue="#{x.idmenu}"></f:selectItems>
+						<p:ajax update="SelectProceso" listener="#{usuarioMenuController.SelectionSubProceso}"  ></p:ajax>
+					</p:selectOneMenu>
+					<h:outputText value="Proceso" />
+					<p:selectOneMenu  id="SelectProceso" style="width:200px" value="#{usuarioMenuController.usuarioMenuDM.procesoSeleccionado.idmenu}" >
+						<f:selectItem itemLabel="Seleccione un proceso" itemValue="0"/>
+						<f:selectItems value="#{usuarioMenuController.procesos}" var="y" itemLabel="#{y.nombre}" itemValue="#{y.idmenu}"></f:selectItems>
+					</p:selectOneMenu>
+					<h:outputText value="Empresa:" />
+					<p:selectOneMenu style="width:200px" value="#{usuarioMenuController.usuarioMenuDM.empresaSeleccionada.idempresa}">
+						<f:selectItem itemLabel="Seleccione una empresa" itemValue="0"/>
+						<f:selectItems value="#{usuarioMenuController.empresas}" var="empresa" itemLabel="#{empresa.nombre}" itemValue="#{empresa.idempresa}"></f:selectItems>
+					</p:selectOneMenu>
+				</h:panelGrid>
+				<p:commandButton value="Regresar" style="float: left;" onclick="history.back();" immediate="true" />
+				
+				<p:commandButton value="Eliminar" style="float: right;" actionListener="#{usuarioMenuController.eliminar()}" update="idpanelDatosGenerales,mensajes,idPanelConsulta"  />
+				
+				<p:commandButton value="Grabar" style="float: right;" actionListener="#{usuarioMenuController.grabar()}" update="idpanelDatosGenerales,mensajes,idPanelConsulta"  />
+				
+				<br />
+				<br />
+
+			</p:panel>
+			
+			<p:panel header="Consulta por usuario y por tipo de menu" >
+				<h:panelGrid columns="1" id="idPanelConsulta">
+					<p:tree value="#{usuarioMenuController.estructuraUsuario}" var="node" id="tree" animate="true">
+				        <p:treeNode id="treeNode">
+				            <h:outputText value="#{node}" id="lblNode"/>
+				        </p:treeNode>
+				    </p:tree>
+				</h:panelGrid>
+			</p:panel>
+			
+		
+	</h:form>
+</ui:composition>

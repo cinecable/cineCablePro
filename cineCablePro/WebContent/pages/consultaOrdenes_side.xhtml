@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="form-sidepage">
+	<h1 align="center" style="border-bottom: 2px solid #dddddd;">Ordenes</h1>
+	<h:panelGrid id="pnlParametros" columns="1" width="100%">
+		<h:outputLabel value="Fecha Desde:" for="idfechadesde" />
+		<p:calendar id="idfechadesde"
+			value="#{consultaOrdenesBean.fechaDesde}" yearRange="c-20:c"
+			locale="es" pattern="dd/MM/yyyy" navigator="true" />
+
+		<h:outputLabel value="Fecha Hasta:" for="idfechahasta" />
+		<p:calendar id="idfechahasta"
+			value="#{consultaOrdenesBean.fechaHasta}" yearRange="c-20:c"
+			locale="es" pattern="dd/MM/yyyy" navigator="true" >
+			<p:ajax event="change" update=":form-contentpage:mensajes" listener="#{consultaOrdenesBean.validaFecha()}"></p:ajax>
+		</p:calendar>
+
+		<h:outputLabel value="Operacion * :" for="idcmbtOrdenes" />
+		<p:selectOneMenu id="idcmbtOrdenes"
+			value="#{consultaOrdenesBean.tipoOrdenSelected.idtipooperacion}"
+			style="width: 150px">
+			<f:selectItems value="#{consultaOrdenesBean.lisTipoOrden}" var="tOrden"
+				itemLabel="#{tOrden.nombre} " itemValue="#{tOrden.idtipooperacion}" />
+		</p:selectOneMenu>
+
+		<h:outputText value="" />
+		<p:commandButton id="btnconsultar" value="Consultar"
+			icon="ui-icon-search" style="float: right;margin-top: 20px;"
+			update=":form-contentpage:pnlOrdenes, :form-contentpage:mensajes" />
+
+
+	</h:panelGrid>
+	<br />
+	</h:form>
+</ui:composition>

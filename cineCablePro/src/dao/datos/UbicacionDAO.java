@@ -50,5 +50,17 @@ public class UbicacionDAO {
 
         return lisUbicacion;
     }
+  @SuppressWarnings("unchecked")
+	public List<Ubicacion> liUbicacionById(Session session, int idUbicacion) throws Exception {
+    List<Ubicacion> lisUbicacion;
 
+    Criteria criteria = session.createCriteria(Ubicacion.class)
+            .add( Restrictions.eq("idubicacion", idUbicacion))
+            .add( Restrictions.eq("idestado", 1))
+            .addOrder( Order.asc("nombre"));
+
+    lisUbicacion = (List<Ubicacion>)criteria.list();
+
+    return lisUbicacion;
+}
 }

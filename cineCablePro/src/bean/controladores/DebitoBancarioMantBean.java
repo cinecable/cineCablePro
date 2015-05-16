@@ -13,6 +13,7 @@ import pojo.annotations.Ctacliente;
 import pojo.annotations.Debitobco;
 import pojo.annotations.Empresa;
 import pojo.annotations.Estado;
+import pojo.annotations.Tipodebito;
 import pojo.annotations.Tipoentidad;
 
 import bo.negocio.CtaclienteBO;
@@ -61,19 +62,19 @@ public class DebitoBancarioMantBean implements Serializable {
 				CtaclienteBO ctaclienteBO = new CtaclienteBO();
 				ctacliente = ctaclienteBO.getCtaclienteById(idcuenta);
 				
-				debitosBancariosBean.consultarDebitoBancario();
+				//debitosBancariosBean.consultarDebitoBancario();
 				
 				if(debitosBancariosBean.getDebitobco() != null && debitosBancariosBean.getDebitobco().getIddebitobco() > 0){
 					modificable = true;
 					
 					debitosBancariosBean.cargaBcoTar();
-					debitosBancariosBean.consultarDebitoBancario();
+				//	debitosBancariosBean.consultarDebitoBancario();
 				}else{
 					modificable = false;
-					debitosBancariosBean.setDebitobco(new Debitobco(0, new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null), 0, null, null, null, 0, null, 0, 0, null));
-					debitosBancariosBean.cargaBcoTar();
-					debitosBancariosBean.consultarDebitoBancario();
-					debitosBancariosBean.setDebitobco(new Debitobco(0, new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null), 0, null, null, null, 0, null, 0, 0, null));
+					//debitosBancariosBean.setDebitobco(new Debitobco(0, new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null), new Tipodebito(), null, null, null, new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null), null, 0, 0, null));
+					//debitosBancariosBean.cargaBcoTar();
+					//debitosBancariosBean.consultarDebitoBancario();
+					debitosBancariosBean.setDebitobco(new Debitobco(0, new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null), new Tipodebito(), null, null, null, new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null), null, 0, 0, null));
 					new MessageUtil().showWarnMessage("Cliente no posee Debitos ingresados!", "");
 				}
 			}
@@ -119,14 +120,14 @@ public class DebitoBancarioMantBean implements Serializable {
 			
 			VerificarId verificarId  = new VerificarId();
 			
-			if(debitosBancariosBean.getDebitobco().getIdtipodebito() > 0){
+			if(debitosBancariosBean.getDebitobco().getTipodebito().getIdtipodebito() > 0){
 				ok = true;
 			}else{
 				new MessageUtil().showWarnMessage("Debe seleccionar una forma de cobro en seccion Debito Bancario", "");
 			}
 			
 			if(ok){
-				if(debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_BANCARIO || debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_TARJETA){
+				if(debitosBancariosBean.getDebitobco().getTipodebito().getIdtipodebito() == Parametro.TIPO_DEBITO_BANCARIO || debitosBancariosBean.getDebitobco().getTipodebito().getIdtipodebito() == Parametro.TIPO_DEBITO_TARJETA){
 					if(debitosBancariosBean.getDebitobco().getBancos().getIdbanco() > 0){
 						if(debitosBancariosBean.getDebitobco().getPropietario() != null && debitosBancariosBean.getDebitobco().getPropietario().trim().length() > 0){
 							if(debitosBancariosBean.getDebitobco().getNrodebito() != null && debitosBancariosBean.getDebitobco().getNrodebito().trim().length() > 0){
@@ -147,7 +148,7 @@ public class DebitoBancarioMantBean implements Serializable {
 			}
 			
 			if(ok){
-				if(debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_BANCARIO){
+				if(debitosBancariosBean.getDebitobco().getTipodebito().getIdtipodebito() == Parametro.TIPO_DEBITO_BANCARIO){
 					if(debitosBancariosBean.getDebitobco().getIdtipocuenta() > 0){
 						ok = true;
 					}else{

@@ -12,7 +12,7 @@ public class ProductoId  implements Serializable, Cloneable{
 	private int idProducto;
 	private String nombreProd;
 	private int cantidad;
-	
+	private int idproductoprincipal;
 	
 	
 	public ProductoId() {
@@ -52,6 +52,14 @@ public class ProductoId  implements Serializable, Cloneable{
 
 	public void setIdprodcuenta(int idprodcuenta) {
 		this.idprodcuenta = idprodcuenta;
+	}
+
+	public int getIdproductoprincipal() {
+		return idproductoprincipal;
+	}
+
+	public void setIdproductoprincipal(int idproductoprincipal) {
+		this.idproductoprincipal = idproductoprincipal;
 	}
 
 	@Override

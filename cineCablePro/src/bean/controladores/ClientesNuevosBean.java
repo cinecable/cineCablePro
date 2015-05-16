@@ -2,11 +2,21 @@ package bean.controladores;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.TabChangeEvent;
+
+import net.cinecable.dao.IMotivosDao;
+import net.cinecable.enums.TipoSolicitudes;
+import net.cinecable.model.base.Ordenes;
 
 import exceptions.VerificarIdException;
 import global.Parametro;
@@ -14,8 +24,15 @@ import global.Parametro;
 import bo.negocio.CtaclienteBO;
 import bo.negocio.PersonaBO;
 
+import pojo.annotations.Clientes;
 import pojo.annotations.Ctacliente;
+import pojo.annotations.Ctasprod;
+import pojo.annotations.Empresa;
+import pojo.annotations.Estado;
+import pojo.annotations.Motivos;
 import pojo.annotations.Persona;
+import pojo.annotations.Tipooperacion;
+import pojo.annotations.Usuario;
 
 import util.FacesUtil;
 import util.MessageUtil;
@@ -51,10 +68,17 @@ public class ClientesNuevosBean implements Serializable{
 	private Persona vendedor;
 	
 	private int activeIndex;
-	
+	@ManagedProperty(value = "#{calendarOrdenesBean}")
+	private CalendarOrdenesBean calendarOrdenesBean;
+	private int mes;
+	private int anio;
+	private Ordenes ordenes;
+	private List<Motivos> lisMotivosHorarios;
+	@EJB
+	private IMotivosDao iMotivoDao;
 	
 	public ClientesNuevosBean() {
-		ctacliente = new Ctacliente();
+		ctacliente = new Ctacliente(0, new Empresa(), new Clientes(), "", "", 0);
 		cobrador = new Persona();
 		vendedor = new Persona();
 		direccionInstalacionBean = new DireccionBean();
@@ -62,6 +86,55 @@ public class ClientesNuevosBean implements Serializable{
 		direccionConbranzaBean = new DireccionBean();
 		
 		activeIndex = 0;
+		mes = 0;
+		anio = Calendar.getInstance().get(Calendar.YEAR);
+		ordenes = new Ordenes();
+		ordenes.setCuentaCliente(new Ctacliente());
+		ordenes.setEmpresa(new Empresa());
+		ordenes.setEstado(new Estado());
+		ordenes.setHorario(new Motivos());
+		ordenes.setMotivo(new Motivos());
+		ordenes.setProducto(new Ctasprod());
+		ordenes.setTipoOperacion(new Tipooperacion());
+		ordenes.setUsuario(new Usuario());
+		lisMotivosHorarios = new ArrayList<Motivos>();
+	}
+	
+	@PostConstruct
+	public void PostClientesNuevosBean() {
+		calendarOrdenesBean.inicializarAnios();
+		calendarOrdenesBean.inicializarMeses();
+		llenarHorarios();
+		dbasCliBean.getClientes().setIdtipopersona(Parametro.TIPO_PERSONA_NATURAL);
+		dbasCliBean.getClientes().getEstadocivil().setIdestadocivil(Parametro.ESTADO_CIVIL_SOLTERO);
+		dbasCliBean.getClientes().setGenero(Parametro.GENERO_MASCULINO);
+		dbasCliBean.getClientes().getTipocliente().setIdtipocliente(Parametro.TIPO_CLIENTE_NORMAL);
+	}
+	
+	public void muestraCalendario(){
+		if(mes > 0){
+			//Si he seleccionado un mes, busco fechas del mes y muestro calendario
+			Calendar fecha = Calendar.getInstance();
+			if(anio == fecha.get(Calendar.YEAR) && (mes-1) == fecha.get(Calendar.MONTH)){
+				fecha.set(anio,mes-1,Calendar.DAY_OF_MONTH,0,0,0);
+			}else{
+				fecha.set(anio,mes-1,1,0,0,0);
+			}
+			calendarOrdenesBean.setFecha(fecha.getTime());
+			
+			calendarOrdenesBean.mostrarEventosAgendados(TipoSolicitudes.InstNueva.getDescripcion(), mes);
+			
+			calendarOrdenesBean.setMostrarCalendar(true);
+		}else{
+			//si no he seleccionado mes oculto calendario
+			calendarOrdenesBean.setMostrarCalendar(false);
+			calendarOrdenesBean.setFecha(null);
+		}
+	}
+	
+	public void llenarHorarios() {
+		lisMotivosHorarios = new ArrayList<Motivos>();
+		lisMotivosHorarios = iMotivoDao.getMotivosByTipoOperacion(TipoSolicitudes.Horarios.getDescripcion());
 	}
 
 	public ProductosBean getProductosBean() {
@@ -96,100 +169,141 @@ public class ClientesNuevosBean implements Serializable{
 		this.telefonosBean = telefonosBean;
 	}
 
-	public void grabarNuevoCliente(){
-		if(validacionOk()){
-			if(nombreCuentaExiste()){
-				if(validacionProductoOk()){
-					if(validacionDireccionOk()){
-						if(validacionDebitoBcoOk()){
-							if(validacionTelefonoOk()){
-								try{
-									CtaclienteBO ctaclienteBO = new CtaclienteBO();
-									
-									//Asignamos data a ctacliente
-									if(dbasCliBean.getClientes() != null){
-										ctacliente.setClientes(dbasCliBean.getClientes());
-									}else{
-										ctacliente.setClientes(null);
-									}
-									if(cobrador != null && cobrador.getIdpersona() > 0){
-										ctacliente.setIdcobrador(cobrador.getIdpersona());
-									}
-									if(vendedor != null && vendedor.getIdpersona() > 0){
-										ctacliente.setIdvendedor(vendedor.getIdpersona());
-									}
-									
-									//calles
-									if(direccionInstalacionBean.getDireccion().getCalleprincipal() != null && direccionInstalacionBean.getDireccion().getCalleprincipal().getIdcalleprincipal() == 0){
-										direccionInstalacionBean.getDireccion().setCalleprincipal(null);
-									}
-									if(direccionInstalacionBean.getDireccion().getCallesecundaria() != null && direccionInstalacionBean.getDireccion().getCallesecundaria().getIdcallesecundaria() == 0){
-										direccionInstalacionBean.getDireccion().setCallesecundaria(null);
-									}
-									if(direccionCorrespondenciaBean.getDireccion().getCalleprincipal() != null && direccionCorrespondenciaBean.getDireccion().getCalleprincipal().getIdcalleprincipal() == 0){
-										direccionCorrespondenciaBean.getDireccion().setCalleprincipal(null);
-									}
-									if(direccionCorrespondenciaBean.getDireccion().getCallesecundaria() != null && direccionCorrespondenciaBean.getDireccion().getCallesecundaria().getIdcallesecundaria() == 0){
-										direccionCorrespondenciaBean.getDireccion().setCallesecundaria(null);
-									}
-									if(direccionConbranzaBean.getDireccion().getCalleprincipal() != null && direccionConbranzaBean.getDireccion().getCalleprincipal().getIdcalleprincipal() == 0){
-										direccionConbranzaBean.getDireccion().setCalleprincipal(null);
-									}
-									if(direccionConbranzaBean.getDireccion().getCallesecundaria() != null && direccionConbranzaBean.getDireccion().getCallesecundaria().getIdcallesecundaria() == 0){
-										direccionConbranzaBean.getDireccion().setCallesecundaria(null);
-									}
-									
-									//Ubicacion
-									if(direccionInstalacionBean.getDireccion().getUbicacion() != null && direccionInstalacionBean.getDireccion().getUbicacion().getIdubicacion() == 0){
-										direccionInstalacionBean.getDireccion().setUbicacion(null);
-									}
-									if(direccionCorrespondenciaBean.getDireccion().getUbicacion() != null && direccionCorrespondenciaBean.getDireccion().getUbicacion().getIdubicacion() == 0){
-										direccionCorrespondenciaBean.getDireccion().setUbicacion(null);
-									}
-									if(direccionConbranzaBean.getDireccion().getUbicacion() != null && direccionConbranzaBean.getDireccion().getUbicacion().getIdubicacion() == 0){
-										direccionConbranzaBean.getDireccion().setUbicacion(null);
-									}
-									
-									//Edificio
-									if(direccionInstalacionBean.getDireccion().getEdificio() != null && direccionInstalacionBean.getDireccion().getEdificio().getIdedificio() == 0){
-										direccionInstalacionBean.getDireccion().setEdificio(null);
-									}
-									if(direccionCorrespondenciaBean.getDireccion().getEdificio() != null && direccionCorrespondenciaBean.getDireccion().getEdificio().getIdedificio() == 0){
-										direccionCorrespondenciaBean.getDireccion().setEdificio(null);
-									}
-									if(direccionConbranzaBean.getDireccion().getEdificio() != null && direccionConbranzaBean.getDireccion().getEdificio().getIdedificio() == 0){
-										direccionConbranzaBean.getDireccion().setEdificio(null);
-									}
-									
-									//referencia
-									if(direccionInstalacionBean.getReferenciadir() != null && direccionInstalacionBean.getReferenciadir().getReferencia() != null && direccionInstalacionBean.getReferenciadir().getReferencia().trim().length() == 0){
-										direccionInstalacionBean.setReferenciadir(null);
-									}
-									if(direccionCorrespondenciaBean.getReferenciadir() != null && direccionCorrespondenciaBean.getReferenciadir().getReferencia() != null && direccionCorrespondenciaBean.getReferenciadir().getReferencia().trim().length() == 0){
-										direccionCorrespondenciaBean.setReferenciadir(null);
-									}
-									if(direccionConbranzaBean.getReferenciadir() != null && direccionConbranzaBean.getReferenciadir().getReferencia() != null && direccionConbranzaBean.getReferenciadir().getReferencia().trim().length() == 0){
-										direccionConbranzaBean.setReferenciadir(null);
-									}
-									
-									ctaclienteBO.grabarCliente(ctacliente, dbasCliBean.getConyuge(), productosBean.getLisProductosId(), direccionInstalacionBean.getDireccion(), direccionCorrespondenciaBean.getDireccion(), direccionConbranzaBean.getDireccion(), debitosBancariosBean.getDebitobco(), telefonosBean.getLisTelefonos(), direccionInstalacionBean.getReferenciadir(), direccionCorrespondenciaBean.getReferenciadir(), direccionConbranzaBean.getReferenciadir());
-									
-									FacesUtil facesUtil = new FacesUtil();
-									try {
-										facesUtil.redirect("gridclientes.jsf");
-									} catch (Exception e) {
-										e.printStackTrace();
-									}
-								} catch(Exception re) {
-									re.printStackTrace();
-									new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", null);
-								}
-							}
+	public void onChange(TabChangeEvent event) {
+		String idTab = event.getTab().getId();
+		
+		if(idTab.equalsIgnoreCase("idProductoCliente")){
+			String nombreCuentaCliente = "";
+			
+			if(dbasCliBean.getClientes() != null && dbasCliBean.getClientes().getNombre1() != null && dbasCliBean.getClientes().getNombre1().trim().length() > 0){
+				nombreCuentaCliente += dbasCliBean.getClientes().getNombre1();
+			}
+			if(dbasCliBean.getClientes() != null && dbasCliBean.getClientes().getApellido1() != null && dbasCliBean.getClientes().getApellido1().trim().length() > 0){
+				nombreCuentaCliente += (nombreCuentaCliente.trim().length() > 0 ? " " : "") +  dbasCliBean.getClientes().getApellido1();
+			}
+			if(dbasCliBean.getClientes() != null && dbasCliBean.getClientes().getApellido2() != null && dbasCliBean.getClientes().getApellido2().trim().length() > 0){
+				nombreCuentaCliente += (nombreCuentaCliente.trim().length() > 0 ? " " : "") +  dbasCliBean.getClientes().getApellido2();
+			}
+			
+			ctacliente.setNombre(nombreCuentaCliente);
+			RequestContext.getCurrentInstance().update("form-contentpage:acc:idtxncta");
+		}else{
+			if(idTab.equalsIgnoreCase("idDebitoBancario")){
+				if(dbasCliBean.getClientes().getTipoidentidad().getIdtidentidad() > 0 && dbasCliBean.getClientes().getIdcliente() != null && dbasCliBean.getClientes().getIdcliente().trim().length() > 0){
+					if(debitosBancariosBean.getDebitobco().getIdtipoidentificacion() <= 0){
+						if(debitosBancariosBean.getDebitobco().getIdentificacion() == null || debitosBancariosBean.getDebitobco().getIdentificacion().trim().length() == 0){
+							debitosBancariosBean.getDebitobco().setIdtipoidentificacion(dbasCliBean.getClientes().getTipoidentidad().getIdtidentidad());
+							debitosBancariosBean.getDebitobco().setIdentificacion(dbasCliBean.getClientes().getIdcliente());
+							
+							RequestContext.getCurrentInstance().update("form-contentpage:acc:idcomponentedbancario:form-dbancarioscomponent:idCmbTdcli");
+							RequestContext.getCurrentInstance().update("form-contentpage:acc:idcomponentedbancario:form-dbancarioscomponent:idtxIdentidad");
 						}
 					}
 				}
 			}else{
-				new MessageUtil().showWarnMessage("Nombre de cuenta ya existe", null);
+				if(idTab.equalsIgnoreCase("idOrdenInstalacion")){
+					mes = Calendar.getInstance().get(Calendar.MONTH);
+					RequestContext.getCurrentInstance().update("form-contentpage:acc:idMes");
+					//<p:ajax update="idcontrolcalendar" listener="#{clientesNuevosBean.muestraCalendario()}"></p:ajax>
+				}
+			}
+		}
+	}
+	
+	public void grabarNuevoCliente(){
+		if(validacionOk()){
+			try{
+				CtaclienteBO ctaclienteBO = new CtaclienteBO();
+				
+				//Asignamos data a ctacliente
+				if(dbasCliBean.getClientes() != null){
+					ctacliente.setClientes(dbasCliBean.getClientes());
+				}else{
+					ctacliente.setClientes(null);
+				}
+				if(cobrador != null && cobrador.getIdpersona() > 0){
+					ctacliente.setIdcobrador(cobrador.getIdpersona());
+				}
+				if(vendedor != null && vendedor.getIdpersona() > 0){
+					ctacliente.setIdvendedor(vendedor.getIdpersona());
+				}
+				
+				//calles
+				if(direccionInstalacionBean.getDireccion().getCalleprincipal() != null && direccionInstalacionBean.getDireccion().getCalleprincipal().getIdcalleprincipal() == 0){
+					direccionInstalacionBean.getDireccion().setCalleprincipal(null);
+				}
+				if(direccionInstalacionBean.getDireccion().getCallesecundaria() != null && direccionInstalacionBean.getDireccion().getCallesecundaria().getIdcallesecundaria() == 0){
+					direccionInstalacionBean.getDireccion().setCallesecundaria(null);
+				}
+				if(direccionCorrespondenciaBean.getDireccion().getCalleprincipal() != null && direccionCorrespondenciaBean.getDireccion().getCalleprincipal().getIdcalleprincipal() == 0){
+					direccionCorrespondenciaBean.getDireccion().setCalleprincipal(null);
+				}
+				if(direccionCorrespondenciaBean.getDireccion().getCallesecundaria() != null && direccionCorrespondenciaBean.getDireccion().getCallesecundaria().getIdcallesecundaria() == 0){
+					direccionCorrespondenciaBean.getDireccion().setCallesecundaria(null);
+				}
+				if(direccionConbranzaBean.getDireccion().getCalleprincipal() != null && direccionConbranzaBean.getDireccion().getCalleprincipal().getIdcalleprincipal() == 0){
+					direccionConbranzaBean.getDireccion().setCalleprincipal(null);
+				}
+				if(direccionConbranzaBean.getDireccion().getCallesecundaria() != null && direccionConbranzaBean.getDireccion().getCallesecundaria().getIdcallesecundaria() == 0){
+					direccionConbranzaBean.getDireccion().setCallesecundaria(null);
+				}
+				
+				//Ubicacion
+				if(direccionInstalacionBean.getDireccion().getUbicacion() != null && direccionInstalacionBean.getDireccion().getUbicacion().getIdubicacion() == 0){
+					direccionInstalacionBean.getDireccion().setUbicacion(null);
+				}
+				if(direccionCorrespondenciaBean.getDireccion().getUbicacion() != null && direccionCorrespondenciaBean.getDireccion().getUbicacion().getIdubicacion() == 0){
+					direccionCorrespondenciaBean.getDireccion().setUbicacion(null);
+				}
+				if(direccionConbranzaBean.getDireccion().getUbicacion() != null && direccionConbranzaBean.getDireccion().getUbicacion().getIdubicacion() == 0){
+					direccionConbranzaBean.getDireccion().setUbicacion(null);
+				}
+				
+				//Edificio
+				if(direccionInstalacionBean.getDireccion().getEdificio() != null && direccionInstalacionBean.getDireccion().getEdificio().getIdedificio() == 0){
+					direccionInstalacionBean.getDireccion().setEdificio(null);
+				}
+				if(direccionCorrespondenciaBean.getDireccion().getEdificio() != null && direccionCorrespondenciaBean.getDireccion().getEdificio().getIdedificio() == 0){
+					direccionCorrespondenciaBean.getDireccion().setEdificio(null);
+				}
+				if(direccionConbranzaBean.getDireccion().getEdificio() != null && direccionConbranzaBean.getDireccion().getEdificio().getIdedificio() == 0){
+					direccionConbranzaBean.getDireccion().setEdificio(null);
+				}
+				
+				//referencia
+				if(direccionInstalacionBean.getReferenciadir() != null && direccionInstalacionBean.getReferenciadir().getReferencia() != null && direccionInstalacionBean.getReferenciadir().getReferencia().trim().length() == 0){
+					direccionInstalacionBean.setReferenciadir(null);
+				}
+				if(direccionCorrespondenciaBean.getReferenciadir() != null && direccionCorrespondenciaBean.getReferenciadir().getReferencia() != null && direccionCorrespondenciaBean.getReferenciadir().getReferencia().trim().length() == 0){
+					direccionCorrespondenciaBean.setReferenciadir(null);
+				}
+				if(direccionConbranzaBean.getReferenciadir() != null && direccionConbranzaBean.getReferenciadir().getReferencia() != null && direccionConbranzaBean.getReferenciadir().getReferencia().trim().length() == 0){
+					direccionConbranzaBean.setReferenciadir(null);
+				}
+				
+				//banco
+				if(debitosBancariosBean.getDebitobco() != null && debitosBancariosBean.getDebitobco().getBancos() != null && debitosBancariosBean.getDebitobco().getBancos().getIdbanco() == 0){
+					debitosBancariosBean.getDebitobco().setBancos(null);
+				}
+				
+				//orden
+				ordenes.setFechaEjecucion(calendarOrdenesBean.getFecha());
+				
+				if(ordenes.getCuentaCliente() != null && ordenes.getCuentaCliente().getIdcuenta() == 0){
+					ordenes.setCuentaCliente(null);
+				}
+				
+				ctaclienteBO.grabarCliente(ctacliente, dbasCliBean.getConyuge(), productosBean.getLisProductosId(), direccionInstalacionBean.getDireccion(), direccionCorrespondenciaBean.getDireccion(), direccionConbranzaBean.getDireccion(), debitosBancariosBean.getDebitobco(), telefonosBean.getLisTelefonos(), direccionInstalacionBean.getReferenciadir(), direccionCorrespondenciaBean.getReferenciadir(), direccionConbranzaBean.getReferenciadir(), ordenes);
+				
+				FacesUtil facesUtil = new FacesUtil();
+				try {
+					facesUtil.redirect("pagos.jsf?faces-redirect=true&idcuenta=" + ctacliente.getIdcuenta());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} catch(Exception re) {
+				re.printStackTrace();
+				new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", null);
 			}
 		}
 	}
@@ -197,18 +311,47 @@ public class ClientesNuevosBean implements Serializable{
 	private boolean validacionOk(){
 		boolean ok = false;
 		
+		if(validacionCliente()){
+			if(!dbasCliBean.cedulaExiste()){
+				if(dbasCliBean.validacionIdentificacion()){
+					if(nombreCuentaExiste()){
+						if(validacionProductoOk()){
+							if(validacionDireccionOk()){
+								if(validacionDebitoBcoOk()){
+									if(validacionTelefonoOk()){
+										if(validacionOrden()){
+											ok = true;
+										}
+									}
+								}
+							}
+						}
+					}else{
+						new MessageUtil().showWarnMessage("Nombre de cuenta ya existe", null);
+					}
+				}
+			}
+		}
+									
+		return ok;
+	}
+	
+	private boolean validacionCliente(){
+		boolean ok = false;
+		
 		try{
 		
 			VerificarId verificarId  = new VerificarId();
 			
-			if(dbasCliBean.getClientes().getIdtipoidentificacion() > 0){
-				if(dbasCliBean.getClientes().getIdtipoidentificacion() == Parametro.TIPO_IDENTIFICACION_OTRO || verificarId.verificarId(dbasCliBean.getClientes().getIdcliente())){
+			if(dbasCliBean.getClientes().getTipoidentidad().getIdtidentidad() > 0){
+				if(dbasCliBean.getClientes().getTipoidentidad().getIdtidentidad() == Parametro.TIPO_IDENTIFICACION_OTRO || verificarId.verificarId(dbasCliBean.getClientes().getIdcliente())){
 					if(dbasCliBean.getClientes().getIdtipopersona() > 0){
 						if(dbasCliBean.getClientes().getNombre1() != null && dbasCliBean.getClientes().getNombre1().trim().length() > 0){
 							if(dbasCliBean.getClientes().getApellido1() != null && dbasCliBean.getClientes().getApellido1().trim().length() > 0){
 								if(dbasCliBean.getClientes().getEmail() != null && dbasCliBean.getClientes().getEmail().trim().length() > 0){
-									if(dbasCliBean.getClientes().getEstadocivil()  > 0){
+									if(dbasCliBean.getClientes().getEstadocivil().getIdestadocivil()  > 0){
 										if(dbasCliBean.getClientes().getGenero()  > 0){
+											dbasCliBean.getClientes().setIdentificacion(dbasCliBean.getClientes().getIdcliente());
 											ok = true;
 										}else{
 											activeIndex = 0;
@@ -244,7 +387,7 @@ public class ClientesNuevosBean implements Serializable{
 			}
 			
 			if(ok){
-				if(dbasCliBean.getClientes().getEstadocivil() == Parametro.ESTADO_CIVIL_CASADO || dbasCliBean.getClientes().getEstadocivil() == Parametro.ESTADO_CIVIL_UNION_LIBRE){
+				if(dbasCliBean.getClientes().getEstadocivil().getIdestadocivil() == Parametro.ESTADO_CIVIL_CASADO || dbasCliBean.getClientes().getEstadocivil().getIdestadocivil() == Parametro.ESTADO_CIVIL_UNION_LIBRE){
 					if(dbasCliBean.getConyuge().getNombre1() == null || dbasCliBean.getConyuge().getNombre1().trim().length() == 0){
 						ok = false;
 						activeIndex = 0;
@@ -271,7 +414,7 @@ public class ClientesNuevosBean implements Serializable{
 			}
 			
 			if(ok){
-				if(dbasCliBean.getClientes().getIdtipoidentificacion() == Parametro.TIPO_IDENTIFICACION_RUC &&  dbasCliBean.getClientes().getIdtipopersona() == Parametro.TIPO_PERSONA_JURIDICO){
+				if(dbasCliBean.getClientes().getTipoidentidad().getIdtidentidad() == Parametro.TIPO_IDENTIFICACION_RUC &&  dbasCliBean.getClientes().getIdtipopersona() == Parametro.TIPO_PERSONA_JURIDICO){
 					if(dbasCliBean.getClientes().getEmpresa_1() == null || dbasCliBean.getClientes().getEmpresa_1().trim().length() == 0){
 						ok = false;
 						activeIndex = 0;
@@ -612,7 +755,7 @@ public class ClientesNuevosBean implements Serializable{
 			
 			VerificarId verificarId  = new VerificarId();
 			
-			if(debitosBancariosBean.getDebitobco().getIdtipodebito() > 0){
+			if(debitosBancariosBean.getDebitobco().getTipodebito().getIdtipodebito() > 0){
 				ok = true;
 			}else{
 				activeIndex = 3;
@@ -620,7 +763,7 @@ public class ClientesNuevosBean implements Serializable{
 			}
 			
 			if(ok){
-				if(debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_BANCARIO || debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_TARJETA){
+				if(debitosBancariosBean.getDebitobco().getTipodebito().getIdtipodebito() == Parametro.TIPO_DEBITO_BANCARIO || debitosBancariosBean.getDebitobco().getTipodebito().getIdtipodebito() == Parametro.TIPO_DEBITO_TARJETA){
 					if(debitosBancariosBean.getDebitobco().getBancos().getIdbanco() > 0){
 						if(debitosBancariosBean.getDebitobco().getNrodebito() != null && debitosBancariosBean.getDebitobco().getNrodebito().trim().length() > 0){
 							if(debitosBancariosBean.getDebitobco().getPropietario() != null && debitosBancariosBean.getDebitobco().getPropietario().trim().length() > 0){
@@ -644,7 +787,7 @@ public class ClientesNuevosBean implements Serializable{
 			}
 			
 			if(ok){
-				if(debitosBancariosBean.getDebitobco().getIdtipodebito() == Parametro.TIPO_DEBITO_BANCARIO){
+				if(debitosBancariosBean.getDebitobco().getTipodebito().getIdtipodebito() == Parametro.TIPO_DEBITO_BANCARIO){
 					if(debitosBancariosBean.getDebitobco().getIdtipocuenta() > 0){
 						ok = true;
 					}else{
@@ -675,6 +818,15 @@ public class ClientesNuevosBean implements Serializable{
 					new MessageUtil().showWarnMessage("Debe seleccionar tipo identidad en seccion Debito Bancario", null);
 				}
 			}
+			
+			if(ok){
+				if(debitosBancariosBean.validacionIdentificacion()){
+					ok = true;
+				}else{
+					ok = false;
+					activeIndex = 3;
+				}
+			}
 		}catch(VerificarIdException e){
 			ok = false;
 			e.printStackTrace();
@@ -692,6 +844,27 @@ public class ClientesNuevosBean implements Serializable{
 		}else{
 			activeIndex = 4;
 			new MessageUtil().showWarnMessage("Debe agregar al menos un telefono en seccion Telefonos Cliente", null);
+		}
+		
+		return ok;
+	}
+	
+	private boolean validacionOrden(){
+		boolean ok = false;
+		
+		if(calendarOrdenesBean.getFecha() != null){
+			ok = true;
+		}else{
+			activeIndex = 5;
+			new MessageUtil().showWarnMessage("Debe seleccionar la fecha de Instalacion en seccion Ordenes de Instalacion", null);
+		}
+		
+		if(ok && ordenes.getHorario().getIdmotivo() > 0){
+			ok = true;
+		}else{
+			ok = false;
+			activeIndex = 5;
+			new MessageUtil().showWarnMessage("Debe seleccionar el horario en seccion Ordenes de Instalacion", null);
 		}
 		
 		return ok;
@@ -849,6 +1022,48 @@ public class ClientesNuevosBean implements Serializable{
 
 	public void setActiveIndex(int activeIndex) {
 		this.activeIndex = activeIndex;
+	}
+
+	public int getMes() {
+		return mes;
+	}
+
+	public void setMes(int mes) {
+		this.mes = mes;
+	}
+
+	public int getAnio() {
+		return anio;
+	}
+
+	public void setAnio(int anio) {
+		this.anio = anio;
+	}
+
+	public CalendarOrdenesBean getCalendarOrdenesBean() {
+		return calendarOrdenesBean;
+	}
+
+	public void setCalendarOrdenesBean(CalendarOrdenesBean calendarOrdenesBean) {
+		this.calendarOrdenesBean = calendarOrdenesBean;
+	}
+
+	
+
+	public List<Motivos> getLisMotivosHorarios() {
+		return lisMotivosHorarios;
+	}
+
+	public void setLisMotivosHorarios(List<Motivos> lisMotivosHorarios) {
+		this.lisMotivosHorarios = lisMotivosHorarios;
+	}
+
+	public Ordenes getOrdenes() {
+		return ordenes;
+	}
+
+	public void setOrdenes(Ordenes ordenes) {
+		this.ordenes = ordenes;
 	}
 	
 }

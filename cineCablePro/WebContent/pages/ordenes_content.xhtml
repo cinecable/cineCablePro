@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:my="http://java.sun.com/jsf/composite/components/paginas">
+
+	<h:form id="form-contentpage">
+		<p:growl id="mensajes" showDetail="true" />
+		<h1 class="title ui-widget-header" style="text-align: center;">Ordenes</h1>
+		<br />
+		<p:panel header="Datos de la solicitud" id="panelSolicitud">
+			<h:panelGrid columns="4" style="width:800px" cellpadding="5px">
+				<h:outputText value="Operación" style="width:200px" />
+				<p:selectOneMenu value="#{ordenesController.ingOrdenesDM.orden.tipoOperacion.idtipooperacion}" style="width:200px">
+					<f:selectItem itemLabel="Seleccione un tipo de operacion" itemValue="0" />
+					<f:selectItems value="#{ordenesController.tipoOperaciones}" var="tOperaciones" itemLabel="#{tOperaciones.nombre}"
+						itemValue="#{tOperaciones.idtipooperacion}"></f:selectItems>
+					<p:ajax update="motivo,dtbProducto,panelCancelacion,groupDireccion,idAnio,idMes,idcontrolcalendar"
+						listener="#{ordenesController.cambioOperacion()}"></p:ajax>
+				</p:selectOneMenu>
+				<h:panelGrid>
+				<p:selectOneMenu id="idAnio" value="#{ordenesController.anio}" style="width:80px" disabled="#{!ordenesController.mostrar}">
+					<f:selectItems value="#{ordenesController.calendarOrdenesBean.lisAnio}"></f:selectItems>
+					<p:ajax update="idcontrolcalendar" listener="#{ordenesController.muestraCalendario()}"></p:ajax>
+				</p:selectOneMenu>
+				<p:selectOneMenu id="idMes" value="#{ordenesController.mes}" style="width:80px" disabled="#{!ordenesController.mostrar}">
+					<f:selectItem itemLabel="Mes" itemValue="0" />
+					<f:selectItems value="#{ordenesController.calendarOrdenesBean.lisMes}"></f:selectItems>
+					<p:ajax update="idcontrolcalendar" listener="#{ordenesController.muestraCalendario()}"></p:ajax>
+				</p:selectOneMenu>
+				</h:panelGrid>
+				<my:calendarOrdenes_component id="idcontrolcalendar"></my:calendarOrdenes_component>
+				<h:outputText value="Motivo" style="width:200px" />
+				<p:selectOneMenu
+					value="#{ordenesController.ingOrdenesDM.orden.motivo.idmotivo}"
+					id="motivo" style="width:200px">
+					<f:selectItem itemLabel="Seleccione un motivo" itemValue="0" />
+					<f:selectItems value="#{ordenesController.motivos}" var="motivo"
+						itemLabel="#{motivo.nombre}" itemValue="#{motivo.idmotivo}"></f:selectItems>
+				</p:selectOneMenu>
+				
+				<h:outputText value="Horarios" style="width:200px" />
+				<p:selectOneMenu
+					value="#{ordenesController.ingOrdenesDM.orden.horario.idmotivo}"
+					 style="width:200px">
+					<f:selectItem itemLabel="Seleccione un horario" itemValue="0" />
+					<f:selectItems value="#{ordenesController.horarios}" var="motivo"
+						itemLabel="#{motivo.nombre}" itemValue="#{motivo.idmotivo}"></f:selectItems>
+				</p:selectOneMenu>
+				
+				<h:outputText value="Observacion" style="width:200px" />
+				<p:inputTextarea
+					value="#{ordenesController.ingOrdenesDM.orden.observacion}"
+					style="width:200px" maxlength="255" autoResize="false" ></p:inputTextarea>
+				<h:panelGroup id="panelCancelacion">
+				<h:panelGrid >
+					<h:outputText value="Cancelado por"
+						rendered="#{ordenesController.cancelacion}" style="width:200px" />
+					<p:selectOneMenu
+						value="#{ordenesController.ingOrdenesDM.orden.tipoMotivoCancelacion}"
+						style="width:200px" rendered="#{ordenesController.cancelacion}">
+						<f:selectItem itemLabel="Seleccione" itemValue="0" />
+						<f:selectItem itemLabel="Empresa" itemValue="1" />
+						<f:selectItem itemLabel="Cliente" itemValue="2" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+			</h:panelGroup>    
+			</h:panelGrid>
+			
+		</p:panel>
+		<p:panel header="Datos del cliente" id="panelCliente">
+			<h:panelGrid columns="4" style="width:800px">
+				<h:outputText value="Identificacion del cliente" style="width:200px" />
+				<p:inputText value="#{ordenesController.ingOrdenesDM.documento}"
+					style="width:200px" readonly="#{ordenesController.bandcliente}"></p:inputText>
+				<p:commandButton value="Buscar"
+					actionListener="#{ordenesController.buscaCliente()}"
+					update=":form-contentpage:inNombre,:form-contentpage:comboCuentas,:form-contentpage:mensajes"
+					disabled="#{ordenesController.bandcliente}"></p:commandButton>
+				<h:outputText value="" />
+				<h:outputText value="Nombres" style="width:200px" />
+				<p:inputText id="inNombre" style="width:200px"
+					value="#{ordenesController.ingOrdenesDM.cliente.nombre1} #{ordenesController.ingOrdenesDM.cliente.nombre2} #{ordenesController.ingOrdenesDM.cliente.apellido1} #{ordenesController.ingOrdenesDM.cliente.apellido2}"
+					readonly="true"></p:inputText>
+				<h:outputText value="Cuenta" />
+				<p:selectOneMenu id="comboCuentas" style="width:200px"
+					value="#{ordenesController.ingOrdenesDM.orden.cuentaCliente.idcuenta}"
+					disabled="#{ordenesController.bandcliente}">
+						
+					
+					<f:selectItems value="#{ordenesController.ctaClient}" var="cuentas"
+					
+						itemLabel="#{cuentas.nombre}" itemValue="#{cuentas.idcuenta}"></f:selectItems>
+					<p:ajax update="dtbProducto" listener="#{ordenesController.borrarProducto}"></p:ajax>
+				</p:selectOneMenu>
+			</h:panelGrid>
+			<br />
+			<center>
+				<h:panelGrid columns="2">
+					<p:dataTable emptyMessage="No hay productos asignados"
+						id="dtbProducto" styleClass="ui-helper-reset" style="width:400px"
+						selectionMode="single" value="#{ordenesController.productos}"
+						var="producto" rowKey="#{producto.idprodcuentas}"
+						selection="#{ordenesController.ingOrdenesDM.orden.producto}">
+						<f:facet name="header">
+					        Productos
+					    </f:facet>
+						<p:column headerText="Codigo">
+									#{producto.producto.idproducto}
+							</p:column>
+	
+						<p:column headerText="Nombre">
+									#{producto.producto.nombre}
+							</p:column>
+	
+						<p:column headerText="Tipo de operación">
+									#{producto.producto.tipProducto}
+							</p:column>
+	
+					</p:dataTable>
+					
+				
+				</h:panelGrid>
+			</center>
+		</p:panel>
+		<h:panelGroup id="groupDireccion">
+			<p:panel header="Campo de dirección" rendered="#{ordenesController.direccion}">
+				
+					<h:panelGrid  columns="6">
+		
+						<h:outputLabel value="Pais :" rendered="#{ordenesController.direccion}"/>
+						<p:selectOneMenu id="idcombopais" style="width:200px" rendered="#{ordenesController.direccion}"
+							value="#{ordenesController.ingOrdenesDM.pais.idpais}">
+							<f:selectItem itemValue="0" itemLabel="Seleccione"/>
+							<f:selectItems value="#{ordenesController.pais}" var="i"
+								itemLabel="#{i.nombre}" itemValue="#{i.idpais}" />
+							<p:ajax listener="#{ordenesController.llenarLisProvincia}"
+								update="idcomboprovincia, idcombociudad,idcombosector,idComboEdificio" />
+						</p:selectOneMenu>
+		
+						<h:outputLabel value="Provincia :" rendered="#{ordenesController.direccion}"/>
+						<p:selectOneMenu id="idcomboprovincia" style="width:200px" value="#{ordenesController.ingOrdenesDM.provincia.idprovincia}" rendered="#{ordenesController.direccion}">
+							<f:selectItem itemValue="0" itemLabel="Seleccione"/>
+							<f:selectItems value="#{ordenesController.ingOrdenesDM.listaprovincia}" var="i"
+								itemLabel="#{i.nombre}" itemValue="#{i.idprovincia}" />
+							<p:ajax listener="#{ordenesController.llenarLisCiudad}" update="idcombociudad,
+		                     idcombosector, 
+		                	 idComboEdificio,idComboCallePrin,
+		               	 	 idComboCallesec,idComboUbicacion,
+		              	     idComboNodos"></p:ajax>
+						</p:selectOneMenu>
+		
+						<h:outputLabel value="Ciudad :" rendered="#{ordenesController.direccion}"/>
+						<p:selectOneMenu id="idcombociudad" style="width:200px" value="#{ordenesController.ingOrdenesDM.ciudad.idciudad}" rendered="#{ordenesController.direccion}">
+							<f:selectItem itemValue="0" itemLabel="Seleccione"/>
+							<f:selectItems value="#{ordenesController.ingOrdenesDM.listaciudad}" var="i"
+								itemLabel="#{i.nombre}" itemValue="#{i.idciudad}" />
+						    <p:ajax listener="#{ordenesController.llenarDependientes}" update="idcombosector" />
+						</p:selectOneMenu>
+						
+						<h:outputLabel value="Sector :" rendered="#{ordenesController.direccion}"/>
+		                <p:selectOneMenu id="idcombosector" value="#{ordenesController.ingOrdenesDM.direccion.sector.idsector}" style="width:200px" rendered="#{ordenesController.direccion}">
+		                  <f:selectItem itemValue="0" itemLabel="Seleccione"/>
+		                  <f:selectItems value="#{ordenesController.ingOrdenesDM.listaSector}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idsector}" />
+		                  <p:ajax listener="#{ordenesController.llenarDependientesSector()}" update="idComboEdificio,idComboCallePrin,idComboCallesec,idComboUbicacion,idComboNodos,idcomboTiposector" />
+		                </p:selectOneMenu>
+		                
+		            
+		                <h:outputLabel value="Tipo de Sector :" rendered="#{ordenesController.direccion}"/>
+		                <p:selectOneMenu id="idcomboTiposector" value="#{ordenesController.ingOrdenesDM.direccion.tiposector.idtiposector}" style="width:200px" rendered="#{ordenesController.direccion}">
+		                  <f:selectItem itemValue="0" itemLabel="Seleccione"/>
+		                  <f:selectItems value="#{ordenesController.ingOrdenesDM.listaTipoSector}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idtiposector}" />
+		                  <p:ajax listener="#{ordenesController.llenarDependientesSector()}" update="idComboEdificio,idComboCallePrin,idComboCallesec,idComboUbicacion,idComboNodos" />
+		                </p:selectOneMenu>
+		                
+		               <h:outputLabel value="Calle Principal  :" rendered="#{ordenesController.direccion}"/>
+		               <p:autoComplete id="idComboCallePrin" size="45" value="#{ordenesController.ingOrdenesDM.direccion.calleprincipal}" completeMethod="#{ordenesController.CompletarCallesPrincipales}" rendered="#{ordenesController.direccion}" 
+						var="i" itemLabel="#{i.nombre}" itemValue="#{i}" converter="callePrincipal" minQueryLength="1"   
+						forceSelection="true"  >
+							<p:column>
+								<h:outputText value="Nombre: " style="font-weight: bold;" />  
+			                        <h:outputText id="idtoolnomcp" value="#{i.nombre}" />
+							</p:column>
+							
+						</p:autoComplete>
+						
+						<h:outputLabel value="Calle Secundaria :" rendered="#{ordenesController.direccion}"/>
+			            <p:autoComplete id="idComboCallesec" size="45" value="#{ordenesController.ingOrdenesDM.direccion.callesecundaria}" completeMethod="#{ordenesController.CompletarCallesSecundarias}" rendered="#{ordenesController.direccion}"
+							var="i" itemLabel="#{i.nombre}" itemValue="#{i}" converter="calleSecundaria" minQueryLength="1"  
+							forceSelection="true"  >
+							<p:column>
+								<h:outputText value="Nombre: " style="font-weight: bold;" />  
+			                        <h:outputText id="idtoolnomcs" value="#{i.nombre}" />
+							</p:column>
+							
+						</p:autoComplete>  
+		               <h:outputLabel value="Ubicacion :" rendered="#{ordenesController.direccion}"/>
+		                    <p:selectOneMenu id="idComboUbicacion" value="#{ordenesController.ingOrdenesDM.direccion.ubicacion.idubicacion}" style="width:200px" rendered="#{ordenesController.direccion}">
+		                    	<f:selectItem itemValue="0" itemLabel="Seleccione"/>
+		                       <f:selectItems value="#{ordenesController.ingOrdenesDM.listaUbicacion}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idubicacion}" />
+		                   </p:selectOneMenu>
+		                   
+		                    <h:outputLabel value="Edificio :"  rendered="#{ordenesController.direccion}"/> 
+		                     <p:selectOneMenu id="idComboEdificio" value="#{ordenesController.ingOrdenesDM.direccion.edificio.idedificio}" style="width:200px" rendered="#{ordenesController.direccion}">
+		                       <f:selectItem itemValue="0" itemLabel="Seleccione"/>
+		                       <f:selectItems value="#{ordenesController.ingOrdenesDM.listaEdificio}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idedificio}" />
+		                   </p:selectOneMenu>
+		                   
+		                   <h:outputLabel value="Nodo :" rendered="#{ordenesController.direccion}"/>
+		                    <p:selectOneMenu id="idComboNodos" value="#{ordenesController.ingOrdenesDM.direccion.nodos.idnodo}" style="width:200px" rendered="#{ordenesController.direccion}">
+		                       <f:selectItem itemValue="0" itemLabel="Seleccione"/>
+		                       <f:selectItems value="#{ordenesController.ingOrdenesDM.listaNodos}" var="i" itemLabel="#{i.nombre}" itemValue="#{i.idnodo}" />
+		                   </p:selectOneMenu>
+		                   
+		                   <h:outputLabel value="Tipo de dirección:" rendered="#{ordenesController.direccion}"/>
+		                   <p:selectOneMenu id="idTipoDireccion" value="#{ordenesController.ingOrdenesDM.direccion.idtipodireccion}" style="width:200px" rendered="#{ordenesController.direccion}">
+		                       <f:selectItem itemValue="0" itemLabel="Seleccione"/>
+		                       <f:selectItem itemValue="1" itemLabel="Dirección de correspondencia"/>
+		                       <f:selectItem itemValue="2" itemLabel="Dirección de cobro"/>
+		                       <f:selectItem itemValue="3" itemLabel="Dirección de instalación"/>
+		                   </p:selectOneMenu>
+		                 
+		                  <h:outputLabel value="Numero :" rendered="#{ordenesController.direccion}"/>               
+		                  <p:inputText id="idtxtnub" style="width:200px" maxlength="20" value="#{ordenesController.ingOrdenesDM.direccion.numero}" rendered="#{ordenesController.direccion}"/>
+		                  
+		                  <h:outputLabel value="Piso :" rendered="#{ordenesController.direccion}"/>
+		                  <p:inputText id="idtxtpiso" style="width:200px" value="#{ordenesController.ingOrdenesDM.direccion.piso}"  rendered="#{ordenesController.direccion}"/>
+		                  <h:outputLabel value="Referencia :" rendered="#{ordenesController.direccion}"/>
+		                  <p:inputTextarea autoResize="false" id="idtxtreferencia" style="width:200px" value="#{ordenesController.ingOrdenesDM.referencia.referencia}"  rendered="#{ordenesController.direccion}" maxlength="2000" />
+		                  <h:outputLabel value="Solar :" rendered="#{ordenesController.direccion}"/>
+		                  <p:inputText id="idtxtsolar" style="width:200px" value="#{ordenesController.ingOrdenesDM.direccion.solar}"  rendered="#{ordenesController.direccion}"/>
+		                  <center>
+		                  	<p:commandButton value="agregar" actionListener="#{ordenesController.agregaDireccion()}" update="direcciones,mensajes,groupDireccion" rendered="#{ordenesController.direccion}"></p:commandButton>
+		                  </center>
+					</h:panelGrid>
+					<p:dataTable id="direcciones" value="#{ordenesController.ingOrdenesDM.listadireccioes}" var="dir" emptyMessage="Agregue una direccion" rendered="#{ordenesController.direccion}">
+						<p:column headerText="Tipo direccion" style="width:15%">
+							<h:outputText value="#{dir.idtipodireccion==1 ? 'Direccion de correspondencia':dir.idtipodireccion==2 ? 'Direccion de cobro':'Direccion de instalacion'}" />
+						</p:column>
+						<p:column headerText="Sector" style="width:15%">
+							<h:outputText value="#{dir.sector.nombre}" />
+						</p:column>
+						<p:column headerText="Calle Principal" style="width:15%">
+							<h:outputText value="#{dir.calleprincipal.nombre}" />
+						</p:column>
+						<p:column headerText="Calle Secundaria" style="width:15%">
+							<h:outputText value="#{dir.callesecundaria.nombre}" />
+						</p:column>	
+						<p:column headerText="Ubicacion" style="width:15%">
+							<h:outputText value="#{dir.ubicacion.nombre}" />
+						</p:column>
+						<p:column style="width:5%">
+							<p:commandButton icon="ui-icon-trash" title="Eliminar" actionListener="#{ordenesController.eliminarDireccion(dir.idtipodireccion)}" update="direcciones"> </p:commandButton>
+						</p:column>
+					</p:dataTable>
+				
+			</p:panel>
+		</h:panelGroup>
+			<p:commandButton value="Grabar" style="float: right;"
+			actionListener="#{ordenesController.grabar()}"
+			update=":form-contentpage:mensajes,:form-contentpage:panelSolicitud,:form-contentpage:panelCliente,:form-contentpage:groupDireccion" />
+		<p:commandButton value="Regresar" style="float: left;"
+			onclick="history.back();" immediate="true" />
+	</h:form>
+</ui:composition>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="form-contentpage">
+	
+		
+	
+	
+		<p:growl id="mensajes" showDetail="true" />
+		<h1 class="title ui-widget-header" style="text-align: center;">Consulta
+			de Personas</h1>
+		
+		<p:panel header="Consulta de Personas" id="panelConsulta">
+			<p:dataTable id="Personas" var="per" emptyMessage="No existen datos para la consulta"
+				value="#{ConsPersonaController.listaPersona}">
+
+				<p:column headerText="Nombres" style="width:15%">
+					<h:outputText value="#{per.nombre1} #{per.nombre2}" />
+				</p:column>
+
+				<p:column headerText="Apellidos" style="width:15%">
+					<h:outputText value="#{per.apellido1} #{per.apellido2}" />
+				</p:column>
+
+				<p:column headerText="Tipo de identidad" style="width:10%">
+					<h:outputText value="#{per.tidentidad.descripcion}" />
+				</p:column>
+
+				<p:column headerText="Identidad" style="width:10%">
+					<h:outputText value="#{per.identidad}" />
+				</p:column>
+
+				<p:column headerText="Usuario" style="width:15%">
+					<h:outputText value="#{per.usuario.nombre}" />
+				</p:column>
+
+				<p:column style="width:7%">
+					<p:commandButton id="buttonModificar" icon="ui-icon-document"
+						title="Modificar" oncomplete="persoDialog.show();"
+						update=":form-contentpage:confirmation:idPanelModificacion">
+						<f:setPropertyActionListener value="#{per}"
+							target="#{ConsPersonaController.personaDM.personaSeleccionada}" />
+					</p:commandButton>
+					<p:commandButton id="buttonEliminar"
+						oncomplete="#{ConsPersonaController.eliminar()}"
+						icon="ui-icon-cancel" title="Eliminar"
+						update="Personas,:form-contentpage:mensajes">
+						<f:setPropertyActionListener value="#{per}"
+							target="#{ConsPersonaController.personaDM.personaSeleccionada}" />
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+			
+			
+		</p:panel>
+
+			<p:commandButton value="Regresar" style="float: left;"
+				onclick="history.back();" immediate="true" />
+		<p:dialog header="Datos de la persona" widgetVar="persoDialog"
+				resizable="false" id="carDlg" showEffect="fade" hideEffect="fade"  closable="true"
+				modal="true" appendToBody="@(body)">
+				<h:form id="confirmation">
+					<p:panel header="Modificacion de persona" id="idPanelModificacion">
+						<p:panel header="Datos de la persona">
+
+							<h:panelGrid columns="4" width="900px" id="idPanelPersona">
+								<h:outputText value="Primer nombre:" />
+								<p:inputText style="width:150px"
+									value="#{ConsPersonaController.personaDM.personaSeleccionada.nombre1}"
+									id="idpnombre">
+									<p:ajax event="blur" update="idPanelUsuario"
+										listener="#{ConsPersonaController.onBlur$idpnombre}"></p:ajax>
+								</p:inputText>
+								<h:outputText value="Segundo nombre:" />
+								<p:inputText style="width:150px"
+									value="#{ConsPersonaController.personaDM.personaSeleccionada.nombre2}"></p:inputText>
+
+								<h:outputText value="Primer apellido:" />
+								<p:inputText style="width:150px"
+									value="#{ConsPersonaController.personaDM.personaSeleccionada.apellido1}">
+									<p:ajax event="blur" update="idPanelUsuario"
+										listener="#{ConsPersonaController.onBlur$idpnombre}"></p:ajax>
+								</p:inputText>
+								<h:outputText value="Segundo apellido:" />
+								<p:inputText style="width:150px"
+									value="#{ConsPersonaController.personaDM.personaSeleccionada.apellido2}"></p:inputText>
+								<h:outputText value="Tipo de identidad:" />
+								<p:selectOneMenu style="width:150px"
+									value="#{ConsPersonaController.personaDM.personaSeleccionada.tidentidad.idtidentidad}">
+									<f:selectItem itemLabel="Seleccione un tipo de identidad"
+										itemValue="0" />
+									<f:selectItems value="#{ConsPersonaController.tidentidad}"
+										var="identidad" itemLabel="#{identidad.descripcion}"
+										itemValue="#{identidad.idtidentidad}"></f:selectItems>
+								</p:selectOneMenu>
+								<h:outputText value="Identidad:" />
+								<p:inputText style="width:150px"
+									value="#{ConsPersonaController.personaDM.personaSeleccionada.identidad}"></p:inputText>
+								<h:outputText value="Area:" />
+								<p:selectOneMenu style="width:150px"
+									value="#{ConsPersonaController.personaDM.personaSeleccionada.area.idarea}">
+									<f:selectItem itemLabel="Seleccione una area" itemValue="0" />
+									<f:selectItems value="#{ConsPersonaController.areas}"
+										var="areas" itemLabel="#{areas.nombre}"
+										itemValue="#{areas.idarea}"></f:selectItems>
+								</p:selectOneMenu>
+								<h:outputText value="Cargo:" />
+								<p:inputText style="width:150px"
+									value="#{ConsPersonaController.personaDM.personaSeleccionada.cargo}" />
+								<h:outputText value="Genero:" />
+								<p:selectOneMenu style="width:150px"
+									value="#{ConsPersonaController.personaDM.personaSeleccionada.idgenero}">
+									<f:selectItem itemLabel="Seleccione un genero" itemValue="0" />
+									<f:selectItems value="#{ConsPersonaController.generos}"
+										var="genero" itemLabel="#{genero.nombre}"
+										itemValue="#{genero.idGenero}"></f:selectItems>
+								</p:selectOneMenu>
+								<h:outputText value="Fecha de nacimiento:" />
+								<p:calendar
+									value="#{ConsPersonaController.personaDM.personaSeleccionada.fnacimiento}">
+								</p:calendar>
+
+								<h:outputText value="Empresa:" />
+								<p:selectOneMenu style="width:150px"
+									value="#{ConsPersonaController.personaDM.personaSeleccionada.usuario.empresa.idempresa}">
+									<f:selectItem itemLabel="Seleccione una empresa" itemValue="0" />
+									<f:selectItems value="#{ConsPersonaController.empresas}"
+										var="empresa" itemLabel="#{empresa.nombre}"
+										itemValue="#{empresa.idempresa}"></f:selectItems>
+								</p:selectOneMenu>
+							</h:panelGrid>
+						</p:panel>
+						<p:panel header="Datos de usuario">
+							<h:panelGrid width="1000px" columns="4" id="idPanelUsuario">
+								<h:outputText value="Nombre de usuario" />
+								<p:inputText
+									value="#{ConsPersonaController.personaDM.personaSeleccionada.usuario.nombre}"
+									maxlength="15"></p:inputText>
+								<h:outputText value="Clave" />
+								<p:password
+									value="#{ConsPersonaController.personaDM.personaSeleccionada.usuario.claves.clave}"></p:password>
+								<h:outputText value="Abreviado" />
+								<p:inputText
+									value="#{ConsPersonaController.personaDM.personaSeleccionada.usuario.abreviado}"
+									maxlength="15"></p:inputText>
+								<h:outputText value="Punto de venta" />
+								<p:inputText
+									value="#{ConsPersonaController.personaDM.personaSeleccionada.usuario.ptovta}"></p:inputText>
+							</h:panelGrid>
+						</p:panel>
+						<br />
+						<p:commandButton value="Grabar" style="float: right;" process="@this"
+							actionListener="#{ConsPersonaController.grabar()}" ajax="false"
+							onsuccess="persoDialog.hide();" />
+						
+						<br />
+						<br />
+					</p:panel>
+				</h:form>
+			</p:dialog>
+		
+		
+	</h:form>
+
+</ui:composition>

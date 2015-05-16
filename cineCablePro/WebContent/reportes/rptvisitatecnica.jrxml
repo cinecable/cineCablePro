@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptvisitatecnica" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c03ea01e-41c0-4eb9-b067-ad49c0798dd1">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="p_idtecnico" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_idestado" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_idsector" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_idtipooperacion" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_idcliente" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_fsolicitud" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_fDesde" class="java.util.Date"/>
+	<parameter name="p_fHasta" class="java.util.Date"/>
+	<parameter name="p_identificacion" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select tbo.idordenes,tbo.observacion,mot.nombre motivo,
+	pers.apellido1||' '||pers.apellido2||' '||pers.nombre1 nombreTecnico,cta.nombre nombrecuenta,
+	tbo.fechaejecucion,tbo.nrocopias,
+	cli.apellido2||' '||cli.apellido1||' '||cli.nombre1 nombrecliente,
+	nod.nombre nnodo,sec.nombre nsec,
+	rdir.referencia nrdir,tope.nombre nombreoperacion
+from tbordenes tbo
+inner join tipooperacion top
+on tbo.idtipooperacion = top.idtipooperacion
+inner join estado est
+on tbo.idestado = est.idestado
+inner join ordasignaciones oas
+on tbo.idordenes = oas.idordenes
+left outer join motivos mot
+on mot.idmotivo = tbo.idmotivo
+left outer join persona pers
+on oas.idpersonat = pers.idpersona
+left outer join ctacliente cta
+on tbo.idcuenta = cta.idcuenta
+left outer join clientes cli
+on cli.idcliente = cta.idcliente
+left outer join direccion dir
+on dir.idcuenta = cta.idcuenta
+and dir.idestado = 1
+and dir.correspondencia ='I'
+left outer join sector sec
+on sec.idsector = dir.idsector
+left outer join nodos nod
+on nod.idnodo = dir.idnodo
+left outer join referenciadir rdir
+on rdir.iddireccion = dir.iddireccion
+left outer join tipooperacion tope
+on tope.idtipooperacion = tbo.idtipooperacion
+where coalesce(tbo.idtipooperacion,0) = coalesce(coalesce($P{p_idtipooperacion}, tbo.idtipooperacion), 0)
+and coalesce(oas.idpersonat,0) = coalesce(coalesce($P{p_idtecnico},oas.idpersonat),0)
+and coalesce(tbo.fechaejecucion,'01-01-9000') >= coalesce(coalesce($P{p_fDesde},tbo.fechaejecucion),'01-01-9000')
+and coalesce(tbo.fechaejecucion,'01-01-9000') <= coalesce(coalesce($P{p_fHasta},tbo.fechaejecucion),'01-01-9000')
+and coalesce(sec.idsector,0) = coalesce(coalesce($P{p_idsector}, sec.idsector),0)
+and coalesce(cli.identificacion,'x') = coalesce(coalesce($P{p_identificacion}, cli.identificacion),'x')]]>
+	</queryString>
+	<field name="idordenes" class="java.lang.Long"/>
+	<field name="observacion" class="java.lang.String"/>
+	<field name="motivo" class="java.lang.String"/>
+	<field name="nombretecnico" class="java.lang.String"/>
+	<field name="nombrecuenta" class="java.lang.String"/>
+	<field name="fechaejecucion" class="java.sql.Date"/>
+	<field name="nrocopias" class="java.lang.Integer">
+		<fieldDescription><![CDATA[en las impresiones, lleva un conteo de cuantas veces a sido impreso una orden]]></fieldDescription>
+	</field>
+	<field name="nombrecliente" class="java.lang.String"/>
+	<field name="nnodo" class="java.lang.String"/>
+	<field name="nsec" class="java.lang.String"/>
+	<field name="nrdir" class="java.lang.String"/>
+	<field name="nombreoperacion" class="java.lang.String"/>
+	<detail>
+		<band height="284">
+			<frame>
+				<reportElement uuid="5bcdc230-f33a-4c29-8a15-99226abaaed2" mode="Transparent" x="0" y="67" width="555" height="208" isPrintWhenDetailOverflows="true"/>
+				<box leftPadding="1" rightPadding="1">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<staticText>
+					<reportElement uuid="97173b1b-f597-4086-be72-8367b6047546" x="17" y="0" width="39" height="20"/>
+					<box>
+						<topPen lineWidth="0.5" lineColor="#000000"/>
+						<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[Cliente:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="d888357a-83f5-44f6-a7d2-8434062609ac" x="17" y="83" width="39" height="20"/>
+					<box>
+						<topPen lineWidth="0.5" lineColor="#000000"/>
+						<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[Motivo]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="12ea67ef-8dd3-4a29-967d-442c5df8cb9a" x="56" y="83" width="480" height="20"/>
+					<box>
+						<topPen lineWidth="0.5" lineColor="#000000"/>
+						<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{motivo}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="07cc27a0-b608-4b34-8432-8123907b5922" x="330" y="0" width="206" height="20"/>
+					<box>
+						<topPen lineWidth="0.5" lineColor="#000000"/>
+						<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{nombrecuenta}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="e5e9ecdd-a203-46f3-9ef8-b0c450feea40" x="56" y="0" width="235" height="20"/>
+					<box>
+						<topPen lineWidth="0.5" lineColor="#000000"/>
+						<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{nombrecliente}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="a5dd9771-6c08-43f6-a284-8e5c69065e44" x="18" y="103" width="60" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[Observacion:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="18f2f6ac-f3d8-4505-a184-e2b89ab782ac" x="18" y="123" width="519" height="38"/>
+					<textElement verticalAlignment="Top">
+						<paragraph lineSpacing="1_1_2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{observacion}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="485fac29-fa58-4e77-9a2a-09017bdb0abf" x="417" y="188" width="93" height="8"/>
+					<textElement textAlignment="Right">
+						<font size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Pag. "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Report">
+					<reportElement uuid="ddd6448a-a856-4099-aa7a-aea6bd1c9216" x="510" y="188" width="40" height="8"/>
+					<textElement>
+						<font size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="723580e9-b8ef-4991-a2e5-05d9a741ced7" x="291" y="0" width="39" height="20"/>
+					<box>
+						<topPen lineWidth="0.5" lineColor="#000000"/>
+						<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[Cuenta:]]></text>
+				</staticText>
+				<line>
+					<reportElement uuid="03e1b48e-e00d-4411-aaec-032059b75c41" x="56" y="181" width="100" height="1"/>
+				</line>
+				<staticText>
+					<reportElement uuid="4ce60a2f-0fdd-418d-a216-dd231a43c791" x="56" y="188" width="100" height="20"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Tecnico]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="4ce60a2f-0fdd-418d-a216-dd231a43c791" x="307" y="188" width="100" height="20"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Cliente]]></text>
+				</staticText>
+				<line>
+					<reportElement uuid="03e1b48e-e00d-4411-aaec-032059b75c41" x="307" y="181" width="100" height="1"/>
+				</line>
+				<staticText>
+					<reportElement uuid="7e3b0f86-cd30-49c5-a59a-630745d71238" x="17" y="22" width="39" height="20"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[Sector:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="301edbe4-a180-4850-ba33-8d69c484aaff" x="56" y="22" width="235" height="20"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{nsec}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="a3f602d2-98dc-4926-998e-33a44ca17db9" x="291" y="22" width="39" height="20"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[Nodo:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="8f3909c0-9305-4e20-a448-c7af8a87d1de" x="330" y="22" width="206" height="20"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{nnodo}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="effbe4fc-71f0-4a9c-9415-df3ac342b96c" x="18" y="42" width="60" height="41"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[Dirección y Referencias:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="10867591-620a-4309-8f8f-2e403c21ed7d" x="91" y="42" width="445" height="41"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Top"/>
+					<textFieldExpression><![CDATA[$F{nrdir}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement uuid="431a23d6-825e-4361-bfb6-f5acfefa1553" x="0" y="1" width="555" height="66"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<staticText>
+					<reportElement uuid="74846727-49fa-4d38-b8fb-93a4de6a3ca7" x="0" y="0" width="156" height="36"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="20" isBold="true" isItalic="true" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Cinecable]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement uuid="357d97a2-9c87-4b95-8fb1-b9685be03ea3" x="489" y="0" width="66" height="12"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="4f254e86-6eb0-45ed-bcf9-772eff1e3a41" x="389" y="0" width="100" height="12"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Fecha Impresión:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="4f254e86-6eb0-45ed-bcf9-772eff1e3a41" x="389" y="12" width="100" height="12"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Hora Impresión:]]></text>
+				</staticText>
+				<textField pattern="h.mm a" isBlankWhenNull="true">
+					<reportElement uuid="357d97a2-9c87-4b95-8fb1-b9685be03ea3" x="489" y="12" width="66" height="12"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="ffd5a1e4-9ff0-45a5-abea-e3375ff0d712" x="56" y="36" width="62" height="12"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{idordenes}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="a2903ece-aff7-460a-a75d-04364bf332f9" x="0" y="36" width="56" height="12"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Orden Nro.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="74846727-49fa-4d38-b8fb-93a4de6a3ca7" x="191" y="8" width="55" height="24"/>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Orden de]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="4d84524b-7dd3-456d-b37d-b30ae8fc2e30" x="367" y="46" width="188" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{nombretecnico}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="b1203814-7f87-4df1-950e-538c9d9397d8" x="310" y="46" width="57" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[Tecnico:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="a0c5a394-16de-4666-91be-b16d5585c8d8" x="389" y="24" width="100" height="12"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Fecha Ejecución:]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement uuid="f8a59a78-fbf2-4484-a1aa-97992c3916f1" x="489" y="24" width="66" height="12"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{fechaejecucion}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="354c3c2d-fe7e-4816-ab95-6c3fffecda89" x="251" y="8" width="138" height="16"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nombreoperacion}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="5246d0da-9545-458a-8602-22494bd8ef12" x="17" y="46" width="100" height="20"/>
+					<textElement>
+						<font fontName="Arial Black" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nro. Copia ]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="02fb4df6-7ee1-49fa-8f66-6ea9c4283daf" x="118" y="46" width="100" height="20"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nrocopias}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+</jasperReport>

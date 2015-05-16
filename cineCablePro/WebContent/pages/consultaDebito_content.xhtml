@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="form-contentpage">
+		<p:growl id="mensajes" showDetail="true" />
+		<h1 class="title ui-widget-header" style="text-align: center;">
+			<h:outputText value="Consulta de Debitos de Clientes" />
+		</h1>
+		<p:panelGrid columns="1" style="width:100%" id="panelGeneral">
+			<p:row>
+				<br />
+				<p:dataTable id="idTablaExport" emptyMessage="No existen Pagos Pendientes"
+					value="#{debitoBancarioDM.debitosClientes}" paginator="true"
+					rows="10" var="debdata"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10"
+					widgetVar="vartablapagos"
+					rendered="#{debitoBancarioDM.tablaActiva}">
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Nombre cliente" />
+						</f:facet>
+						<h:outputText
+							value="#{debdata.cliente.nombre1} #{debdata.cliente.nombre2} #{debdata.cliente.apellido1} #{debdata.cliente.apellido2}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Nro. Identificación" />
+						</f:facet>
+						<h:outputText value="#{debdata.cliente.idcliente}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Banco Débito" />
+						</f:facet>
+						<h:outputText value="#{debdata.debito.bancos.nombre}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="No.Cta." />
+						</f:facet>
+						<h:outputText value="#{debdata.debito.idcuenta}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Saldo" />
+						</f:facet>
+						<h:outputText value="#{debdata.factura.valpendiente}" />
+					</p:column>
+					<p:column>
+						<p:commandButton icon="ui-icon ui-icon-trash" onclick="vardialogdelete.show()" update=":form-contentpage:idpaneldelete">
+							<f:setPropertyActionListener value="#{debdata}"	target="#{debitoBancarioDM.facturasDebitoSelected}" />
+						</p:commandButton>
+					</p:column>
+					<f:facet name="footer">
+						<h:outputText value="Total: $#{debitoBancarioDM.totalGeneralExport}" style="font-size: 12px" >
+							<f:convertNumber pattern="0.00" />
+						</h:outputText>
+					</f:facet>
+				</p:dataTable>
+				<p:dataTable id="idTablaImport" emptyMessage="No existen Pagos Pendientes"
+					value="#{debitoBancarioDM.lisDatosImport}" paginator="true"
+					rows="10" var="exportData"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10"
+					rendered="#{!debitoBancarioDM.tablaActiva}">
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{debitoBancarioDM.tituloImport1}" />
+						</f:facet>
+						<h:outputText
+							value="#{exportData.dato1}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{debitoBancarioDM.tituloImport2}" />
+						</f:facet>
+						<h:outputText
+							value="#{exportData.dato2}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{debitoBancarioDM.tituloImport3}" />
+						</f:facet>
+						<h:outputText
+							value="#{exportData.dato3}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{debitoBancarioDM.tituloImport4}" />
+						</f:facet>
+						<h:outputText
+							value="#{exportData.dato4}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{debitoBancarioDM.tituloImport5}" />
+						</f:facet>
+						<h:outputText
+							value="#{exportData.dato5}" />
+					</p:column>
+					<f:facet name="footer">
+						<h:outputText value="Total: $#{debitoBancarioDM.totalGeneralImport}" style="font-size: 12px" >
+							<f:convertNumber pattern="0.00" />
+						</h:outputText>
+					</f:facet>
+				</p:dataTable>
+			</p:row>
+		</p:panelGrid>
+
+		<p:separator></p:separator>
+		<p:commandButton value="Regresar" style="float: right;"
+			onclick="history.back();" immediate="true" />
+			
+		<p:dialog id="iddialogdelete"  header="Eliminar Registro" closable="true" widgetVar="vardialogdelete" onHide="vartablapagos.unselectAllRows()" modal="true" showEffect="fade" hideEffect="fade" height="80" width="450">
+			<p:panelGrid id="idpaneldelete" columns="2" styleClass="gridnoborder">
+				<p:row>
+				<p:column>
+				<h:outputText id="idlabeldelete" value="¿Quitar débito #{debitoBancarioDM.facturasDebitoSelected.cliente.nombre1} #{debitoBancarioDM.facturasDebitoSelected.cliente.nombre2} #{debitoBancarioDM.facturasDebitoSelected.cliente.apellido1} #{debitoBancarioDM.facturasDebitoSelected.cliente.apellido2} #{debitoBancarioDM.facturasDebitoSelected.factura.valpendiente}?" />
+				</p:column>
+				<p:column>
+				<h:outputText value="" />
+				</p:column>
+				</p:row>
+				
+				<p:row>
+				<p:column colspan="2">
+				<h:panelGrid id="idpanel2delete" columns="2" style="position: absolute;right: 0;bottom: 0;">
+					<p:commandButton id="idconfirmardelete" value="Confirmar" actionListener="#{debitoBancarioDM.quitarPago()}" oncomplete="vardialogdelete.hide()" update=":form-contentpage:mensajes, :form-contentpage:idTablaExport" />
+					<p:commandButton id="idcancelardelete" value="Cancelar" onclick="vardialogdelete.hide()" />
+				</h:panelGrid>
+				</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:dialog>
+	</h:form>
+</ui:composition>

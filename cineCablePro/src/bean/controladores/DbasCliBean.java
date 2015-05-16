@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import bo.negocio.ClienteBO;
 import bo.negocio.ConyugeBO;
 import bo.negocio.CtaclienteBO;
 import bo.negocio.TipoclienteBO;
@@ -19,7 +20,9 @@ import pojo.annotations.Clientes;
 import pojo.annotations.Conyuge;
 import pojo.annotations.Ctacliente;
 import pojo.annotations.Empresa;
+import pojo.annotations.Estadocivil;
 import pojo.annotations.Tipocliente;
+import pojo.annotations.Tipoidentidad;
 import pojo.annotations.Usuario;
 import pojo.annotations.custom.Genero;
 import pojo.annotations.custom.TipoEstadoCivil;
@@ -65,10 +68,11 @@ public class DbasCliBean  implements Serializable{
 	 tipoIdDocSelect = new TipoIdDoc(0, null);
 	 tipoPersonaSelect=new TipoPersona(0, null);
 	 titNombres="Datos Persona";
-	 clientes = new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null, null, null, null, new Date(), null, 1, 0, 1, 1, new Date(), null);
-	 clientesClon = new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null, null, null, null, new Date(), null, 1, 0, 1, 1, new Date(), null);
+	 clientes = new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null, null, null, null, new Date(), null,new Estadocivil(), 0, 1, new Date(), null, new Tipoidentidad());
+	 clientesClon = new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null, null, null, null, new Date(), null, new Estadocivil(), 0,  1, new Date(), null,new Tipoidentidad());
 	 conyuge = new Conyuge(0, new Clientes(), null, null, null, null, null);
 	 conyugeClon = new Conyuge(0, new Clientes(), null, null, null, null, null);
+	 
 	 
 	 lisTipocliente = new ArrayList<Tipocliente>();
 	 
@@ -76,6 +80,8 @@ public class DbasCliBean  implements Serializable{
      tieneConyuge = false;
 	 CargaTDoc();
 	 ListaTipoCliente();
+		
+	
 	}
 	
 	private void ListaTipoCliente(){
@@ -128,7 +134,7 @@ public class DbasCliBean  implements Serializable{
 					
 					if(conyuge != null){
 						if(conyuge.getClientes() == null){
-							conyuge.setClientes(new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null, null, null, null, new Date(), null, 1, 0, 1, 1, new Date(), null));
+							conyuge.setClientes(new Clientes(null, new Tipocliente(), new Usuario(), new Empresa(), null, null, null, null, null, null, new Date(), null, new Estadocivil(), 0, 1, new Date(), null,new Tipoidentidad()));
 						}
 						
 						conyugeClon = conyuge.clonar();
@@ -184,24 +190,75 @@ public class DbasCliBean  implements Serializable{
 			habEmpresa=false;
 		}
 		
-		eventoIdentidadPersona();
+		creaNombreEmpresa();
 	}
 	
-	public void eventoIdentidadPersona(){
-		if(getClientes().getIdtipoidentificacion() == Parametro.TIPO_IDENTIFICACION_RUC && getClientes().getIdtipopersona() == Parametro.TIPO_PERSONA_NATURAL){
+	private void creaNombreEmpresa(){
+		if(getClientes().getTipoidentidad().getIdtidentidad() == Parametro.TIPO_IDENTIFICACION_RUC && getClientes().getIdtipopersona() == Parametro.TIPO_PERSONA_NATURAL){
 			String NombreCliente = getClientes().getNombre1() + " " + getClientes().getNombre2() + " " + getClientes().getApellido1() + " " + getClientes().getApellido2();
 			getClientes().setEmpresa_1(NombreCliente);
 		}
 	}
 	
+	public void eventoIdentidadPersona(){
+		creaNombreEmpresa();
+		getClientes().setIdcliente(null);
+	}
+	
 	public void validarEstadoCivil(){
-		if(clientes.getEstadocivil() == Parametro.ESTADO_CIVIL_CASADO || clientes.getEstadocivil() == Parametro.ESTADO_CIVIL_UNION_LIBRE){
+		if(clientes.getEstadocivil().getIdestadocivil() == Parametro.ESTADO_CIVIL_CASADO || clientes.getEstadocivil().getIdestadocivil() == Parametro.ESTADO_CIVIL_UNION_LIBRE){
 			tieneConyuge = true;
 		}else{
 			tieneConyuge = false;
 		}
 	}
 
+	public boolean cedulaExiste(){
+		boolean ok = false;
+		
+		ClienteBO clienteBO = new ClienteBO();
+		
+		try {
+			Clientes clientes = clienteBO.getClientesById(getClientes().getIdcliente());
+			
+			if(clientes != null && clientes.getIdcliente() != null && clientes.getIdcliente().trim().length() > 0){
+				ok = true;
+				new MessageUtil().showWarnMessage("Numero identificacion ya existe. "+clientes.getNombre1()+ " " + clientes.getApellido1(),"");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			new MessageUtil().showErrorMessage("Ha ocurrido un error. Comunicar al Webmaster.","");
+		}
+		
+		return ok;
+	}
+	
+	public boolean validacionIdentificacion(){
+		boolean ok = false;
+		
+		try {
+			if(clientes != null && clientes.getTipoidentidad() != null && clientes.getTipoidentidad().getIdtidentidad() > 0 &&
+					clientes.getIdcliente() != null && clientes.getIdcliente().trim().length() > 0){
+				if(clientes.getTipoidentidad().getIdtidentidad() == Parametro.TIPO_IDENTIFICACION_CEDULA &&
+						clientes.getIdcliente().trim().length() != 10){
+					new MessageUtil().showWarnMessage("Longitud de Cedula incorrecto en Seccion de Datos Basicos","");
+				}else{
+					if(clientes.getTipoidentidad().getIdtidentidad() == Parametro.TIPO_IDENTIFICACION_RUC &&
+							clientes.getIdcliente().trim().length() != 13){
+						new MessageUtil().showWarnMessage("Longitud de RUC incorrecto en Seccion de Datos Basicos","");
+					}else{
+						ok = true;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			new MessageUtil().showErrorMessage("Ha ocurrido un error. Comunicar al Webmaster.","");
+		}
+		
+		return ok;
+	}
+	
 	public List<TipoIdDoc> getLisTipoIddoc() {
 		return lisTipoIddoc;
 	}

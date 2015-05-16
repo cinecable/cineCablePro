@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<h:form id="form-contentpage">
+		<h1 class="title ui-widget-header" style="text-align: center;">
+			<h:outputText value="Solicitud de Operaciones" />
+		</h1>
+		<p:panelGrid columns="1" style="width:100%" id="panelGeneral">
+			<p:row>
+				<br />
+				<p:dataTable emptyMessage="No existen Pagos Pendientes"
+					value="#{debitoBancarioDM.debitosClientes}" paginator="true"
+					rows="10" var="debdata"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10">
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Nombre cliente" />
+						</f:facet>
+						<h:outputText
+							value="#{debdata.cliente.nombre1} #{debdata.cliente.nombre2} #{debdata.cliente.apellido1} #{debdata.cliente.apellido2}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Tipo de Solicitud" />
+						</f:facet>
+						<h:outputText value="#{debdata.cliente.idcliente}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Motivos" />
+						</f:facet>
+						<h:outputText value="#{debdata.factura.valpendiente}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Observación" />
+						</f:facet>
+						<h:outputText value="#{debdata.debito.bancos.nombre}" />
+					</p:column>
+				</p:dataTable>
+			</p:row>
+			<br />
+		</p:panelGrid>
+		<p:panelGrid></p:panelGrid>
+	</h:form>
+	<p:separator></p:separator>
+	<p:commandButton value="Regresar" style="float: right;"
+		onclick="history.back();" immediate="true" />
+</ui:composition>

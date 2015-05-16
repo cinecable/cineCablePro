@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<h:form id="form-contentpage">
+		<h1 class="title ui-widget-header" style="text-align: center;">Cierre de Caja</h1>
+		<p:messages id="mensajes" autoUpdate="true" showSummary="true" closable="true" />
+		<p:panel id="panel-content" style="min-height: 300px;margin: 20px 0">
+			<h:link value="Regresar" style="float: right;" outcome="gridclientes?faces-redirect=true" >
+			</h:link>
+			<br /><br />
+			<p:panelGrid id="idBasico" columns="4" styleClass="gridcriterios" columnClasses="columna1, columna2, columna1, columna2">
+				<f:facet name="header">Parámetros de Impresion</f:facet>
+				<p:outputLabel value="Cajero:" for="idCajero" />
+				<p:selectOneMenu id="idCajero"
+					value="#{cierreCajaBean.idusuario}" style="width: 150px">
+					<f:selectItems value="#{cierreCajaBean.lisUsuario}" var="i"
+						itemLabel="#{i.nombre}" itemValue="#{i.idusuario}" />
+				</p:selectOneMenu>
+				<h:outputText value="" />
+				<h:outputText value="" />
+				
+				<h:outputLabel value="Fecha Desde:" for="idFechaDesde" />
+				<p:calendar id="idFechaDesde"
+					value="#{cierreCajaBean.fechaDesde}"
+					yearRange="c-50:c" locale="es" pattern="dd/MM/yyyy"
+					navigator="true" />
+				<h:outputLabel value="Fecha Hasta:" for="idFechaHasta" />
+				<p:calendar id="idFechaHasta"
+					value="#{cierreCajaBean.fechaHasta}"
+					yearRange="c-50:c" locale="es" pattern="dd/MM/yyyy"
+					navigator="true" />
+			</p:panelGrid>
+			<br />
+			<p:commandButton id="btnConsultar" value="Consultar"
+				style="float: right;" update=":form-contentpage:idTablaIngresos, :form-contentpage:mensajes" >
+				<f:setPropertyActionListener target="#{cierreCajaBean.isconsultaejecutada}" value="true"></f:setPropertyActionListener>
+			</p:commandButton>
+			<br />
+			<br />
+			<br />
+			<p:dataTable id="idTablaIngresos"
+				value="#{cierreCajaBean.lisIngresosCierreCaja}" var="ingreso"
+				rowKey="#{ingreso.idfpago}" widgetVar="varTablaIngresos"
+				paginator="false" rows="10"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				selection="#{cierreCajaBean.ingresosCierreCajaSelected}"
+				selectionMode="single" emptyMessage="No se encontraron registros"
+				lazy="true">
+
+				<p:ajax event="rowSelect" update=":form-contentpage:iddialogeditor" oncomplete="eventDialog.show();" />
+
+				<f:facet name="header">
+					INGRESOS
+				</f:facet>
+
+				<p:column headerText="Nombre">
+					<h:outputText value="#{ingreso.nombre}" />
+				</p:column>
+				<p:column headerText="Valor">
+					<h:outputText value="#{ingreso.valpago}" >
+						<f:convertNumber pattern="0.00" />
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+			<br />
+			<center>
+				<p:commandButton value="Cerrar Caja" 
+					update=":form-contentpage:mensajes" >
+				</p:commandButton>
+			</center>
+		</p:panel>
+		<p:dialog id="iddialogeditor" header="Detalle de Movimientos"
+			closable="true" widgetVar="eventDialog" modal="true"
+			showEffect="fade" hideEffect="fade" width="600">
+			<p:dataTable id="idTablaDetalle" value="#{cierreCajaBean.ingresosCierreCajaSelected}" var="detalle">
+				<p:column>
+					<f:facet name="header">Descripcion</f:facet>
+					<h:outputText value="#{detalle.nombre}">
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+		</p:dialog>
+	</h:form>
+</ui:composition>

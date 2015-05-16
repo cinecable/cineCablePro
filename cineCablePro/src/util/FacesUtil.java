@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -85,5 +86,8 @@ public class FacesUtil {
 		
 		return paramValue;
 	}
-	
+	public String getRealPath(String Resource) {
+		ServletContext scontext = (ServletContext) facesContext.getExternalContext().getContext();
+		return scontext.getRealPath(Resource);
+	}
 }

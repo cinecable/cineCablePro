@@ -3,12 +3,15 @@ package pojo.annotations;
 // Generated 09/02/2014 10:20:13 AM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
+//import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+//import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -34,9 +37,11 @@ public class Servicio implements java.io.Serializable {
 	private Date fecha;
 	private String idcontrolador;
 	private String comunicacion;
+	private String serviceClass;
 	//private Set<?> prodservicios = new HashSet<Object>(0);
 	private Costoservicio costoservicio;
-
+	//private List<Costoservicio> costoservicio;
+	
 	public Servicio() {
 	}
 
@@ -52,8 +57,8 @@ public class Servicio implements java.io.Serializable {
 
 	public Servicio(int idservicio, Tiposervicio tiposervicio, String nombre,
 			String abreviado, int idestado, int idempresa, Date fecha,
-			String idcontrolador, String comunicacion, /*Set<?> prodservicios,*/
-			Costoservicio costoservicio) {
+			String idcontrolador, String comunicacion/*, Set<?> prodservicios,
+			Costoservicio costoservicio*/) {
 		this.idservicio = idservicio;
 		this.tiposervicio = tiposervicio;
 		this.nombre = nombre;
@@ -64,7 +69,7 @@ public class Servicio implements java.io.Serializable {
 		this.idcontrolador = idcontrolador;
 		this.comunicacion = comunicacion;
 		//this.prodservicios = prodservicios;
-		this.costoservicio = costoservicio;
+		//this.costoservicio = costoservicio;
 	}
 
 	@Id
@@ -77,7 +82,7 @@ public class Servicio implements java.io.Serializable {
 		this.idservicio = idservicio;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "idtiposervicio", nullable = false)
 	public Tiposervicio getTiposervicio() {
 		return this.tiposervicio;
@@ -162,11 +167,30 @@ public class Servicio implements java.io.Serializable {
 
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "servicio")
 	public Costoservicio getCostoservicio() {
-		return this.costoservicio;
+		return costoservicio;
 	}
 
 	public void setCostoservicio(Costoservicio costoservicio) {
 		this.costoservicio = costoservicio;
 	}
+	
+	/*@OneToMany(fetch = FetchType.LAZY, mappedBy = "servicio")
+	public List<Costoservicio> getCostoservicio() {
+		return costoservicio;
+	}
 
+	public void setCostoservicio(List<Costoservicio> costoservicio) {
+		this.costoservicio = costoservicio;
+	}*/
+	
+	
+	//@Column(name = "serviceclass")
+	@Transient
+	public String getServiceClass() {
+		return serviceClass;
+	}
+
+	public void setServiceClass(String serviceClass) {
+		this.serviceClass = serviceClass;
+	}
 }

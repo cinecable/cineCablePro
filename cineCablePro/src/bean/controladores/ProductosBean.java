@@ -57,6 +57,7 @@ public class ProductosBean implements Serializable {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void consultarProductos() {
 		if (idcuenta > 0) {
 			try {
@@ -177,6 +178,7 @@ public class ProductosBean implements Serializable {
 			productosID.setIdProducto(adicionalSelected.getIdproducto());
 			productosID.setNombreProd(adicionalSelected.getNombre());
 			productosID.setCantidad(cantidad);
+			productosID.setIdproductoprincipal(productoSelected.getIdproducto());
 	
 			lisProductosId.add(productosID);
 	

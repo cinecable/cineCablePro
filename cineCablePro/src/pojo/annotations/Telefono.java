@@ -76,7 +76,7 @@ public class Telefono implements java.io.Serializable, Cloneable {
 		this.ctacliente = ctacliente;
 	}
 
-	@Column(name = "nombre", nullable = false, length = 25)
+	@Column(name = "nombre", nullable = false, length = 100)
 	public String getNombre() {
 		return this.nombre;
 	}

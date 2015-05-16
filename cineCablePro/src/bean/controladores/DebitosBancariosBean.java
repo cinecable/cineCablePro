@@ -1,5 +1,7 @@
 package bean.controladores;
 
+import global.Parametro;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,19 +41,14 @@ public class DebitosBancariosBean  implements Serializable{
 	private List<TipoCuenta> lisTipoCuenta;
 	private List<TipoIdDoc> lisTipoIddoc;
 
-	
-	//private Tipodebito tipoDebitoSelected;	
-	//private Bancos bancosSelected;	
-	//private Bancos tarjetasSelected;	
-	//private TipoCuenta tipoCuentaSelected;
-	//private String codSeguridad;
-	//private String propietario;
-	//private String nroDocumento;
 	private boolean reqBanco;
 	
 	private Debitobco debitobco;
+	private Debitobco debitobcoConsulta;
 	private Debitobco debitobcoClon;
+	private Debitobco debitobcoClonConsulta;
 	private int idcuenta;
+	private String TipoCtaBanco;
 	
 	public DebitosBancariosBean() {
 		lisTipodebito = new ArrayList<Tipodebito>();
@@ -60,16 +57,9 @@ public class DebitosBancariosBean  implements Serializable{
 		lisTipoCuenta = new ArrayList<TipoCuenta>();
 		lisTipoIddoc = new ArrayList<TipoIdDoc>();
 		
-		debitobco = new Debitobco(0, new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null), 0, null, null, null, 0, null, 0, 0, null);
-		debitobcoClon = new Debitobco(0, new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null), 0, null, null, null, 0, null, 0, 0, null);
+		debitobco = new Debitobco(0, new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null), new Tipodebito(0,null,null,0,0,null), null, null, null, new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null), null, 0, 0, null);
+		debitobcoClon = new Debitobco(0, new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null), new Tipodebito(0,null,null,0,0,null), null, null, null, new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null), null, 0, 0, null);
 		
-		//tipoDebitoSelected=new Tipodebito(0, null, 0, 0, null);
-		
-		//bancosSelected=new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null);
-		
-		//tarjetasSelected=new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null);
-		
-		//tipoCuentaSelected=new TipoCuenta(0, null);
 		
 		cargaTiposdb();
 		cargaBcoTar();
@@ -84,7 +74,7 @@ public class DebitosBancariosBean  implements Serializable{
 						.getParametroUrl("idcuenta").toString() : "0");
 
 		if (idcuenta > 0) {
-			//consultarDebitoBancario();
+			consultarDebitoBancario();
 		}
 	}
 	
@@ -92,11 +82,45 @@ public class DebitosBancariosBean  implements Serializable{
 		if(this.idcuenta > 0){
 			try {
 				DebitosbcoBO debitosbcoBO = new DebitosbcoBO();
-				debitobco = debitosbcoBO.getDebitobcoByIdcuenta(idcuenta);
-				debitobcoClon = debitobco.clonar();
+				setDebitobco(debitosbcoBO.getDebitobcoByIdcuenta(idcuenta));
+				
+				if 	(debitobco != null) {
+					if (debitobco.getIdtipocuenta() >= 0) {
+						if (debitobco.getIdtipocuenta() == 1) {
+							setTipoCtaBanco("Cta. Ahorros");
+						} else {
+							if (debitobco.getIdtipocuenta() == 2) {
+								setTipoCtaBanco("Cta. Corriente");
+							} else {
+								setTipoCtaBanco("Cta. No definida");
+							}
+						}
+					}
+				
+					if (debitobco.getBancos() == null){
+						debitobco.setBancos(null);				
+					}
+					if (debitobco.getBancosEmisor() == null || debitobco.getBancosEmisor().getIdbanco()==0) {
+						debitobco.setBancosEmisor(null);
+					}
+					if (debitobco.getBancosEmisor() == null) {
+						debitobco.setBancosEmisor(new Bancos());
+					}
+					if (debitobco.getIdentificacion() == null) {
+						debitobco.setIdentificacion("No Definido");
+					}
+					if (debitobco.getPropietario() == null) {
+						debitobco.setPropietario("No Definido");
+					}
+					if (debitobco.getNrodebito() == null) {
+						debitobco.setNrodebito("No Definido");
+					}
+					debitobcoClon = debitobco.clonar();
+			
+				}
 			} catch(Exception e) {
 				e.printStackTrace();
-				new MessageUtil().showFatalMessage("Error!", "Ha ocurrido un error inesperado. Comunicar al Webmaster!");
+				new MessageUtil().showFatalMessage("Error!", "Ha ocurrido un error inesperado. Al consultar Debitos Bancarios Beans !");
 			}
 		}
 	}
@@ -139,12 +163,7 @@ public void cargaBcoTar() {
 	reqBanco=false;
 	
 
-	
-	/*if (!tipoDebitoSelected.equals(null)) {
-		idtipoentidad=tipoDebitoSelected.getIdtipodebito();
-		reqBanco=true;
-	}*/
-	idtipoentidad = debitobco.getIdtipodebito();
+	idtipoentidad = debitobco.getTipodebito().getIdtipodebito();
 	reqBanco=true;
 	
 	if (idtipoentidad == 1) {
@@ -164,7 +183,7 @@ public void cargaBcoTar() {
 		
 	} else if (idtipoentidad == 2) {
 		//tarjetasSelected=new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null);
-		debitobco.setIdbancotar(0);
+		//debitobco.getBancosEmisor().setIdbanco(0);
 		continuar=true;
 		texto="Sel.Tarjeta Credito ...";
 	}
@@ -190,7 +209,7 @@ public void cargaBcoTar() {
 			        			           
 				           if (idtipoentidad == 2) {
 					       		//tarjetasSelected=new Bancos(0, new Estado(), new Tipoentidad(), new Empresa(), null, 0, null);
-				        	   debitobco.setIdbancotar(0);
+				        	 //  debitobco.getBancosEmisor().setIdbanco(0);
 					       		texto="Sel.Emisor Tarjeta ...";
 					       									
 								// Inicializando Nodos
@@ -241,18 +260,39 @@ public void cargaBcoTar() {
 		lisTipoIddoc.add(new TipoIdDoc(4, "Otro Documento"));
 	}
 	
+	public boolean validacionIdentificacion(){
+		boolean ok = false;
+		
+		try {
+			if(debitobco != null && debitobco.getIdtipoidentificacion() > 0 &&
+					debitobco.getIdentificacion() != null && debitobco.getIdentificacion().trim().length() > 0){
+				if(debitobco.getIdtipoidentificacion() == Parametro.TIPO_IDENTIFICACION_CEDULA &&
+						debitobco.getIdentificacion().trim().length() != 10){
+					new MessageUtil().showWarnMessage("Longitud de Cedula incorrecto en Seccion Debito Bancario","");
+				}else{
+					if(debitobco.getIdtipoidentificacion() == Parametro.TIPO_IDENTIFICACION_RUC &&
+							debitobco.getIdentificacion().trim().length() != 13){
+						new MessageUtil().showWarnMessage("Longitud de RUC incorrecto en Seccion Debito Bancario","");
+					}else{
+						ok = true;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			new MessageUtil().showErrorMessage("Ha ocurrido un error. Comunicar al Webmaster.","");
+		}
+		
+		return ok;
+	}
+	
 	public List<Tipodebito> getLisTipodebito() {
 		return lisTipodebito;
 	}
 	public void setLisTipodebito(List<Tipodebito> lisTipodebito) {
 		this.lisTipodebito = lisTipodebito;
 	}
-	/*public Tipodebito getTipoDebitoSelected() {
-		return tipoDebitoSelected;
-	}
-	public void setTipoDebitoSelected(Tipodebito tipoDebitoSelected) {
-		this.tipoDebitoSelected = tipoDebitoSelected;
-	}*/
+	
 	public List<Bancos> getLisBancos() {
 		return lisBancos;
 	}
@@ -265,19 +305,7 @@ public void cargaBcoTar() {
 	public void setLisTarjetas(List<Bancos> lisTarjetas) {
 		this.lisTarjetas = lisTarjetas;
 	}
-	/*public Bancos getBancosSelected() {
-		return bancosSelected;
-	}
-	public void setBancosSelected(Bancos bancosSelected) {
-		this.bancosSelected = bancosSelected;
-	}
-	public Bancos getTarjetasSelected() {
-		return tarjetasSelected;
-	}
-	public void setTarjetasSelected(Bancos tarjetasSelected) {
-		this.tarjetasSelected = tarjetasSelected;
-	}*/
-
+	
 	public List<TipoCuenta> getLisTipoCuenta() {
 		return lisTipoCuenta;
 	}
@@ -285,30 +313,7 @@ public void cargaBcoTar() {
 		this.lisTipoCuenta = lisTipoCuenta;
 	}
 	
-	/*public TipoCuenta getTipoCuentaSelected() {
-		return tipoCuentaSelected;
-	}
-	public void setTipoCuentaSelected(TipoCuenta tipoCuentaSelected) {
-		this.tipoCuentaSelected = tipoCuentaSelected;
-	}
-	public String getCodSeguridad() {
-		return codSeguridad;
-	}
-	public void setCodSeguridad(String codSeguridad) {
-		this.codSeguridad = codSeguridad;
-	}
-	public String getPropietario() {
-		return propietario;
-	}
-	public void setPropietario(String propietario) {
-		this.propietario = propietario;
-	}
-	public String getNroDocumento() {
-		return nroDocumento;
-	}
-	public void setNroDocumento(String nroDocumento) {
-		this.nroDocumento = nroDocumento;
-	}*/
+
 	public boolean isReqBanco() {
 		return reqBanco;
 	}
@@ -342,5 +347,34 @@ public void cargaBcoTar() {
 
 	public void setDebitobcoClon(Debitobco debitobcoClon) {
 		this.debitobcoClon = debitobcoClon;
-	}	
+	}
+	public Debitobco getDebitobcoConsulta() {
+		return debitobcoConsulta;
+	}
+
+	public void setDebitobcoConsulta(Debitobco debitobcoConsulta) {
+		this.debitobcoConsulta = debitobcoConsulta;
+	}
+
+	public Debitobco getDebitobcoClonConsulta() {
+		return debitobcoClonConsulta;
+	}
+
+	public void setDebitobcoClonConsulta(Debitobco debitobcoClonConsulta) {
+		this.debitobcoClonConsulta = debitobcoClonConsulta;
+	}
+
+	/**
+	 * @return the tipoCtaBanco
+	 */
+	public String getTipoCtaBanco() {
+		return TipoCtaBanco;
+	}
+
+	/**
+	 * @param tipoCtaBanco the tipoCtaBanco to set
+	 */
+	public void setTipoCtaBanco(String tipoCtaBanco) {
+		TipoCtaBanco = tipoCtaBanco;
+	}
 }

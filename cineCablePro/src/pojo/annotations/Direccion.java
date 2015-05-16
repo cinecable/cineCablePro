@@ -6,9 +6,11 @@ package pojo.annotations;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
 import javax.persistence.Table;
 
 
@@ -25,6 +27,7 @@ public class Direccion implements java.io.Serializable, Cloneable {
 	private static final long serialVersionUID = 21333028665661038L;
 	private int iddireccion;
 	private Edificio edificio;
+	private Referenciadir referenciadir;
 	private Ctacliente ctacliente;
 	private Calleprincipal calleprincipal;
 	private Tiposector tiposector;
@@ -40,7 +43,8 @@ public class Direccion implements java.io.Serializable, Cloneable {
 	private String vineta;
 	private String poste;
 	private String solar;
-	private int idestado;
+	private int idtipodireccion;
+	private Estado estado;
 	
 	public Direccion() {
 	}
@@ -81,9 +85,20 @@ public class Direccion implements java.io.Serializable, Cloneable {
 		this.poste = poste;
 		this.solar = solar;
 	}
+	
+	@Column(name = "idtipodireccion")
+	public int getIdtipodireccion() {
+		return idtipodireccion;
+	}
 
+	public void setIdtipodireccion(int idtipodireccion) {
+		this.idtipodireccion = idtipodireccion;
+	}
+	
 	@Id
 	@Column(name = "iddireccion", unique = true, nullable = false)
+	/* @SequenceGenerator(name = "sq_generacion_direccion", sequenceName = "sq_generacion_direccion", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sq_generacion_direccion") */
 	public int getIddireccion() {
 		return this.iddireccion;
 	}
@@ -243,56 +258,32 @@ public class Direccion implements java.io.Serializable, Cloneable {
 	public void setSolar(String solar) {
 		this.solar = solar;
 	}
-
-	@Column(name = "idestado")
-	public int getIdestado() {
-		return idestado;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "idreferencia")
+	public Referenciadir getReferenciadir() {
+		return referenciadir;
 	}
 
-	public void setIdestado(int idestado) {
-		this.idestado = idestado;
+	public void setReferenciadir(Referenciadir referenciadir) {
+		this.referenciadir = referenciadir;
 	}
 
+	
+	@ManyToOne
+	@JoinColumn(name = "idestado")
+	public Estado getEstado() {
+		return estado;
+	}
+
+	public void setEstado(Estado estado) {
+		this.estado = estado;
+	}
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		Direccion direccion = (Direccion) super.clone();
 		
-		/*if(direccion.getCalleprincipal() != null){
-			direccion.setCalleprincipal((Calleprincipal)direccion.getCalleprincipal().clone());
-		}
-		
-		if(direccion.getCallesecundaria() != null){
-			direccion.setCallesecundaria((Callesecundaria)direccion.getCallesecundaria().clone());
-		}
-		
-		if(direccion.getCtacliente() != null){
-			direccion.setCtacliente((Ctacliente)direccion.getCtacliente().clone());
-		}
-		
-		if(direccion.getEdificio() != null){
-			direccion.setEdificio((Edificio)direccion.getEdificio().clone());
-		}
-		
-		if(direccion.getNodos() != null){
-			direccion.setNodos((Nodos)direccion.getNodos().clone());
-		}
-		
-		if(direccion.getReferenciadir() != null){
-			direccion.setReferenciadir((Referenciadir)direccion.getReferenciadir().clone());
-		}
-		
-		if(direccion.getSector() != null){
-			direccion.setSector((Sector)direccion.getSector().clone());
-		}
-		
-		if(direccion.getTiposector() != null){
-			direccion.setTiposector((Tiposector)direccion.getTiposector().clone());
-		}
-		
-		if(direccion.getUbicacion() != null){
-			direccion.setUbicacion((Ubicacion)direccion.getUbicacion().clone());
-		}*/
-		
+			
 		return direccion;
 	}
 	
@@ -317,7 +308,7 @@ public class Direccion implements java.io.Serializable, Cloneable {
 		result = prime * result
 				+ ((edificio == null) ? 0 : edificio.getIdedificio());
 		result = prime * result + iddireccion;
-		result = prime * result + idestado;
+		result = prime * result + ((estado == null) ? 0 : estado.getIdestado());
 		result = prime * result + ((idtab == null) ? 0 : idtab.hashCode());
 		result = prime * result + ((nodos == null) ? 0 : nodos.getIdnodo());
 		result = prime * result + ((numero == null) ? 0 : numero.hashCode());
@@ -374,9 +365,10 @@ public class Direccion implements java.io.Serializable, Cloneable {
 			return false;
 		if (iddireccion != other.iddireccion)
 			return false;
-		if (idestado != other.idestado)
-			return false;
-		if (idtab == null) {
+		if (estado == null) {
+			if (other.estado != null)
+				return false;
+	   } else if (idtab == null) {
 			if (other.idtab != null)
 				return false;
 		} else if (!idtab.equals(other.idtab))

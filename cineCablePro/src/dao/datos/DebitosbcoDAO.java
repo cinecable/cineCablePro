@@ -7,7 +7,6 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-
 import pojo.annotations.Debitobco;
 
 
@@ -34,6 +33,8 @@ public class DebitosbcoDAO {
         lisDebitobco = (List<Debitobco>)criteria.list();
 
         return lisDebitobco;
+      
+        
     }
 	
 	public Debitobco getDebitobcoByIdcuenta(Session session, int idcuenta) throws Exception {
@@ -41,11 +42,14 @@ public class DebitosbcoDAO {
 		
 		Criteria criteria = session.createCriteria(Debitobco.class)
 				.add( Restrictions.eq("idcuenta",idcuenta))
-				.createAlias("bancos", "bco");
-		
+				.createAlias("bancos", "bco",1)
+				.createAlias("bancosEmisor", "bcoE",1)
+				.createAlias("tipodebito", "tdbo",1);
+				
 		debitobco = (Debitobco) criteria.uniqueResult();
 		
-		return debitobco;
+		return debitobco;		
+		
 	}
 	
 	public void saveDebitobco(Session session, Debitobco debitobco) throws Exception {

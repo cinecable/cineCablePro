@@ -53,7 +53,7 @@ public class TelefonosMantBean implements Serializable {
 				CtaclienteBO ctaclienteBO = new CtaclienteBO();
 				ctacliente = ctaclienteBO.getCtaclienteById(idcuenta);
 				
-				telefonosBean.consultarTelefonos();
+				//telefonosBean.consultarTelefonos();
 				
 				if(telefonosBean.getLisTelefonos() != null && telefonosBean.getLisTelefonos().size() > 0){
 					modificable = true;

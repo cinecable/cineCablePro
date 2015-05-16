@@ -727,6 +727,7 @@ public class FacturaBO {
 		return ok;
 	}
 	
+	@SuppressWarnings("unused")
 	public boolean procesarGeneracionCreditosExcedentes(List<DetalleFacturaPojo> lisDetalleFacturaPojo, List<Tpagos> lisTpagos, int idcuenta, String numeroFacturaParam[]) throws Exception {
 		boolean ok = false;
 		Session session = null;
@@ -746,6 +747,7 @@ public class FacturaBO {
 			ExcedentesBO excedentesBO = new ExcedentesBO();
 			CargosBO cargosBO = new CargosBO();
 			NrosfacturaBO nrosfacturaBO = new NrosfacturaBO();
+			CtaclienteBO ctaclienteBO = new CtaclienteBO();
 			
 			List<Tpagos> lisFormasPagoCuenta = new ArrayList<Tpagos>(lisTpagos);
 			Date fecharegistro = new Date();
@@ -757,6 +759,7 @@ public class FacturaBO {
 			String nombreCliente = "";
 			String resolucion = "";
 			
+			Ctacliente ctacliente = ctaclienteBO.getCtaclienteById(idcuenta);
 			UsuarioBean usuarioBean = (UsuarioBean)new FacesUtil().getSessionBean("usuarioBean");
 			
 			for(DetalleFacturaPojo detalleFacturaPojo : lisDetalleFacturaPojo){//TODO aqui me quedé, ver que aqui se pagan varias generaciones y por cada una factura
@@ -1013,6 +1016,7 @@ public class FacturaBO {
 					facturaAbono.setValorexcedentes(0f);
 					facturaAbono.setIdfactura(numeroFactura);
 					facturaAbono.setIdestado(Parametro.FACTURA_ESTADO_PAGADA);
+					facturaAbono.setDebitobco(ctacliente.getDebitobco());
 					
 					//Auditoria
 					fecharegistro = new Date();
@@ -1598,7 +1602,8 @@ public class FacturaBO {
 			nombreCliente = ctacliente.getClientes().getNombre1() + " " + ctacliente.getClientes().getNombre2() + " " + ctacliente.getClientes().getApellido1() + " " + ctacliente.getClientes().getApellido2();
 			factura.setNombre(nombreCliente);
 			idCliente = ctacliente.getClientes().getIdcliente();
-			factura.setIdcliente(idCliente);
+			/*factura.setIdcliente(idCliente);*/
+			factura.setClientes(ctacliente.getClientes());
 			
 			direccionCliente = direccionBO.consultarDireccionPorCuenta(idcuenta);
 			factura.setDircliente(direccionCliente);
@@ -1611,6 +1616,7 @@ public class FacturaBO {
 			factura.setValtotal(factura.getValbase() + factura.getValimpuestos());
 			factura.setIdcuenta(ctacliente.getIdcuenta());
 			factura.setValorexcedentes(0f);
+			factura.setDebitobco(ctacliente.getDebitobco());
 			
 			//Auditoria
 			fecharegistro = new Date();
@@ -1828,6 +1834,7 @@ public class FacturaBO {
 				facturaAbono.setValorexcedentes(0f);
 				facturaAbono.setIdfactura(numeroFactura);
 				facturaAbono.setIdestado(Parametro.FACTURA_ESTADO_PAGADA);
+				factura.setDebitobco(ctacliente.getDebitobco());
 				
 				//Auditoria
 				fecharegistro = new Date();

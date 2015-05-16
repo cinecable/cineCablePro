@@ -24,7 +24,34 @@
 							rutaPadre=":form-contentpage:acc:idcomponenteproductos"></my:productos_component>
 					</h:panelGrid>
 				</p:tab>
-
+				<p:tab title="Ordenes de Instalación" titleStyleClass="tabStyle">
+					<h:panelGrid columns="4" cellpadding="5px" style="width: 100%">
+						<h:panelGrid>
+						<h:outputText value="Fecha de Instalación" />
+						<p:selectOneMenu id="idAnio" value="#{adicionarProductosBean.anio}" style="width:80px">
+							<f:selectItems value="#{adicionarProductosBean.calendarOrdenesBean.lisAnio}"></f:selectItems>
+							<p:ajax update="idcontrolcalendar" listener="#{adicionarProductosBean.muestraCalendario()}"></p:ajax>
+						</p:selectOneMenu>
+						<p:selectOneMenu id="idMes" value="#{adicionarProductosBean.mes}" style="width:80px">
+							<f:selectItem itemLabel="Mes" itemValue="0" />
+							<f:selectItems value="#{adicionarProductosBean.calendarOrdenesBean.lisMes}"></f:selectItems>
+							<p:ajax update="idcontrolcalendar" listener="#{adicionarProductosBean.muestraCalendario()}"></p:ajax>
+						</p:selectOneMenu>
+						</h:panelGrid>
+						<my:calendarOrdenes_component id="idcontrolcalendar"></my:calendarOrdenes_component>
+						<h:outputText value="Horarios" style="width:200px" />
+						<p:selectOneMenu value="#{adicionarProductosBean.ordenes.horario.idmotivo}" style="width:200px">
+							<f:selectItem itemLabel="Seleccione un horario" itemValue="0" />
+							<f:selectItems value="#{adicionarProductosBean.lisMotivosHorarios}" var="motivo"
+								itemLabel="#{motivo.nombre}" itemValue="#{motivo.idmotivo}"></f:selectItems>
+						</p:selectOneMenu>
+						<h:outputText value="Observacion" style="width:200px" />
+						<p:inputTextarea value="#{adicionarProductosBean.ordenes.observacion}"
+							style="width:200px" maxlength="255" autoResize="false" ></p:inputTextarea>
+						<h:panelGroup id="panelCancelacion">
+					</h:panelGroup>    
+					</h:panelGrid>
+				</p:tab>
 			</p:accordionPanel>
 			<p:spacer height="50px"></p:spacer>
 			<center>

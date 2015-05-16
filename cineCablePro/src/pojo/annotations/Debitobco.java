@@ -26,14 +26,15 @@ public class Debitobco implements java.io.Serializable, Cloneable {
 	private static final long serialVersionUID = -675806293271550648L;
 	private int iddebitobco;
 	private Bancos bancos;
-	private int idtipodebito;
+	private Bancos bancosEmisor;
+	//private int idtipodebito;
+	private Tipodebito tipodebito;
 	private int idtipoidentificacion;
 	private int idtipocuenta;
 	private String identificacion;
 	private Date fcaducidad;
 	private String codigoseguridad;
 	private String propietario;
-	private Integer idbancotar;
 	private String nrodebito;
 	private int idcuenta;
 	private int idestado;
@@ -42,22 +43,22 @@ public class Debitobco implements java.io.Serializable, Cloneable {
 	public Debitobco() {
 	}
 
-	public Debitobco(int iddebitobco, int idtipodebito) {
+	public Debitobco(int iddebitobco, Tipodebito tipodebito) {
 		this.iddebitobco = iddebitobco;
-		this.idtipodebito = idtipodebito;
+		this.tipodebito = tipodebito;
 	}
 
-	public Debitobco(int iddebitobco, Bancos bancos, int idtipodebito,
+	public Debitobco(int iddebitobco, Bancos bancos, Tipodebito tipodebito,
 			Date fcaducidad, String codigoseguridad, String propietario,
-			Integer idbancotar, String nrodebito, int idtipoidentificacion,
+			Bancos bancosEmisor, String nrodebito, int idtipoidentificacion,
 			int idtipocuenta, String identificacion/*, Set<?> ctaclientes*/) {
 		this.iddebitobco = iddebitobco;
 		this.bancos = bancos;
-		this.idtipodebito = idtipodebito;
+		this.tipodebito = tipodebito;
 		this.fcaducidad = fcaducidad;
 		this.codigoseguridad = codigoseguridad;
 		this.propietario = propietario;
-		this.idbancotar = idbancotar;
+		this.bancosEmisor = bancosEmisor;
 		this.nrodebito = nrodebito;
 		this.idtipoidentificacion = idtipoidentificacion;
 		this.idtipocuenta = idtipocuenta;
@@ -85,14 +86,27 @@ public class Debitobco implements java.io.Serializable, Cloneable {
 		this.bancos = bancos;
 	}
 
-	@Column(name = "idtipodebito", nullable = false)
-	public int getIdtipodebito() {
-		return this.idtipodebito;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "idtipodebito")
+	public Tipodebito getTipodebito() {
+		return tipodebito;
 	}
 
-	public void setIdtipodebito(int idtipodebito) {
-		this.idtipodebito = idtipodebito;
+	
+	public void setTipodebito(Tipodebito tipodebito) {
+		this.tipodebito = tipodebito;
 	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "idbancotar")
+	public Bancos getBancosEmisor() {
+		return bancosEmisor;
+	}
+
+	public void setBancosEmisor(Bancos bancosEmisor) {
+		this.bancosEmisor = bancosEmisor;
+	}
+
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "fcaducidad", length = 13)
@@ -122,15 +136,7 @@ public class Debitobco implements java.io.Serializable, Cloneable {
 		this.propietario = propietario;
 	}
 
-	@Column(name = "idbancotar")
-	public Integer getIdbancotar() {
-		return this.idbancotar;
-	}
-
-	public void setIdbancotar(Integer idbancotar) {
-		this.idbancotar = idbancotar;
-	}
-
+	
 	@Column(name = "nrodebito", length = 20)
 	public String getNrodebito() {
 		return this.nrodebito;
@@ -204,14 +210,14 @@ public class Debitobco implements java.io.Serializable, Cloneable {
 		result = prime * result
 				+ ((fcaducidad == null) ? 0 : fcaducidad.hashCode());
 		result = prime * result
-				+ ((idbancotar == null) ? 0 : idbancotar.hashCode());
+				+ ((bancosEmisor == null) ? 0 : bancosEmisor.getIdbanco());
 		result = prime * result + idcuenta;
 		result = prime * result + iddebitobco;
 		result = prime * result
 				+ ((identificacion == null) ? 0 : identificacion.hashCode());
 		result = prime * result + idestado;
 		result = prime * result + idtipocuenta;
-		result = prime * result + idtipodebito;
+		result = prime * result + ((tipodebito == null) ? 0 : tipodebito.getIdtipodebito());
 		result = prime * result + idtipoidentificacion;
 		result = prime * result
 				+ ((nrodebito == null) ? 0 : nrodebito.hashCode());
@@ -244,10 +250,10 @@ public class Debitobco implements java.io.Serializable, Cloneable {
 				return false;
 		} else if (!fcaducidad.equals(other.fcaducidad))
 			return false;
-		if (idbancotar == null) {
-			if (other.idbancotar != null)
+		if (bancosEmisor == null) {
+			if (other.bancosEmisor != null)
 				return false;
-		} else if (!idbancotar.equals(other.idbancotar))
+		} else if (bancosEmisor.getIdbanco() != other.bancosEmisor.getIdbanco())
 			return false;
 		if (idcuenta != other.idcuenta)
 			return false;
@@ -262,7 +268,10 @@ public class Debitobco implements java.io.Serializable, Cloneable {
 			return false;
 		if (idtipocuenta != other.idtipocuenta)
 			return false;
-		if (idtipodebito != other.idtipodebito)
+		if (tipodebito == null) {
+			if (other.tipodebito != null)
+				return false;
+		} else if (tipodebito.getIdtipodebito() != other.tipodebito.getIdtipodebito())
 			return false;
 		if (idtipoidentificacion != other.idtipoidentificacion)
 			return false;
@@ -278,6 +287,9 @@ public class Debitobco implements java.io.Serializable, Cloneable {
 			return false;
 		return true;
 	}
+
+	
+	
 	
 	
 

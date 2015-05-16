@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<h:form id="form-contentpage">
+		<p:growl id="mensajes" showDetail="true" />
+		<h1 class="title ui-widget-header" style="text-align: center;">Asignaci&oacute;n
+			de Ordenes</h1>
+		<div align="center" style="width: 80%">
+			<h:panelGrid id="pnlDatos" styleClass="hidepanel" columns="3"
+				rendered="#{asignacionOperacionesDM.tipoOperacion eq 'OA'}"
+				style="width:100%">
+				<h:outputLabel value="Técnico" />
+				<h:selectOneMenu id="cmbTec"
+					value="#{asignacionOperacionesDM.codTecnico}" style="width:95%">
+					<f:selectItem itemLabel="Seleccione un Tecnico" itemValue="0" />
+					<f:selectItems value="#{asignacionOperacionesDM.tecnicos}"
+						var="tecn"
+						itemLabel="#{tecn.apellido1} #{tecn.apellido2} #{tecn.nombre1}"
+						itemValue="#{tecn.idpersona}">
+					</f:selectItems>
+					<p:ajax listener="#{opAsignacionController.buscaSupervisor()}"
+						update="cmbSup">
+					</p:ajax>
+				</h:selectOneMenu>
+				<p:commandButton value="Consultar ordenes de técnico"
+					update="ordenesList"
+					action="#{opAsignacionController.consultarCoincidencia()}">
+				</p:commandButton>
+				<h:outputLabel value="Supervisor" />
+				<h:selectOneMenu id="cmbSup"
+					value="#{asignacionOperacionesDM.codSupervisor}" style="width:95%">
+					<f:selectItem itemLabel="Seleccione un Supervisor a ser Asignado"
+						itemValue="0" />
+					<f:selectItems value="#{asignacionOperacionesDM.supervisores}"
+						var="sup"
+						itemLabel="#{sup.apellido1} #{sup.apellido2} #{sup.nombre1}"
+						itemValue="#{sup.idpersona}">
+					</f:selectItems>
+					<p:ajax onstart="reempSup.show()" update="cmbSup"></p:ajax>
+				</h:selectOneMenu>
+				<p:commandButton value="Guardar"
+					onclick="confguarda.show();savebtn.enable()"
+					rendered="#{asignacionOperacionesDM.tipoOperacion eq 'OA'}">
+				</p:commandButton>
+				<h:outputLabel value="Ordenes" />
+
+				<p:pickList value="#{opAsignacionController.ordenes}" var="orden"
+					converter="dualOrdenesConverter" itemLabel="" itemValue="#{orden}"
+					addLabel="Añadir" addAllLabel="Añadir todos" removeLabel="Quitar"
+					removeAllLabel="Quitar todos" id="ordenesList">
+					<p:ajax event="transfer"
+						listener="#{opAsignacionController.onTransfer}"></p:ajax>
+					<f:facet name="sourceCaption">Ordenes por Asignar</f:facet>
+					<f:facet name="targetCaption">Ordenes de Técnico</f:facet>
+
+					<p:column style="width:5%">
+						<p:graphicImage value="/resources/images/vineta.png" />
+					</p:column>
+					<c:if test="#{asignacionOperacionesDM.estadoOrden eq 'EN'}">
+						<p:column>
+							#{orden.idOrdenes} #{orden.cuentaCliente.clientes.apellido1} #{orden.cuentaCliente.clientes.apellido2} #{orden.cuentaCliente.clientes.nombre1} #{orden.cuentaCliente.clientes.nombre2}  #{orden.motivo.nombre} #{orden.cuentaCliente.nombre} #{orden.fechaEjecucion}
+						</p:column>
+					</c:if>
+					<c:if test="#{asignacionOperacionesDM.estadoOrden eq 'EA'}">
+						<p:column>
+							#{orden.idOrdenes} #{orden.cuentaCliente.clientes.apellido1} #{orden.cuentaCliente.clientes.apellido2} #{orden.cuentaCliente.clientes.nombre1} #{orden.cuentaCliente.clientes.nombre2}  #{orden.motivo.nombre} #{orden.cuentaCliente.nombre} #{orden.fechaAsignacion}
+						</p:column>
+					</c:if>
+				</p:pickList>
+				<br />
+			</h:panelGrid>
+
+			<p:panelGrid id="pnlConsulta" styleClass="hidepanel" columns="1"
+				style="width:100%"
+				rendered="#{asignacionOperacionesDM.tipoOperacion eq 'OC'}">
+				<p:dataTable emptyMessage="No se encuentran Solicitudes"
+					value="#{asignacionOperacionesDM.ordenes}" var="ord">
+					<p:column headerText="Id Orden">
+						<h:outputText value="#{ord.idOrdenes}" />
+					</p:column>
+					<p:column headerText="Id Cuenta">
+						<h:outputText value="#{ord.cuentaCliente.idcuenta}" />
+					</p:column>
+					<p:column headerText="Cliente">
+						<h:outputText
+							value="#{ord.cuentaCliente.clientes.apellido1} #{ord.cuentaCliente.clientes.apellido2} #{ord.cuentaCliente.clientes.nombre1}" />
+					</p:column>
+					<p:column headerText="Cuenta" style="width:140px">
+						<h:outputText value="#{ord.cuentaCliente.nombre}" />
+					</p:column>
+					<p:column headerText="Fecha Ejecución">
+						<h:outputText value="#{ord.fechaEjecucion}" />
+					</p:column>
+					<p:column headerText="Motivo">
+						<h:outputText value="#{ord.motivo.nombre}" />
+					</p:column>
+				</p:dataTable>
+			</p:panelGrid>
+		</div>
+		<p:confirmDialog message="¿Esta seguro de guardar los cambios?"
+			header="mensaje de confirmación" widgetVar="confguarda">
+			<p:commandButton value="Si" update="mensajes"
+				onclick="savebtn.disable()" oncomplete="confguarda.hide()"
+				widgetVar="savebtn"
+				actionListener="#{opAsignacionController.guardar()}" />
+			<p:commandButton value="No" onclick="confguarda.hide()" type="button" />
+		</p:confirmDialog>
+		<p:confirmDialog message="Desea asignar otro Supervisor al técnico?"
+			header="mensaje de confirmación" widgetVar="reempSup">
+			<p:commandButton value="Si" type="button" onclick="reempSup.hide()" />
+			<p:commandButton value="No" update="cmbSup"
+				actionListener="#{opAsignacionController.setAnteriorSupervisor()}"
+				oncomplete="reempSup.hide()" />
+		</p:confirmDialog>
+		<p:separator></p:separator>
+		<p:commandButton value="Regresar" style="float: right;"
+			onclick="history.back();" immediate="true" />
+	</h:form>
+</ui:composition>

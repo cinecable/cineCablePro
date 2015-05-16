@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="form-contentpage">
+		<p:growl id="mensajes" showDetail="true" />
+		<h1 class="title ui-widget-header" style="text-align: center;">Asignacion Operaciones por dia
+		</h1>
+		<p:panel header="Ingreso de asignacion de operaciones" id="panelPrincipal">
+			<h:panelGrid columns="4" style="width:700px">
+				<h:outputText value="Operacion" />
+				<p:selectOneMenu value="#{asignacionController.asignacionSolicitudDM.paramAsigOrd.tipoOperacion.idtipooperacion}">
+					<f:selectItem itemLabel="Seleccione un tipo de operacion" itemValue="0"/>
+					<f:selectItems value="#{asignacionController.tipoOperaciones}" var="tOperaciones" itemLabel="#{tOperaciones.nombre}" itemValue="#{tOperaciones.idtipooperacion}"></f:selectItems>
+					<p:ajax update="mensajes" listener="#{asignacionController.controlAsignacion()}"></p:ajax>
+				</p:selectOneMenu>
+				<h:outputText value="" />
+				<h:outputText value="" />
+				<h:outputText value="Fecha de Asignacion desde:" />
+				<p:calendar value="#{asignacionController.asignacionSolicitudDM.fechaDesde}" pattern="dd/MM/yyyy">
+					<p:ajax update="mensajes,dtbtrbDias" listener="#{asignacionController.controlFechas()}" event="dateSelect"></p:ajax>
+				</p:calendar>
+				<h:outputText value="" />
+				<h:outputText value="" />
+				<h:outputText value="Fecha de Asignacion Hasta:" />
+				<p:calendar value="#{asignacionController.asignacionSolicitudDM.fechaHasta}" pattern="dd/MM/yyyy">
+					<p:ajax update="mensajes,dtbtrbDias" listener="#{asignacionController.controlFechas()}" event="dateSelect"></p:ajax>
+				</p:calendar>
+				<h:outputText value="" />
+				<h:outputText value="" />
+				<h:outputText value="No de Asignaciones por todos los dias" />
+				<p:inputText maxlength="3" value="#{asignacionController.asignacionSolicitudDM.paramAsigOrd.noasignaciones}">
+					<p:growl for="number" ></p:growl>	
+					<p:ajax event="blur" listener="#{asignacionController.asignacionTotal()}" update="dtbtrbDias"></p:ajax>
+					
+				</p:inputText>
+			</h:panelGrid>
+		</p:panel>
+		<p:panel header="Asignacion de trabajos por dia" id="PanelSecundario">
+			<p:dataTable emptyMessage="Llene los campos necesarios" var="asigna" id="dtbtrbDias" style="width:300px" 
+				value="#{asignacionController.asignaciones}"
+				paginator="true" rows="5" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+				<p:column headerText="Fecha de asignacion" style="width:15%">
+					<p:calendar value="#{asigna.fechaasignacion}" readonly="true" mode="popup" showOn="button"  disabled="true" pattern="dd/MM/yyyy"/>
+				</p:column>	
+				<p:column headerText="No de asignaciones">
+					<p:inputMask mask="9?9" maxlength="3" value="#{asigna.noasignaciones}" readonly="false">
+						<p:ajax event="blur" update=":form-contentpage:mensajes" listener="#{asignacionController.controlDias(asigna)}"></p:ajax>
+					</p:inputMask>
+				</p:column>	
+			</p:dataTable>
+		</p:panel>
+		<p:commandButton value="Grabar" style="float: right;"
+				actionListener="#{asignacionController.grabar()}" update=":form-contentpage:mensajes,:form-contentpage:panelPrincipal,:form-contentpage:PanelSecundario"  />
+			<p:commandButton value="Regresar" style="float: left;"
+				onclick="history.back();" immediate="true" />
+				<br />
+				<br />
+		
+	</h:form>
+
+</ui:composition>

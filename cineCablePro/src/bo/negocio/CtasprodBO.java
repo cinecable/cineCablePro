@@ -1,6 +1,12 @@
 package bo.negocio;
 
+import global.Parametro;
+
 import java.util.List;
+
+import net.cinecable.model.base.Ordenes;
+import net.cinecable.model.base.OrdenesAsignaciones;
+import net.cinecable.model.base.ParamAsignacionOrden;
 
 import org.hibernate.Session;
 
@@ -8,12 +14,19 @@ import bean.controladores.UsuarioBean;
 
 import pojo.annotations.Ctacliente;
 import pojo.annotations.Ctasprod;
+import pojo.annotations.Empresa;
 import pojo.annotations.Estado;
+import pojo.annotations.Motivos;
+import pojo.annotations.Persona;
 import pojo.annotations.Producto;
+import pojo.annotations.Tipooperacion;
 import pojo.annotations.custom.ProductoId;
 import util.FacesUtil;
 import util.HibernateUtil;
 import dao.datos.CtasprodDAO;
+import dao.datos.OrdasignacionesDAO;
+import dao.datos.TbordenesDAO;
+import dao.datos.TbparamasigordenDAO;
 
 public class CtasprodBO {
 
@@ -41,12 +54,15 @@ public class CtasprodBO {
 		return lisCtasprod;
 	}
 	
-	public boolean grabarProductos(int idcuenta, List<ProductoId> lisProductosId, List<ProductoId> lisProductosIdClon) throws Exception {
+	public boolean grabarProductos(int idcuenta, List<ProductoId> lisProductosId, List<ProductoId> lisProductosIdClon, Ordenes ordenesParam) throws Exception {
 		boolean ok = false;
     	Session session = null;
     	
     	try{
     		CtasprodDAO ctasprodDAO = new CtasprodDAO();
+    		TbordenesDAO tbordenesDAO = new TbordenesDAO();
+    		OrdasignacionesDAO ordasignacionesDAO = new OrdasignacionesDAO();
+    		TbparamasigordenDAO tbparamasigordenDAO = new TbparamasigordenDAO();
     		
     		session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
@@ -79,6 +95,78 @@ public class CtasprodBO {
 					
 					//grabar
 					ctasprodDAO.saveCtasprod(session, ctasprod);
+					
+					//ordenes
+					//codigo secuencial
+					Ordenes ordenes = ordenesParam.clonar();
+					int idOrdenes = tbordenesDAO.maxIdordenes(session) + 1;
+					ordenes.setIdOrdenes(Long.valueOf(idOrdenes));
+					
+					//orden por cada ctasprod
+					ordenes.setProducto(ctasprod);
+
+					Motivos motivos = new Motivos();
+					motivos.setIdmotivo(Parametro.MOTIVO_INSTALACION_NUEVA);
+					ordenes.setMotivo(motivos);
+					
+					Tipooperacion tipoOperacion = new Tipooperacion();
+					tipoOperacion.setIdtipooperacion(Parametro.TIPO_OPERACION_INSTALACION_NUEVA);
+					ordenes.setTipoOperacion(tipoOperacion);
+					
+					ordenes.setEmpresa(usuarioBean.getUsuario().getEmpresa());
+					ordenes.setCuentaCliente(ctacliente);
+					
+					Estado estadoOrden = new Estado();
+					estadoOrden.setIdestado(Parametro.ESTADO_PENDIENTE);
+					ordenes.setEstado(estadoOrden);
+					
+					ordenes.setIdproductoprincipal(productoId.getIdproductoprincipal());
+					
+					//Auditoria
+					ordenes.setIp(usuarioBean.getIp());
+					ordenes.setUsuario(usuarioBean.getUsuario());
+					
+					//grabar ordenes
+					tbordenesDAO.ingresarOrdenes(session, ordenes);
+					
+					//ordasignaciones
+					OrdenesAsignaciones ordenesAsignaciones = new OrdenesAsignaciones();
+					ordenesAsignaciones.setEstado(8);//TODO estado
+					
+					Empresa empresa = new Empresa();
+					empresa.setIdempresa(usuarioBean.getUsuario().getEmpresa().getIdempresa());
+					ordenesAsignaciones.setEmpresa(empresa);
+
+					ordenesAsignaciones.setFechaAsignacion(ordenes.getFechaEjecucion());
+					ordenesAsignaciones.setIp(usuarioBean.getIp());
+					ordenesAsignaciones.setOrden(ordenes);
+					
+					Persona personaSupervisor = new Persona();
+					personaSupervisor.setIdpersona(-1);
+					ordenesAsignaciones.setSupervisor(personaSupervisor);
+
+					Persona personaTecnico = new Persona();
+					personaTecnico.setIdpersona(-1);
+					ordenesAsignaciones.setTecnico(personaTecnico);
+
+					ordenesAsignaciones.setUsuario(usuarioBean.getUsuario());
+					
+					//grabar ordasignaciones
+					ordasignacionesDAO.ingresarOrdasignaciones(session, ordenesAsignaciones);
+					
+					//tbparamasigOrden
+					ParamAsignacionOrden paramAsignacionOrden = new ParamAsignacionOrden();
+					
+					//consultar la asignacion
+					paramAsignacionOrden = tbparamasigordenDAO.consultarPorFechaTipoOperacion(session, ordenes.getFechaEjecucion(), ordenes.getTipoOperacion().getIdtipooperacion());
+					
+					//disminuir en 1 numero de asignaciones
+					if(paramAsignacionOrden != null && paramAsignacionOrden.getNoasignaciones() >0){
+						paramAsignacionOrden.setNoasignaciones(paramAsignacionOrden.getNoasignaciones()-1);
+						
+						//grabar tbparamasigOrden
+						tbparamasigordenDAO.actualizarTbparamasigorden(session, paramAsignacionOrden);
+					}
 				}
 			}
 			

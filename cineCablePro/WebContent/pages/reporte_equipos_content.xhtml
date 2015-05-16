@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="form-contentpage">
+		<p:growl id="mensajes" showDetail="true" />
+		<h1 class="title ui-widget-header" style="text-align: center;">Reporte de equipos
+		</h1>
+		<h:panelGrid columns="4" style="width:800px">
+			<h:outputText value="Fecha inicio visita:" />
+			<p:calendar value="#{reporteMaterialesController.reporteDM.fechaDesde}" pattern="dd/MM/yyyy" style="width:200px"></p:calendar>
+			<h:outputText value="Fecha fin visita:" />
+			<p:calendar value="#{reporteMaterialesController.reporteDM.fechaHasta}" pattern="dd/MM/yyyy" style="width:200px"></p:calendar>
+			<h:outputText value="Materiales:" />
+			<p:selectOneMenu value="#{reporteMaterialesController.reporteDM.tipoMaterial.idTipMaterial}" style="width:200px">
+				<f:selectItem itemLabel="Seleccione" itemValue="0"/>
+				<f:selectItems value="#{reporteMaterialesController.materiales}" var="mat" itemLabel="#{mat.descripcion}" itemValue="#{mat.idTipMaterial}"/>
+			</p:selectOneMenu>
+			<p:commandButton value="Agregar Material" actionListener="#{reporteMaterialesController.agregaMateriales()}" update="materiales" ></p:commandButton>			
+		</h:panelGrid>
+		<br />
+		<center>
+			<p:dataTable id="materiales" value="#{reporteMaterialesController.reporteDM.listaMaterial}" var="material" style="width:500px" emptyMessage="No se han agregado materiales para la búsqueda">
+				<p:column headerText="Codigo">
+					<h:outputText value="#{material.idTipMaterial}" />
+				</p:column>
+				<p:column headerText="Descripción">
+					<h:outputText value="#{material.descripcion}" />
+				</p:column>
+				<p:column headerText="" style="text-align:center;">
+					<p:commandButton icon="ui-icon-trash" title="Eliminar" actionListener="#{reporteMaterialesController.eliminar(material.idTipMaterial)}" update="materiales"></p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</center>	
+		<p:commandLink value="imprimir" 
+				oncomplete="window.open('./report.xhtml', 'popupWindowName', 'dependent=yes, menubar=no, toolbar=no'); return true"
+				style="font-size:14px; float: right;"
+				action="#{reporteMaterialesController.showReport()}" />
+		<p:commandButton value="Regresar" style="float: left;"
+			onclick="history.back();" immediate="true" />	
+	</h:form>
+
+</ui:composition>

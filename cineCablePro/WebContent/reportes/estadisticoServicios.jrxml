@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="operacionesOperacionales" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8152059c-1fe8-472d-90cb-e91b697c8b23">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fechadesde" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaHasta" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="toperacion" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="idtec" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tipoOperacion" class="java.lang.String"/>
+	<parameter name="tecnico" class="java.lang.String"/>
+	<parameter name="usuario" class="java.lang.String"/>
+	<parameter name="idsup" class="java.lang.Integer"/>
+	<parameter name="supervisor" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select a.idordenes,b.nombre operacion,c.idcuenta,f.nombre servicio,sum((g.costo + h.costoproducto)) costoServProd, count(b.idtipooperacion) totalOperacion
+from tbordenes a
+inner join tipooperacion b on a.idtipooperacion=b.idtipooperacion
+inner join ctasprod c on c.idprodcuentas=a.idctaprod
+inner join producto d on d.idproducto=c.idproducto
+inner join prodservicio e on d.idproducto=e.idproducto
+inner join servicio f on f.idservicio=e.idservicio
+inner join costoservicio g on g.idservicio=f.idservicio
+inner join costoproducto h on h.idproducto=d.idproducto
+group by b.idtipooperacion,a.idordenes,c.idcuenta,f.nombre,b.nombre
+order by operacion]]>
+	</queryString>
+	<field name="idordenes" class="java.lang.Long"/>
+	<field name="operacion" class="java.lang.String"/>
+	<field name="idcuenta" class="java.lang.Integer"/>
+	<field name="servicio" class="java.lang.String"/>
+	<field name="costoservprod" class="java.lang.Float"/>
+	<field name="totaloperacion" class="java.lang.Long"/>
+	<group name="toperaciones">
+		<groupExpression><![CDATA[$F{operacion}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<textField>
+					<reportElement uuid="0db16468-3307-48c6-bad7-8cd8d73c48ad" x="35" y="0" width="100" height="20"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{operacion}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="idorden">
+		<groupExpression><![CDATA[$F{idordenes}]]></groupExpression>
+		<groupHeader>
+			<band height="40">
+				<staticText>
+					<reportElement uuid="fdddf81a-a28b-43a2-aaec-b2dba773fcb3" x="35" y="0" width="78" height="20"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Orden Número:]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="87a0e1c0-f140-4565-ae45-874177a227e7" x="113" y="0" width="100" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{idordenes}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="a9b9a828-351c-4894-9df9-086993653096" x="84" y="20" width="78" height="20"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nro. Cuenta]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="4bcd8e92-e7ae-4b6c-89c4-d448fcc341f2" x="184" y="20" width="78" height="20"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Servicio]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="943ddf9b-9f13-4b62-8cdc-b01ce9ae0210" x="284" y="20" width="126" height="20"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Costo producto + servicio]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="105" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="789b462f-17ba-4c9d-a3b3-70ba511c73a3" x="0" y="47" width="555" height="23"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTADISTICA DE SERVICIOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e64702fc-d81f-4fbd-9c7e-70ab986e2062" x="435" y="0" width="46" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f9f84796-f7a2-4a1c-9e7a-c730f18aeb6f" x="435" y="15" width="46" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hora:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ec2fd8b9-a7e0-4df9-808f-bc06e1da190a" x="435" y="30" width="46" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Usuario:]]></text>
+			</staticText>
+			<textField pattern="yyyy-MM-dd">
+				<reportElement uuid="fb8c2345-9bc4-42bd-8f1c-38de035cf749" x="481" y="0" width="64" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm">
+				<reportElement uuid="4680254d-1431-4d5f-a944-85fcc7effc39" x="481" y="15" width="64" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="06c73553-4ef8-468f-91b5-dadda93682f3" x="481" y="30" width="64" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="6e2ae28c-7440-4b98-867e-7a18e1fae92f" x="84" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{idcuenta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="6a7f9f6e-46fc-4bd5-a543-d7baab8c74eb" x="184" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{servicio}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="cd1e9d08-0b02-43f6-b6e6-7198b17594b3" x="284" y="0" width="100" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{costoservprod}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

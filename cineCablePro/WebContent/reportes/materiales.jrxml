@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="operacionesOperacionales" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8152059c-1fe8-472d-90cb-e91b697c8b23">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fechadesde" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaHasta" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="usuario" class="java.lang.String"/>
+	<parameter name="tipMaterial" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select e.nombre toperacion, f.descripcion material,sum(a.cantidadtotal)  cantidadTotal,sum(a.cantidadtotal* b.valorunidad) valorTotal
+from tbreservacionesbodegamaterial a
+inner join tbmateriales b on a.idunidad=b.idunidad
+inner join tbreservacionesordenesbodega  c on c.idreservaorden=a.idreservaorden
+inner join tbordenes d on c.idordenes=d.idordenes and d.estado=4
+inner join tipooperacion e on e.idtipooperacion=d.idtipooperacion
+inner join ttipmaterial f on f.idtipmaterial=b.idtipmaterial
+where ((c.fechaingreso>=to_date($P{fechadesde},'yyyy-MM-dd') or $P{fechadesde} is null)
+       and (c.fechaingreso<=to_date($P{fechaHasta},'yyyy-MM-dd') or $P{fechaHasta} is null))
+       and f.idtipmaterial in ($P!{tipMaterial})
+group by toperacion,material
+order by toperacion]]>
+	</queryString>
+	<field name="toperacion" class="java.lang.String"/>
+	<field name="material" class="java.lang.String"/>
+	<field name="cantidadtotal" class="java.lang.Double"/>
+	<field name="valortotal" class="java.lang.Double"/>
+	<group name="tOrdenes">
+		<groupExpression><![CDATA[$F{toperacion}]]></groupExpression>
+		<groupHeader>
+			<band height="32">
+				<staticText>
+					<reportElement uuid="ea6c5f66-d14c-4a3c-aba6-7cf0f25ab1c2" x="12" y="12" width="83" height="20"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Tipo Operación:]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="582f7f0c-eb21-4b3f-a5af-2fd2dcfaafa2" x="97" y="12" width="100" height="20"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{toperacion}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="123" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="789b462f-17ba-4c9d-a3b3-70ba511c73a3" x="0" y="47" width="555" height="23"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTADISTICA DE EQUIPOS Y MATERIALES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b44b44bf-6d32-4648-be59-91dcb201ffba" x="146" y="95" width="69" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Inicio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="55fa6d1d-5205-4864-8276-55e443a6af4d" x="311" y="95" width="69" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Fin:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="bc68c24d-3329-4ae6-befa-578398a2bea7" x="215" y="95" width="80" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{fechadesde}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="610f7801-933d-450f-95a7-7c1d8870b665" x="380" y="95" width="80" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{fechaHasta}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="e64702fc-d81f-4fbd-9c7e-70ab986e2062" x="435" y="0" width="46" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f9f84796-f7a2-4a1c-9e7a-c730f18aeb6f" x="435" y="15" width="46" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hora:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ec2fd8b9-a7e0-4df9-808f-bc06e1da190a" x="435" y="30" width="46" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Usuario:]]></text>
+			</staticText>
+			<textField pattern="yyyy-MM-dd">
+				<reportElement uuid="fb8c2345-9bc4-42bd-8f1c-38de035cf749" x="481" y="0" width="64" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm">
+				<reportElement uuid="4680254d-1431-4d5f-a944-85fcc7effc39" x="481" y="15" width="64" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="06c73553-4ef8-468f-91b5-dadda93682f3" x="481" y="30" width="64" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="5d8f25cf-cf67-4927-953e-031e5ab5a67d" x="97" y="0" width="118" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{material}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement uuid="b3b5d636-9ebd-4af8-b94d-ac018b79778f" x="215" y="0" width="118" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{cantidadtotal} + "U"]]></textFieldExpression>
+			</textField>
+			<textField pattern="$ #,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="76313444-eb3e-4605-b2ea-67fdedfec5ee" x="333" y="0" width="118" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{valortotal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

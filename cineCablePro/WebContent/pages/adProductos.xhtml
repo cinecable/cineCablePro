@@ -15,8 +15,21 @@
             .gridcriterios tr, .gridcriterios td {
                 border: none;
             }
-            
+            .special_day a.ui-state-default 
+			{
+				font-weight: bolder;  
+				text-decoration: underline;
+			}
+			#form-contentpage\:acc\:idcontrolcalendar\:form-calendarcomponent\:idcalendarorden .ui-datepicker-prev, #form-contentpage\:acc\:idcontrolcalendar\:form-calendarcomponent\:idcalendarorden .ui-datepicker-next {
+				display: none;
+			}
         </style>
+        <script type="text/javascript">
+			function specialDate(date) {
+				var fechasMes = document.getElementById('form-contentpage:acc:idcontrolcalendar:form-calendarcomponent:idhidden').value;
+				return specialDateStyle(date, fechasMes);
+			}
+		</script>
 	</ui:define>
 	
 	<ui:define name="side_page">

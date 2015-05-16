@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<h:form id="form-sidepage">
+		<h5>Consulta de Ordenes e Impresión</h5>
+		<p:panelGrid id="pnlDatos" styleClass="hidepanel" columns="1"
+			style="width:100%">
+			<h:outputLabel value="Técnico" />
+			<h:selectOneMenu id="cmbTec"
+				value="#{imprimirReporteDm.codTecnicoSeleccionado}"
+				style="width:95%">
+				<f:selectItem itemLabel="Seleccione un Tecnico" itemValue="0" />
+				<f:selectItems
+					value="#{imprimirReporteController.imprimirReporteDm.tecnicos}"
+					var="tecn"
+					itemLabel="#{tecn.apellido1} #{tecn.apellido2} #{tecn.nombre1}"
+					itemValue="#{tecn.idpersona}">
+				</f:selectItems>
+			</h:selectOneMenu>
+		</p:panelGrid>
+		<br />
+		<div align="center">
+			<p:commandButton value="Consultar"
+				action="#{imprimirReporteController.consultarOrdenes()}"
+				update=":form-contentpage:messages,:form-contentpage">
+			</p:commandButton>
+		</div>
+	</h:form>
+</ui:composition>

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="operacionesOperacionales" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8152059c-1fe8-472d-90cb-e91b697c8b23">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fechadesde" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaHasta" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="toperacion" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="idtec" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tipoOperacion" class="java.lang.String"/>
+	<parameter name="tecnico" class="java.lang.String"/>
+	<parameter name="usuario" class="java.lang.String"/>
+	<parameter name="idsup" class="java.lang.Integer"/>
+	<parameter name="supervisor" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select ord.idcuenta,cta.nombre,ord.idordenes,top.nombre,mon.fechainiciovisita,mon.fechafinvisita,
+(select (nombre1 || ' ' || nombre2  || ' ' || apellido1 || ' ' || apellido2) from persona where idpersona=tsp.idpersonat) tecnico
+from tmonitoreo mon
+inner join tbordenes ord on mon.idordenes=ord.idordenes and ord.fechaasignacion is not null
+inner join tipooperacion top on top.idtipooperacion=ord.idtipooperacion
+inner join ctacliente cta on cta.idcuenta =ord.idcuenta
+inner join tecnicosupervisor tsp on tsp.fechaasignacion=ord.fechaasignacion
+where (fechainiciovisita>=to_date($P{fechadesde},'yyyy-MM-dd') or $P{fechadesde} is null)
+      and (fechafinvisita<=to_date($P{fechaHasta},'yyyy-MM-dd') or $P{fechaHasta} is null)
+      and (ord.idtipooperacion=$P{toperacion} or $P{toperacion}=0)
+      and (tsp.idpersonas=$P{idsup} or $P{idsup}=0)
+      and (tsp.idpersonat=$P{idtec} or $P{idtec}=0)]]>
+	</queryString>
+	<field name="idcuenta" class="java.lang.Integer"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="idordenes" class="java.lang.Long"/>
+	<field name="fechainiciovisita" class="java.sql.Timestamp"/>
+	<field name="fechafinvisita" class="java.sql.Timestamp"/>
+	<field name="tecnico" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="173" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="47" width="555" height="23" uuid="789b462f-17ba-4c9d-a3b3-70ba511c73a3"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RESULTADO MONITOREO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="146" y="95" width="69" height="15" uuid="b44b44bf-6d32-4648-be59-91dcb201ffba"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Inicio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="311" y="95" width="69" height="15" uuid="55fa6d1d-5205-4864-8276-55e443a6af4d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Fin:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="124" y="110" width="91" height="15" uuid="696ce8d8-d9f1-4891-9e40-27deee0d6bc1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo de operacion:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="169" y="125" width="46" height="15" uuid="0d7bf62a-667a-4d17-86de-cfc0e229d6d9"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Técnico:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="215" y="95" width="80" height="15" uuid="bc68c24d-3329-4ae6-befa-578398a2bea7"/>
+				<textFieldExpression><![CDATA[$P{fechadesde}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="95" width="80" height="15" uuid="610f7801-933d-450f-95a7-7c1d8870b665"/>
+				<textFieldExpression><![CDATA[$P{fechaHasta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="215" y="110" width="245" height="15" uuid="7c190d0b-e154-4237-aa55-4eb5005e7b89"/>
+				<textFieldExpression><![CDATA[$P{tipoOperacion}==null ? "TODOS":$P{tipoOperacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="215" y="125" width="245" height="15" uuid="d83c9875-9865-498d-9927-a80679fdf39d"/>
+				<textFieldExpression><![CDATA[$P{tecnico}==null ? "TODOS":$P{tecnico}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="435" y="0" width="46" height="15" uuid="e64702fc-d81f-4fbd-9c7e-70ab986e2062"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="435" y="15" width="46" height="15" uuid="f9f84796-f7a2-4a1c-9e7a-c730f18aeb6f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hora:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="435" y="30" width="46" height="15" uuid="ec2fd8b9-a7e0-4df9-808f-bc06e1da190a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Usuario:]]></text>
+			</staticText>
+			<textField pattern="yyyy-MM-dd">
+				<reportElement x="481" y="0" width="64" height="15" uuid="fb8c2345-9bc4-42bd-8f1c-38de035cf749"/>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm">
+				<reportElement x="481" y="15" width="64" height="15" uuid="4680254d-1431-4d5f-a944-85fcc7effc39"/>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="481" y="30" width="64" height="15" uuid="06c73553-4ef8-468f-91b5-dadda93682f3"/>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="215" y="140" width="245" height="15" uuid="af87cbbe-ff09-431d-af07-11183abf80aa"/>
+				<textFieldExpression><![CDATA[$P{supervisor}==null ? "TODOS":$P{supervisor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="152" y="140" width="59" height="15" uuid="70a928fe-3cee-4e56-9ed1-175a5144e5ef"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Supervisor:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement x="51" y="7" width="62" height="15" uuid="805c925d-1798-4a48-be92-f793978f3d89"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Id Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="113" y="7" width="83" height="15" uuid="23fc5f13-5ce8-4889-aba6-38f5dae4351a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="196" y="7" width="62" height="15" uuid="f04dc7fe-d543-4d40-976d-a0e6c7214434"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nro. Orden]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="260" y="0" width="78" height="33" uuid="256ff348-cba1-47f3-ac4e-1bb9a9b7d031"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha de visita inicial]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="338" y="0" width="80" height="33" uuid="3106ece9-1c71-42c2-8d71-8924c4c88775"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha de visita final]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="426" y="7" width="62" height="15" uuid="28d2cb1c-bc0f-4d1a-aff7-5443e38869d7"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tecnico]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="51" y="0" width="62" height="15" uuid="fda746a8-3bd2-418a-bb4f-b3450a05b65e"/>
+				<textFieldExpression><![CDATA[$F{idcuenta}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="113" y="0" width="83" height="15" uuid="011780a9-dec1-4402-b5fa-993e361fc402"/>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="196" y="0" width="64" height="15" uuid="98657a49-b6bd-4176-b68d-bc3cac79a637"/>
+				<textFieldExpression><![CDATA[$F{idordenes}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy-MM-dd" isBlankWhenNull="true">
+				<reportElement x="260" y="0" width="78" height="15" uuid="00e09b28-6a96-44ec-9dd3-c46bf2ebd5a3"/>
+				<box leftPadding="5"/>
+				<textFieldExpression><![CDATA[$F{fechainiciovisita}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy-MM-dd" isBlankWhenNull="true">
+				<reportElement x="338" y="0" width="80" height="15" uuid="ff66b1e0-b3a1-44a3-9fc2-4c20f6e74b1d"/>
+				<box leftPadding="5"/>
+				<textFieldExpression><![CDATA[$F{fechafinvisita}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="426" y="0" width="105" height="15" uuid="8677343c-c4ca-4caa-95dd-180095687e19"/>
+				<textFieldExpression><![CDATA[$F{tecnico}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

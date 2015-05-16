@@ -3,6 +3,7 @@ package pojo.annotations;
 // Generated 09/02/2014 10:20:13 AM by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -32,14 +34,12 @@ public class Producto implements java.io.Serializable {
 	private String nombre;
 	private String abreviado;
 	private Date fecha;
-	/*private Set<?> prodservicios = new HashSet<Object>(0);
-	private Set<?> pagosants = new HashSet<Object>(0);
-	private Set<?> ctasprods = new HashSet<Object>(0);*/
 	private Costoproducto costoproducto;
-	//private Set<?> promocioneses = new HashSet<Object>(0);
 	private int jerarquia;
 	private String tipojerarquia;
-
+	private String tipProducto;
+	private List<Prodservicio> prodServicio;
+	
 	public Producto() {
 	}
 
@@ -64,13 +64,17 @@ public class Producto implements java.io.Serializable {
 		this.nombre = nombre;
 		this.abreviado = abreviado;
 		this.fecha = fecha;
-		/*this.prodservicios = prodservicios;
-		this.pagosants = pagosants;
-		this.ctasprods = ctasprods;*/
 		this.costoproducto = costoproducto;
-		//this.promocioneses = promocioneses;
+	}
+	
+	@Column(name = "tipproducto")
+	public String getTipProducto() {
+		return tipProducto;
 	}
 
+	public void setTipProducto(String tipProducto) {
+		this.tipProducto = tipProducto;
+	}
 	@Id
 	@Column(name = "idproducto", unique = true, nullable = false)
 	public int getIdproducto() {
@@ -139,33 +143,6 @@ public class Producto implements java.io.Serializable {
 		this.fecha = fecha;
 	}
 
-	/*@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
-	public Set<?> getProdservicios() {
-		return this.prodservicios;
-	}
-
-	public void setProdservicios(Set<?> prodservicios) {
-		this.prodservicios = prodservicios;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
-	public Set<?> getPagosants() {
-		return this.pagosants;
-	}
-
-	public void setPagosants(Set<?> pagosants) {
-		this.pagosants = pagosants;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
-	public Set<?> getCtasprods() {
-		return this.ctasprods;
-	}
-
-	public void setCtasprods(Set<?> ctasprods) {
-		this.ctasprods = ctasprods;
-	}*/
-
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "producto")
 	public Costoproducto getCostoproducto() {
 		return this.costoproducto;
@@ -193,13 +170,15 @@ public class Producto implements java.io.Serializable {
 		this.tipojerarquia = tipojerarquia;
 	}
 
-	/*@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
-	public Set<?> getPromocioneses() {
-		return this.promocioneses;
+	@OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
+	public List<Prodservicio> getProdServicio() {
+		return prodServicio;
 	}
 
-	public void setPromocioneses(Set<?> promocioneses) {
-		this.promocioneses = promocioneses;
-	}*/
+	public void setProdServicio(List<Prodservicio> prodServicio) {
+		this.prodServicio = prodServicio;
+	}
+
+	
 
 }

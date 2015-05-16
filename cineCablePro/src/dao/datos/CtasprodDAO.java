@@ -37,13 +37,14 @@ public class CtasprodDAO {
 		List<Ctasprod> lisCtasprod = null;
 		
 		String hql = " from Ctasprod as c left join fetch c.producto as p ";
-		hql += " where c.ctacliente.idcuenta = :idcuenta ";
-		hql += " and c.estado.idestado = :idestado ";
+		hql += " left join fetch c.estado as e ";	
+		hql += " where c.ctacliente.idcuenta = :idcuenta ";	
+		hql += " and c.estado.idestado != :idestado ";
 		hql += " and c.empresa.idempresa = :idempresa ";
-		
+		hql += " order by c.producto.nombre asc ";
 		Query query = session.createQuery(hql)
 				.setInteger("idcuenta", idcuenta)
-				.setInteger("idestado", 1)
+				.setInteger("idestado", 4)//poner en parametros
 				.setInteger("idempresa", idempresa);
 		
 		lisCtasprod = (List<Ctasprod>) query.list();

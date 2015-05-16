@@ -4,13 +4,21 @@ package pojo.annotations;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -37,12 +45,13 @@ public class Pagos implements java.io.Serializable, Cloneable {
 	private Date fecha;
 	private String ip;
 	private int idcuenta;
-	//private Set<?> tpagoses = new HashSet<Object>(0);
+	private List<Tpagos> tpagoses;
 	
 	//Atributos Personalizados
 	private String textoPago;
 
 	public Pagos() {
+		tpagoses = new ArrayList<Tpagos>();
 	}
 
 	public Pagos(int idpago, Estado estado, Usuario usuario, Empresa empresa,
@@ -59,7 +68,7 @@ public class Pagos implements java.io.Serializable, Cloneable {
 
 	public Pagos(int idpago, Estado estado, Usuario usuario, Empresa empresa,
 			String idfactura, int idgeneracion, float valtotal, Date fecha,
-			String ip, int idcuenta/*, Set<?> tpagoses*/) {
+			String ip, int idcuenta, List<Tpagos> tpagoses) {
 		this.idpago = idpago;
 		this.estado = estado;
 		this.usuario = usuario;
@@ -70,11 +79,14 @@ public class Pagos implements java.io.Serializable, Cloneable {
 		this.fecha = fecha;
 		this.ip = ip;
 		this.idcuenta = idcuenta;
-		//this.tpagoses = tpagoses;
+		this.tpagoses = tpagoses;
 	}
 
 	@Id
 	@Column(name = "idpago", unique = true, nullable = false)
+	@SequenceGenerator(name = "sq_gen_pagos", sequenceName = "sec_sq_gen_pagos", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sq_gen_pagos")
+
 	public int getIdpago() {
 		return this.idpago;
 	}
@@ -276,14 +288,14 @@ public class Pagos implements java.io.Serializable, Cloneable {
 		return true;
 	}
 
-	/*@OneToMany(fetch = FetchType.LAZY, mappedBy = "pagos")
-	public Set<?> getTpagoses() {
-		return this.tpagoses;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pagos", cascade = CascadeType.ALL)
+	public List<Tpagos> getTpagoses() {
+		return tpagoses;
 	}
 
-	public void setTpagoses(Set<?> tpagoses) {
+	public void setTpagoses(List<Tpagos> tpagoses) {
 		this.tpagoses = tpagoses;
-	}*/
+	}
 	
 	
 

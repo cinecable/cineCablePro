@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<h:form id="form-contentpage">
+		<p:growl id="mensajes" showDetail="true" sticky="true" />
+		<h1 class="title ui-widget-header" style="text-align: center;">
+			<h:outputText value="Control de Bodega" />
+		</h1>
+		<p:separator></p:separator>
+
+		<h:panelGrid columns="4">
+
+			<h:outputText value="Generación N#  #{controlBodegaDM.nroGeneracion}" />
+
+			<div align="right" style="width: 700px">
+				<p:commandButton value="Emitir Orden de Entrega"
+					rendered="#{controlBodegaDM.modificar==0}"
+					onclick="confguarda.show();savebtn.enable()"></p:commandButton>
+				<p:commandButton value="Guardar entrega de Bodega Modificada"
+					action="#{controlBodegaController.guardarReservarOrdenBodega()}"
+					rendered="#{not empty controlBodegaDM.listadoControlBodega}"
+					update="mensajes,:form-contentpage"></p:commandButton>
+			</div>
+
+		</h:panelGrid>
+		<p:separator></p:separator>
+		<p:accordionPanel id="accpan">
+			<p:tab title="Selección de Ordenes"
+				rendered="#{!controlBodegaDM.finalizadaSeleccion and controlBodegaDM.modificar == 0}">
+				<h:outputText value="Seleccionar Todos "
+					rendered="#{controlBodegaDM.proceso}" />
+				<p:selectBooleanCheckbox value="#{controlBodegaDM.todosSeleccion}"
+					rendered="#{controlBodegaDM.proceso}">
+					<p:ajax event="change" update=":form-contentpage"
+						listener="#{controlBodegaController.seleccionarTodos}" />
+				</p:selectBooleanCheckbox>
+				<br />
+				<br />
+				<p:dataTable emptyMessage="No hay ordenes Pendientes"
+					styleClass="ui-helper-reset" selectionMode="multiple"
+					id="listOrdenes"
+					value="#{controlBodegaController.controlBodegaDM.ordenesTecnico}"
+					var="ord" rowKey="#{ord.idOrdenes}"
+					selection="#{controlBodegaController.controlBodegaDM.ordenesSeleccionadas}">
+
+					<p:column headerText="Cliente">
+							#{ord.cuentaCliente.clientes.apellido1} #{ord.cuentaCliente.clientes.apellido2}
+					</p:column>
+
+					<p:column headerText="Cuenta">
+							#{ord.cuentaCliente.nombre}
+					</p:column>
+
+					<p:column headerText="Fecha Ejecución">
+							#{ord.fechaEjecucion}
+					</p:column>
+
+					<p:column headerText="Tipo Orden">
+							#{ord.tipoOperacion.nombre}
+					</p:column>
+
+				</p:dataTable>
+				<p:separator></p:separator>
+			</p:tab>
+			<p:tab title="Selección de Entrega de Ordenes"
+				rendered="#{controlBodegaDM.modificar==1}">
+				<p:dataTable value="#{controlBodegaDM.listadoControlBodega}"
+					emptyMessage="No hay entregas modificables" selectionMode="single"
+					selection="#{controlBodegaDM.controlBodegaSeleccionada}" var="rtt"
+					rowKey="#{rtt.idControl}">
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Orden N#" />
+						</f:facet>
+						<h:outputText value="#{rtt.idControl}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Tecnico" />
+						</f:facet>
+						<h:outputText
+							value="#{rtt.tecnico.apellido1} #{rtt.tecnico.apellido2} #{rtt.tecnico.nombre1}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Ordenes" />
+						</f:facet>
+						<h:outputText value="#{rtt.reservas.size()}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Fecha Entrega" />
+						</f:facet>
+						<h:outputText value="#{rtt.fechaControl}" />
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+			<p:tab title="Selección de Materiales" id="accsel"
+				rendered="#{controlBodegaDM.finalizadaSeleccion}">
+				<p:panelGrid>
+					<p:row>
+						<p:column style="width:95%">
+							<p:dataTable id="dattable"
+								value="#{controlBodegaController.controlBodegaDM.ordenesBodega}"
+								var="debdata" rowKey="#{debdata.orden.idOrdenes}">
+								<p:column>
+									<p:dataTable emptyMessage="No existen asignaciones pendientes"
+										selectionMode="single" paginator="true" rows="10"
+										paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+										rowsPerPageTemplate="5,10"
+										value="#{debdata.reservaMateriales}"
+										selection="#{controlBodegaDM.reservacionSeleccionadaAux}"
+										rowKey="#{debdatadet.idtemp}" var="debdatadet">
+										<p:ajax event="rowSelect" update=":form-contentpage:accpan" />
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Material" />
+											</f:facet>
+											<h:outputText
+												value="#{debdatadet.material.tipoMaterial.descripcion}" />
+										</p:column>
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Serie" />
+											</f:facet>
+											<h:outputText value="#{debdatadet.material.nroSerie}" />
+										</p:column>
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Mac" />
+											</f:facet>
+											<h:outputText value="#{debdatadet.material.macAddres}" />
+										</p:column>
+										<p:column width="80">
+											<f:facet name="header">
+												<h:outputText value="Orden" />
+											</f:facet>
+											<h:outputText value="#{debdata.orden.motivo.nombre}"
+												style="width:100%" />
+										</p:column>
+										<p:column width="60">
+											<f:facet name="header">
+												<h:outputText value="Total" />
+											</f:facet>
+											<p:inputText value="#{debdatadet.cantidad}" disabled="true"
+												style="width:100%"></p:inputText>
+										</p:column>
+										<p:column width="60">
+											<f:facet name="header">
+												<h:outputText value="Total Final" />
+											</f:facet>
+											<p:inputText value="#{debdatadet.cantidadTotal}"
+												style="width:100%"
+												disabled="#{debdatadet.material.tipoMaterial.tipMaterialGen.value != 'UTILES'}">
+												<p:ajax event="blur" update=":form-contentpage" />
+											</p:inputText>
+										</p:column>
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Observación" />
+											</f:facet>
+											<p:inputText value="#{debdatadet.observaciones}"
+												style="width:98%"></p:inputText>
+										</p:column>
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Se entrega" />
+											</f:facet>
+											<h:outputText value="#{debdatadet.estado==1 ? 'SI':'NO'}" />
+										</p:column>
+									</p:dataTable>
+								</p:column>
+							</p:dataTable>
+						</p:column>
+						<p:column>
+							<p:commandButton icon="ui-icon-plus"
+								oncomplete="additem.show();btnacept.enable();"
+								update=":frmadd:panelAdd"></p:commandButton>
+							<p:commandButton icon="ui-icon-minus"
+								action="#{controlBodegaController.removerReserva()}"
+								update=":form-contentpage"></p:commandButton>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+				<br />
+				<p:commandButton value="Seleccionar Material"
+					oncomplete="dial.show();" update=":dialselecc"
+					actionListener="#{controlBodegaController.loadMaterial()}">
+				</p:commandButton>
+			</p:tab>
+		</p:accordionPanel>
+		<div align="right">
+			<p:commandButton value="Finalizar Selección" ajax="false"
+				rendered="#{controlBodegaDM.proceso}"
+				actionListener="#{controlBodegaController.finalizarSeleccion()}"
+				update=":form-contentpage">
+			</p:commandButton>
+		</div>
+	</h:form>
+	<p:dialog id="dialselecc" widgetVar="dial" modal="true" width="600"
+		header="Selección de Equipos/Materiales" closable="true"
+		resizable="false" appendToBody="@(body)">
+		<h:form id="frmDial">
+			<p:remoteCommand name="updateDialog" update="datalist" />
+			<p:panelGrid id="panelDial" style="width:100%;">
+				<p:row>
+					<p:column>
+						<h:outputText value="Tipo de Material" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{controlBodegaDM.reservacionSeleccionada.material.tipoMaterial.descripcion}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column colspan="2">
+						<p:dataTable id="datalist"
+							value="#{controlBodegaController.controlBodegaDM.materialesConsulta}"
+							var="mat" selectionMode="single"
+							filteredValue="#{controlBodegaDM.materialesFiltrados}"
+							selection="#{controlBodegaController.controlBodegaDM.materialSeleccionado}"
+							paginator="true" rows="10" rowKey="#{mat.idUnidad}">
+							<p:ajax event="rowSelect"
+								listener="#{controlBodegaController.asignarMaterial}"
+								update=":frmDial:datalist,:form-contentpage"
+								oncomplete="dial.hide()" />
+							<p:column headerText="Serie" filterBy="#{mat.nroSerie}">
+								#{mat.nroSerie}
+								</p:column>
+							<p:column headerText="Mac" filterBy="#{mat.macAddres}">
+								#{mat.macAddres}
+								</p:column>
+							<p:column headerText="Fecha Ingreso">
+								#{mat.fechaIngreso}
+								</p:column>
+							<p:column headerText="Existente">
+								#{mat.cantidad}
+								</p:column>
+							<p:column headerText="Unidad">
+								#{mat.tipoUnidad}
+								</p:column>
+						</p:dataTable>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+	<p:dialog header="Añadir nuevo item" widgetVar="additem" modal="true"
+		closable="true" resizable="false" appendToBody="@(body)">
+		<h:form id="frmadd">
+			<p:panelGrid columns="2" id="panelAdd">
+				<h:outputText value="Seleccione la orden" />
+				<h:selectOneMenu value="#{controlBodegaDM.codOrdenReservacionAdd}">
+					<f:selectItems value="#{controlBodegaDM.ordenesSeleccionadas}"
+						var="ordbod"
+						itemLabel="#{ordbod.motivo.nombre} #{ordbod.cuentaCliente.nombre}"
+						itemValue="#{ordbod.idOrdenes}">
+					</f:selectItems>
+				</h:selectOneMenu>
+				<h:outputText value="Tipo de Material" />
+				<h:selectOneMenu value="#{tipoMaterialDM.codMaterialSeleccionado}"
+					id="cmbtipomaterial">
+					<f:selectItems value="#{tipoMaterialDM.tipoMateriales}"
+						var="tipmat" itemLabel="#{tipmat.descripcion}"
+						itemValue="#{tipmat.idTipMaterial}">
+					</f:selectItems>
+				</h:selectOneMenu>
+				<p:commandButton value="agregar" update=":form-contentpage:accpan"
+					onclick="btnacept.disable()" oncomplete="additem.hide()"
+					widgetVar="btnacept"
+					actionListener="#{controlBodegaController.addMaterial()}" />
+				<p:commandButton value="Cancelar" onclick="additem.hide()"
+					type="button" />
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+	<h:form id="bottonR">
+		<p:separator></p:separator>
+		<p:commandButton value="Regresar" style="float: right;"
+			onclick="history.back();" immediate="true" />
+		</h:form>
+</ui:composition>

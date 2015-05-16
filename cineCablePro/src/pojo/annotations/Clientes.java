@@ -2,13 +2,17 @@ package pojo.annotations;
 
 // Generated 09/02/2014 10:20:13 AM by Hibernate Tools 3.4.0.CR1
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,15 +38,20 @@ public class Clientes implements java.io.Serializable, Cloneable {
 	private String apellido2;
 	private String empresa_1;
 	private Date fecha;
+	
 	private Date hora;
 	private Date fechanacimiento;
 	private String email;
 	private String identificacion;
-	private int estadocivil;
+	private Estadocivil estadocivil;
 	private int genero;
-	private int idtipoidentificacion;
+	
+
+	private Tipoidentidad tipoidentidad;
 	private int idtipopersona;
 	private String ip;
+	private List<Ctacliente> ctaclientes = new ArrayList<Ctacliente>();
+
 	//private Set<?> conyuges = new HashSet<Object>(0);
 	//private Set<?> ctaclientes = new HashSet<Object>(0);
 
@@ -62,8 +71,8 @@ public class Clientes implements java.io.Serializable, Cloneable {
 
 	public Clientes(String idcliente, Tipocliente tipocliente, Usuario usuario,
 			Empresa empresa, String nombre1, String nombre2, String apellido1,
-			String apellido2, String empresa_1, Date fecha, Date fechanacimiento, String email, int estadocivil, int genero/*,
-			Set<?> conyuges, Set<?> ctaclientes*/, int idtipoidentificacion, int idtipopersona, Date hora, String identificacion) {
+			String apellido2, String empresa_1, Date fecha, Date fechanacimiento, String email, Estadocivil estadocivil, int genero/*,
+			Set<?> conyuges, */,   int idtipopersona, Date hora, String identificacion,Tipoidentidad tipoidentidad) {
 		this.idcliente = idcliente;
 		this.tipocliente = tipocliente;
 		this.usuario = usuario;
@@ -78,12 +87,12 @@ public class Clientes implements java.io.Serializable, Cloneable {
 		this.email = email;
 		this.estadocivil = estadocivil;
 		this.genero = genero;
-		this.idtipoidentificacion = idtipoidentificacion;
+		this.tipoidentidad = tipoidentidad;
 		this.idtipopersona = idtipopersona;
 		this.hora = hora;
 		this.identificacion = identificacion;
-		/*this.conyuges = conyuges;
-		this.ctaclientes = ctaclientes;*/
+		/*this.conyuges = conyuges;*/
+		//this.ctaclientes = ctaclientes;
 	}
 
 	@Id
@@ -125,7 +134,27 @@ public class Clientes implements java.io.Serializable, Cloneable {
 	public void setEmpresa(Empresa empresa) {
 		this.empresa = empresa;
 	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "estadocivil", nullable = false)
+	public Estadocivil getEstadocivil() {
+		return estadocivil;
+	}
 
+	public void setEstadocivil(Estadocivil estadocivil) {
+		this.estadocivil = estadocivil;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "idtipoidentificacion", nullable = false)
+	public Tipoidentidad getTipoidentidad() {
+		return tipoidentidad;
+	}
+
+	public void setTipoidentidad(Tipoidentidad tipoidentidad) {
+		this.tipoidentidad = tipoidentidad;
+	}
+	
 	@Column(name = "nombre1", nullable = false, length = 25)
 	public String getNombre1() {
 		return this.nombre1;
@@ -210,14 +239,7 @@ public class Clientes implements java.io.Serializable, Cloneable {
 		this.email = email;
 	}
 
-	@Column(name = "estadocivil")
-	public int getEstadocivil() {
-		return estadocivil;
-	}
-
-	public void setEstadocivil(int estadocivil) {
-		this.estadocivil = estadocivil;
-	}
+	
 
 	@Column(name = "genero")
 	public int getGenero() {
@@ -228,15 +250,7 @@ public class Clientes implements java.io.Serializable, Cloneable {
 		this.genero = genero;
 	}
 
-	@Column(name = "idtipoidentificacion")
-	public int getIdtipoidentificacion() {
-		return idtipoidentificacion;
-	}
-
-	public void setIdtipoidentificacion(int idtipoidentificacion) {
-		this.idtipoidentificacion = idtipoidentificacion;
-	}
-
+	
 	@Column(name = "idtipopersona")
 	public int getIdtipopersona() {
 		return idtipopersona;
@@ -264,7 +278,14 @@ public class Clientes implements java.io.Serializable, Cloneable {
 		this.identificacion = identificacion;
 	}
 
-	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "clientes", cascade = CascadeType.ALL)
+	public List<Ctacliente> getCtaclientes() {
+		return ctaclientes;
+	}
+
+	public void setCtaclientes(List<Ctacliente> ctaclientes) {
+		this.ctaclientes = ctaclientes;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -276,7 +297,7 @@ public class Clientes implements java.io.Serializable, Cloneable {
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result
 				+ ((empresa_1 == null) ? 0 : empresa_1.hashCode());
-		result = prime * result + estadocivil;
+		result = prime * result + estadocivil.getIdestadocivil();
 		result = prime * result + ((fecha == null) ? 0 : fecha.hashCode());
 		result = prime * result
 				+ ((fechanacimiento == null) ? 0 : fechanacimiento.hashCode());
@@ -286,7 +307,7 @@ public class Clientes implements java.io.Serializable, Cloneable {
 				+ ((idcliente == null) ? 0 : idcliente.hashCode());
 		result = prime * result
 				+ ((identificacion == null) ? 0 : identificacion.hashCode());
-		result = prime * result + idtipoidentificacion;
+		result = prime * result + tipoidentidad.getIdtidentidad();
 		result = prime * result + idtipopersona;
 		result = prime * result + ((ip == null) ? 0 : ip.hashCode());
 		result = prime * result + ((nombre1 == null) ? 0 : nombre1.hashCode());
@@ -352,7 +373,10 @@ public class Clientes implements java.io.Serializable, Cloneable {
 				return false;
 		} else if (!identificacion.equals(other.identificacion))
 			return false;
-		if (idtipoidentificacion != other.idtipoidentificacion)
+		if (tipoidentidad == null) {
+			if (other.tipoidentidad != null)
+				return false;
+		} else if (tipoidentidad.getIdtidentidad() != other.tipoidentidad.getIdtidentidad())
 			return false;
 		if (idtipopersona != other.idtipopersona)
 			return false;
@@ -382,23 +406,7 @@ public class Clientes implements java.io.Serializable, Cloneable {
 	public Clientes clonar() throws Exception {
 		return (Clientes)this.clone();
 	}
-	
-	/*@OneToMany(fetch = FetchType.LAZY, mappedBy = "clientes")
-	public Set<?> getConyuges() {
-		return this.conyuges;
-	}
 
-	public void setConyuges(Set<?> conyuges) {
-		this.conyuges = conyuges;
-	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "clientes")
-	public Set<?> getCtaclientes() {
-		return this.ctaclientes;
-	}
-
-	public void setCtaclientes(Set<?> ctaclientes) {
-		this.ctaclientes = ctaclientes;
-	}*/
 
 }
