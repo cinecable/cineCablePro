@@ -174,7 +174,7 @@ public class ProductoDAO {
 			}
 			
 			if(filtroIn != null && filtroIn.length > 0){
-				criteria.add( Restrictions.in("tipojerarquia", filtroIn));
+				criteriaCount.add( Restrictions.in("tipojerarquia", filtroIn));
 			}
 			
 			Object object = criteriaCount.uniqueResult();

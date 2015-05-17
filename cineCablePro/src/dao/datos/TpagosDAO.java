@@ -84,9 +84,6 @@ public class TpagosDAO {
 	                    .createAlias("bancosByIdbcoemisor", "bcoemisor", Criteria.LEFT_JOIN)
                         .setProjection( Projections.rowCount());
 
-				criteriaCount.setMaxResults(pageSize)
-				.setFirstResult(pageNumber);
-				
 				Object object = criteriaCount.uniqueResult();
 				int count = (object==null?0:Integer.parseInt(object.toString()));
 				args[0] = count;

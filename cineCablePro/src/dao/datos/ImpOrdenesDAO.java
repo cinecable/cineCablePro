@@ -111,23 +111,23 @@ public class ImpOrdenesDAO {
 	                 .createAlias("ord.tipoOperacion", "tpo");
 	        
 			if(fSolicitud != null){
-	        	criteria.add( Restrictions.eq("ord.fechaEjecucion",fSolicitudTmp));
+				criteriaCount.add( Restrictions.eq("ord.fechaEjecucion",fSolicitudTmp));
 	        }
 	        
 	        if(idtipooperacion > 0){
-	        	criteria.add( Restrictions.eq("tpo.idtipooperacion",idtipooperacion));
+	        	criteriaCount.add( Restrictions.eq("tpo.idtipooperacion",idtipooperacion));
 	        }
 	        
 	        if(identificacion != null && identificacion.length() > 0){
-	        	criteria.add( Restrictions.eq("clte.identificacion",identificacion));
+	        	criteriaCount.add( Restrictions.eq("clte.identificacion",identificacion));
 	        }
 	        
 	        if(idtecnico > 0){
-	        	criteria.add( Restrictions.eq("tec.idpersona",idtecnico));
+	        	criteriaCount.add( Restrictions.eq("tec.idpersona",idtecnico));
 	        }
 			
 	        if(idcuenta > 0){
-	        	criteria.add( Restrictions.eq("cta.idcuenta",idcuenta));
+	        	criteriaCount.add( Restrictions.eq("cta.idcuenta",idcuenta));
 	        }
 	        
 			Object object = criteriaCount.uniqueResult();

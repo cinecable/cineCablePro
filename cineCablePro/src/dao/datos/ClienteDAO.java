@@ -71,20 +71,17 @@ public class ClienteDAO {
 	                                .createAlias("empresa", "emp");
 				
 				if(nombre1 != null && nombre1.trim().length() > 0){
-                    criteria.add( Restrictions.like("nombre1", "%"+nombre1.replaceAll(" ", "%")+"%").ignoreCase());
+					criteriaCount.add( Restrictions.like("nombre1", "%"+nombre1.replaceAll(" ", "%")+"%").ignoreCase());
                 }
 
                 if(Apellido1 != null && Apellido1.trim().length() > 0){
-                    criteria.add( Restrictions.like("apellido1", "%"+Apellido1.replaceAll(" ", "%")+"%").ignoreCase());
+                	criteriaCount.add( Restrictions.like("apellido1", "%"+Apellido1.replaceAll(" ", "%")+"%").ignoreCase());
                 }
 
                 if(empresa != null && empresa.trim().length() > 0){
-                    criteria.add( Restrictions.eq("empresa_1", empresa));
+                	criteriaCount.add( Restrictions.eq("empresa_1", empresa));
                 }
 			
-				criteriaCount.setMaxResults(pageSize)
-				.setFirstResult(pageNumber);
-				
 				Object object = criteriaCount.uniqueResult();
 				int count = (object==null?0:Integer.parseInt(object.toString()));
 				args[0] = count;
