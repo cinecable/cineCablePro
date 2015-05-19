@@ -36,6 +36,8 @@ public class ClientesBean implements Serializable {
     private String apellido2;
     private String empresa;
     private String numeroIdentificacion;
+    private String vineta;
+    private String ctabancaria; 
     private int key;
 
     public int getKey() {
@@ -77,11 +79,13 @@ public class ClientesBean implements Serializable {
 				     List<Ctacliente> data = new ArrayList<Ctacliente>();
 				
 				     //Si no hay filtros que no consulte
-				     if((nombre1 != null && nombre1.trim().length() > 0) || (nombre2 != null && nombre2.trim().length() > 0) || (apellido1 != null && apellido1.trim().length() > 0) || (apellido2 != null && apellido2.trim().length() > 0) || (numeroIdentificacion != null && numeroIdentificacion.trim().length() > 0) || (empresa != null && empresa.trim().length() > 0)){
+				     if((nombre1 != null && nombre1.trim().length() > 0) || (nombre2 != null && nombre2.trim().length() > 0) || (apellido1 != null && apellido1.trim().length() > 0) || (apellido2 != null && apellido2.trim().length() > 0) || (numeroIdentificacion != null && numeroIdentificacion.trim().length() > 0) || (empresa != null && empresa.trim().length() > 0) || (vineta != null && vineta.trim().length() > 0)){
 				         CtaclienteBO ctaclienteBO = new CtaclienteBO();
 				         int args[] = {0};
-				         data = ctaclienteBO.lisCtaclienteByPage(pageSize, first, args, nombre1, nombre2, apellido1, apellido2, numeroIdentificacion, empresa);
+				         data = ctaclienteBO.lisCtaclienteByPage(pageSize, first, args, nombre1, nombre2, apellido1, apellido2, numeroIdentificacion, empresa, vineta);
 				         this.setRowCount(args[0]);
+				     }else{
+				    	 this.setRowCount(0);
 				     }
 				
 				     return data;
@@ -154,6 +158,22 @@ public class ClientesBean implements Serializable {
 
 	public void setNumeroIdentificacion(String numeroIdentificacion) {
 		this.numeroIdentificacion = numeroIdentificacion;
+	}
+
+	public String getVineta() {
+		return vineta;
+	}
+
+	public void setVineta(String vineta) {
+		this.vineta = vineta;
+	}
+
+	public String getCtabancaria() {
+		return ctabancaria;
+	}
+
+	public void setCtabancaria(String ctabancaria) {
+		this.ctabancaria = ctabancaria;
 	}
 
 	public void onRowSelect(SelectEvent event){

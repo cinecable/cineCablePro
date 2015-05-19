@@ -45,6 +45,16 @@
 				<p:inputText id="txtempresa" value="#{clientesBean.empresa}" >
 				    <p:ajax event="keyup" update="idTablaClientes"></p:ajax>
 				</p:inputText>
+				
+				<p:outputLabel value="Viñeta:" for="txtvineta" />
+				<p:inputText id="txtvineta" value="#{clientesBean.vineta}" >
+				    <p:ajax event="keyup" update="idTablaClientes"></p:ajax>
+				</p:inputText>
+				
+				<p:outputLabel value="Cta.Bancaria:" for="txtctabancaria" />
+				<p:inputText id="txtctabancaria" value="#{clientesBean.ctabancaria}" >
+				    <p:ajax event="keyup" update="idTablaClientes"></p:ajax>
+				</p:inputText>
             </p:panelGrid>
 			<br /><br /> 
 			<p:dataTable id="idTablaClientes" value="#{clientesBean.lisCtacliente}" var="cuenta" rowKey="#{cuenta.idcuenta}" widgetVar="vartablaCtacliente"
@@ -73,8 +83,12 @@
                 	<h:outputText value="#{cuenta.clientes.apellido2}" />
 				</p:column>
 				
-				<p:column id="idIdentificacionHeader" headerText="Identificación">
+				<p:column id="idSecuencialHeader" headerText="Id Secuencial">
                 	<h:outputText value="#{cuenta.clientes.idcliente}" />
+				</p:column>
+				
+				<p:column id="idIdentificacionHeader" headerText="Identificación">
+                	<h:outputText value="#{cuenta.clientes.identificacion}" />
 				</p:column>
                             
                 <p:column id="idEmpresaHeader" headerText="Empresa">

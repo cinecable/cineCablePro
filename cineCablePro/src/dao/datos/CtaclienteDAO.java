@@ -10,6 +10,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import pojo.annotations.Ctacliente;
+import pojo.annotations.Direccion;
 
 public class CtaclienteDAO {
 
@@ -52,11 +53,13 @@ public class CtaclienteDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Ctacliente> lisCtacliente(Session session, String nombre1, String nombre2, String apellido1, String apellido2, String numeroIdentificacion, String empresa, int pageSize, int pageNumber, int[] args  ) throws Exception {
+	public List<Ctacliente> lisCtacliente(Session session, String nombre1, String nombre2, String apellido1, String apellido2, String numeroIdentificacion, String empresa, String vineta, int pageSize, int pageNumber, int[] args  ) throws Exception {
         List<Ctacliente> lisCtacliente;
 
         Criteria criteria = session.createCriteria(Ctacliente.class)
                 .createAlias("clientes", "cli");
+        
+        Criteria criteriaDireccion = session.createCriteria(Direccion.class, "dir");
         
         if(nombre1 != null && nombre1.trim().length() > 0){
             criteria.add( Restrictions.like("cli.nombre1", "%"+nombre1.replaceAll(" ", "%")+"%").ignoreCase());
@@ -75,11 +78,15 @@ public class CtaclienteDAO {
         }
         
         if(numeroIdentificacion != null && numeroIdentificacion.trim().length() > 0){
-            criteria.add( Restrictions.like("cli.idcliente", "%"+numeroIdentificacion.replaceAll(" ", "%")+"%").ignoreCase());
+            criteria.add( Restrictions.like("cli.identificacion", "%"+numeroIdentificacion.replaceAll(" ", "%")+"%").ignoreCase());
         }
         
         if(empresa != null && empresa.trim().length() > 0){
             criteria.add( Restrictions.like("cli.empresa_1", "%"+empresa.replaceAll(" ", "%")+"%").ignoreCase());
+        }
+        
+        if(vineta != null && vineta.trim().length() > 0){
+            criteria.add( Restrictions.like("dir.vineta", "%"+vineta.replaceAll(" ", "%")+"%").ignoreCase());
         }
         
         criteria.addOrder(Order.asc("cli.nombre1"))
@@ -111,11 +118,15 @@ public class CtaclienteDAO {
 	        }
 	        
 	        if(numeroIdentificacion != null && numeroIdentificacion.trim().length() > 0){
-	        	criteriaCount.add( Restrictions.like("cli.idcliente", "%"+numeroIdentificacion.replaceAll(" ", "%")+"%").ignoreCase());
+	        	criteriaCount.add( Restrictions.like("cli.identificacion", "%"+numeroIdentificacion.replaceAll(" ", "%")+"%").ignoreCase());
 	        }
 	        
 	        if(empresa != null && empresa.trim().length() > 0){
 	        	criteriaCount.add( Restrictions.like("cli.empresa_1", "%"+empresa.replaceAll(" ", "%")+"%").ignoreCase());
+	        }
+	        
+	        if(vineta != null && vineta.trim().length() > 0){
+	        	criteriaCount.add( Restrictions.like("dir.vineta", "%"+vineta.replaceAll(" ", "%")+"%").ignoreCase());
 	        }
 		
 			Object object = criteriaCount.uniqueResult();
