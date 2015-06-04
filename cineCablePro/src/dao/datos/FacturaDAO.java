@@ -111,6 +111,7 @@ public class FacturaDAO {
 		hql += " where idcuenta = :idcuenta ";
 		//hql += " and idestado = :idestado ";
 		hql += " and fecha between :fechaDesde and :fechaHasta ";
+		hql += " and idfactura != '' ";
 		hql += " order by fecha desc ";
 				
 		Calendar desde = Calendar.getInstance();
