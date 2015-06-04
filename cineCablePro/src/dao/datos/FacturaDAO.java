@@ -119,18 +119,20 @@ public class FacturaDAO {
 		desde.set(Calendar.HOUR_OF_DAY, 0);
 		desde.set(Calendar.MINUTE, 0);
 		desde.set(Calendar.SECOND, 0);
+		desde.set(Calendar.MILLISECOND, 0);
 		
 		Calendar hasta = Calendar.getInstance();
 		hasta.setTime(fechaHasta);
 		hasta.set(Calendar.HOUR_OF_DAY, 23);
 		hasta.set(Calendar.MINUTE, 59);
 		hasta.set(Calendar.SECOND, 59);
+		hasta.set(Calendar.MILLISECOND, 999);
 		
 		Query query = session.createQuery(hql)
 		.setInteger("idcuenta", idcuenta)
-		.setDate("fechaDesde", desde.getTime())
-		.setDate("fechaHasta", hasta.getTime())
-		.setMaxResults(10);
+		.setTimestamp("fechaDesde", desde.getTime())
+		.setTimestamp("fechaHasta", hasta.getTime());
+		//.setMaxResults(10);
 		//.setInteger("idestado", 3);
 		
 		lisFactura = (List<Factura>) query.list();
