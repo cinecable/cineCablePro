@@ -12,9 +12,8 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
-import pojo.annotations.Clientes;
 import pojo.annotations.Ctacliente;
-import pojo.annotations.Empresa;
+import pojo.annotations.custom.ConsultaCliente;
 import util.FacesUtil;
 import util.MessageUtil;
 import bo.negocio.CtaclienteBO;
@@ -28,8 +27,9 @@ public class ClientesBean implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -6551797159262046706L;
-	private Ctacliente ctaclienteItem;
+	private ConsultaCliente consultaClienteItem; 
     private LazyDataModel<Ctacliente> lisCtacliente;
+    private LazyDataModel<ConsultaCliente> lisConsultaCliente;
     private String nombre1;
     private String nombre2;
     private String apellido1;
@@ -49,16 +49,16 @@ public class ClientesBean implements Serializable {
 	}
 
 	public ClientesBean() {
-		ctaclienteItem = new Ctacliente(0,  new Empresa(), new Clientes());
+		consultaClienteItem = new ConsultaCliente(null, null, null, null, null, null, 0, null, null, null);
         consultarCtaClientes();
     }
     
-    public Ctacliente getCtaclienteItem() {
-		return ctaclienteItem;
+	public ConsultaCliente getConsultaClienteItem() {
+		return consultaClienteItem;
 	}
 
-	public void setCtaclienteItem(Ctacliente ctaclienteItem) {
-		this.ctaclienteItem = ctaclienteItem;
+	public void setConsultaClienteItem(ConsultaCliente consultaClienteItem) {
+		this.consultaClienteItem = consultaClienteItem;
 	}
 
 	public LazyDataModel<Ctacliente> getLisCtacliente() {
@@ -69,20 +69,29 @@ public class ClientesBean implements Serializable {
 		this.lisCtacliente = lisCtacliente;
 	}
 
+	public LazyDataModel<ConsultaCliente> getLisConsultaCliente() {
+		return lisConsultaCliente;
+	}
+
+	public void setLisConsultaCliente(
+			LazyDataModel<ConsultaCliente> lisConsultaCliente) {
+		this.lisConsultaCliente = lisConsultaCliente;
+	}
+
 	@SuppressWarnings("serial")
 	public void consultarCtaClientes(){
         try
         {
-            lisCtacliente = new LazyDataModel<Ctacliente>() {
+            lisConsultaCliente = new LazyDataModel<ConsultaCliente>() {
 				@Override
-				 public List<Ctacliente> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String,String> filters) {
-				     List<Ctacliente> data = new ArrayList<Ctacliente>();
+				 public List<ConsultaCliente> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String,String> filters) {
+				     List<ConsultaCliente> data = new ArrayList<ConsultaCliente>();
 				
 				     //Si no hay filtros que no consulte
-				     if((nombre1 != null && nombre1.trim().length() > 0) || (nombre2 != null && nombre2.trim().length() > 0) || (apellido1 != null && apellido1.trim().length() > 0) || (apellido2 != null && apellido2.trim().length() > 0) || (numeroIdentificacion != null && numeroIdentificacion.trim().length() > 0) || (empresa != null && empresa.trim().length() > 0) || (vineta != null && vineta.trim().length() > 0)){
+				     if((nombre1 != null && nombre1.trim().length() > 0) || (nombre2 != null && nombre2.trim().length() > 0) || (apellido1 != null && apellido1.trim().length() > 0) || (apellido2 != null && apellido2.trim().length() > 0) || (numeroIdentificacion != null && numeroIdentificacion.trim().length() > 0) || (empresa != null && empresa.trim().length() > 0) || (vineta != null && vineta.trim().length() > 0)  || (ctabancaria != null && ctabancaria.trim().length() > 0)){
 				         CtaclienteBO ctaclienteBO = new CtaclienteBO();
 				         int args[] = {0};
-				         data = ctaclienteBO.lisCtaclienteByPage(pageSize, first, args, nombre1, nombre2, apellido1, apellido2, numeroIdentificacion, empresa, vineta);
+				         data = ctaclienteBO.lisConsultaClienteByPage(pageSize, first, args, nombre1, nombre2, apellido1, apellido2, numeroIdentificacion, empresa, vineta, ctabancaria);
 				         this.setRowCount(args[0]);
 				     }else{
 				    	 this.setRowCount(0);
@@ -179,7 +188,7 @@ public class ClientesBean implements Serializable {
 	public void onRowSelect(SelectEvent event){
 		FacesUtil facesUtil = new FacesUtil();
 		try {
-			facesUtil.redirect("cliente.jsf?faces-redirect=true&idcuenta="+ctaclienteItem.getIdcuenta());
+			facesUtil.redirect("cliente.jsf?faces-redirect=true&idcuenta="+consultaClienteItem.getIdcuenta());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

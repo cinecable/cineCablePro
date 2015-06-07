@@ -36,7 +36,7 @@ public class Debitobco implements java.io.Serializable, Cloneable {
 	private String codigoseguridad;
 	private String propietario;
 	private String nrodebito;
-	private int idcuenta;
+	private Ctacliente ctacliente;
 	private int idestado;
 	//private Set<?> ctaclientes = new HashSet<Object>(0);
 
@@ -173,13 +173,14 @@ public class Debitobco implements java.io.Serializable, Cloneable {
 		this.identificacion = identificacion;
 	}
 
-	@Column(name = "idcuenta")
-	public int getIdcuenta() {
-		return idcuenta;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "idcuenta", nullable = false)
+	public Ctacliente getCtacliente() {
+		return this.ctacliente;
 	}
 
-	public void setIdcuenta(int idcuenta) {
-		this.idcuenta = idcuenta;
+	public void setCtacliente(Ctacliente ctacliente) {
+		this.ctacliente = ctacliente;
 	}
 
 	@Column(name = "idestado")
@@ -211,7 +212,8 @@ public class Debitobco implements java.io.Serializable, Cloneable {
 				+ ((fcaducidad == null) ? 0 : fcaducidad.hashCode());
 		result = prime * result
 				+ ((bancosEmisor == null) ? 0 : bancosEmisor.getIdbanco());
-		result = prime * result + idcuenta;
+		result = prime * result
+				+ ((ctacliente == null) ? 0 : ctacliente.getIdcuenta());
 		result = prime * result + iddebitobco;
 		result = prime * result
 				+ ((identificacion == null) ? 0 : identificacion.hashCode());
@@ -255,7 +257,10 @@ public class Debitobco implements java.io.Serializable, Cloneable {
 				return false;
 		} else if (bancosEmisor.getIdbanco() != other.bancosEmisor.getIdbanco())
 			return false;
-		if (idcuenta != other.idcuenta)
+		if (ctacliente == null) {
+			if (other.ctacliente != null)
+				return false;
+		} else if (ctacliente.getIdcuenta() != other.ctacliente.getIdcuenta())
 			return false;
 		if (iddebitobco != other.iddebitobco)
 			return false;

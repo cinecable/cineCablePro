@@ -5,12 +5,10 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import pojo.annotations.Ctacliente;
-import pojo.annotations.Direccion;
+import pojo.annotations.custom.ConsultaCliente;
 
 public class CtaclienteDAO {
 
@@ -53,83 +51,101 @@ public class CtaclienteDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Ctacliente> lisCtacliente(Session session, String nombre1, String nombre2, String apellido1, String apellido2, String numeroIdentificacion, String empresa, String vineta, int pageSize, int pageNumber, int[] args  ) throws Exception {
-        List<Ctacliente> lisCtacliente;
+	public List<ConsultaCliente> lisConsultaCliente(Session session, String nombre1, String nombre2, String apellido1, String apellido2, String numeroIdentificacion, String empresa, String vineta, String nrodebito, int pageSize, int pageNumber, int[] args  ) throws Exception {
+        List<ConsultaCliente> lisConsultaCliente;
 
-        Criteria criteria = session.createCriteria(Ctacliente.class)
-                .createAlias("clientes", "cli");
-        
-        Criteria criteriaDireccion = session.createCriteria(Direccion.class, "dir");
+        String hql = " select new pojo.annotations.custom.ConsultaCliente(cli.nombre1, cli.nombre2, cli.apellido1, cli.apellido2, cli.empresa_1, cli.identificacion, cta.idcuenta, cli.idcliente, dto.nrodebito, dir.vineta ) ";
+        hql += " from Clientes cli, Ctacliente cta, Debitobco dto, Direccion dir ";
+        hql += " where cta.clientes.idcliente = cli.idcliente ";
+        hql += " and dto.ctacliente.idcuenta = cta.idcuenta ";
+        hql += " and dir.ctacliente.idcuenta = cta.idcuenta ";
+        hql += " and dir.correspondencia = 'I' ";
         
         if(nombre1 != null && nombre1.trim().length() > 0){
-            criteria.add( Restrictions.like("cli.nombre1", "%"+nombre1.replaceAll(" ", "%")+"%").ignoreCase());
+            hql += " and lower(cli.nombre1) like " + "'%"+nombre1.toLowerCase().replaceAll(" ", "%")+"%' ";
         }
         
         if(nombre2 != null && nombre2.trim().length() > 0){
-            criteria.add( Restrictions.like("cli.nombre2", "%"+nombre2.replaceAll(" ", "%")+"%").ignoreCase());
+            hql += " and lower(cli.nombre2) like " + "'%"+nombre2.toLowerCase().replaceAll(" ", "%")+"%' ";
         }
         
         if(apellido1 != null && apellido1.trim().length() > 0){
-            criteria.add( Restrictions.like("cli.apellido1", "%"+apellido1.replaceAll(" ", "%")+"%").ignoreCase());
+            hql += " and lower(cli.apellido1) like " + "'%"+apellido1.toLowerCase().replaceAll(" ", "%")+"%' ";
         }
         
         if(apellido2 != null && apellido2.trim().length() > 0){
-            criteria.add( Restrictions.like("cli.apellido2", "%"+apellido2.replaceAll(" ", "%")+"%").ignoreCase());
+            hql += " and lower(cli.apellido2) like " + "'%"+apellido2.toLowerCase().replaceAll(" ", "%")+"%' ";
         }
         
         if(numeroIdentificacion != null && numeroIdentificacion.trim().length() > 0){
-            criteria.add( Restrictions.like("cli.identificacion", "%"+numeroIdentificacion.replaceAll(" ", "%")+"%").ignoreCase());
+            hql += " and cli.identificacion like " + "'%"+numeroIdentificacion.replaceAll(" ", "%")+"%' ";
         }
         
         if(empresa != null && empresa.trim().length() > 0){
-            criteria.add( Restrictions.like("cli.empresa_1", "%"+empresa.replaceAll(" ", "%")+"%").ignoreCase());
+            hql += " and lower(cli.empresa_1) like " + "'%"+empresa.toLowerCase().replaceAll(" ", "%")+"%' ";
         }
         
         if(vineta != null && vineta.trim().length() > 0){
-            criteria.add( Restrictions.like("dir.vineta", "%"+vineta.replaceAll(" ", "%")+"%").ignoreCase());
+            hql += " and lower(dir.vineta) like " + "'%"+vineta.toLowerCase().replaceAll(" ", "%")+"%' ";
         }
         
-        criteria.addOrder(Order.asc("cli.nombre1"))
-        .setMaxResults(pageSize)
+        if(nrodebito != null && nrodebito.trim().length() > 0){
+            hql += " and dto.nrodebito like " + "'%"+nrodebito.replaceAll(" ", "%")+"%' ";
+        }
+        
+        hql += " order by cli.nombre1 asc ";
+        
+        Query query = session.createQuery(hql);
+        
+        query.setMaxResults(pageSize)
         .setFirstResult(pageNumber);
-        
-        lisCtacliente = (List<Ctacliente>) criteria.list();
-        
-        if(lisCtacliente != null && lisCtacliente.size() > 0)
-        {
-			Criteria criteriaCount = session.createCriteria(Ctacliente.class)
-	            .setProjection( Projections.rowCount())
-	            .createAlias("clientes", "cli");
-			
-			if(nombre1 != null && nombre1.trim().length() > 0){
-				criteriaCount.add( Restrictions.like("cli.nombre1", "%"+nombre1.replaceAll(" ", "%")+"%").ignoreCase());
-	        }
-	        
-	        if(nombre2 != null && nombre2.trim().length() > 0){
-	        	criteriaCount.add( Restrictions.like("cli.nombre2", "%"+nombre2.replaceAll(" ", "%")+"%").ignoreCase());
-	        }
-	        
-	        if(apellido1 != null && apellido1.trim().length() > 0){
-	        	criteriaCount.add( Restrictions.like("cli.apellido1", "%"+apellido1.replaceAll(" ", "%")+"%").ignoreCase());
-	        }
-	        
-	        if(apellido2 != null && apellido2.trim().length() > 0){
-	        	criteriaCount.add( Restrictions.like("cli.apellido2", "%"+apellido2.replaceAll(" ", "%")+"%").ignoreCase());
-	        }
-	        
-	        if(numeroIdentificacion != null && numeroIdentificacion.trim().length() > 0){
-	        	criteriaCount.add( Restrictions.like("cli.identificacion", "%"+numeroIdentificacion.replaceAll(" ", "%")+"%").ignoreCase());
-	        }
-	        
-	        if(empresa != null && empresa.trim().length() > 0){
-	        	criteriaCount.add( Restrictions.like("cli.empresa_1", "%"+empresa.replaceAll(" ", "%")+"%").ignoreCase());
-	        }
-	        
-	        if(vineta != null && vineta.trim().length() > 0){
-	        	criteriaCount.add( Restrictions.like("dir.vineta", "%"+vineta.replaceAll(" ", "%")+"%").ignoreCase());
-	        }
 		
-			Object object = criteriaCount.uniqueResult();
+        lisConsultaCliente = (List<ConsultaCliente>) query.list();
+        
+        if(lisConsultaCliente != null && lisConsultaCliente.size() > 0)
+        {
+        	String hqlCount = " select count(cli.idcliente) ";
+        	hqlCount += " from Clientes cli, Ctacliente cta, Debitobco dto, Direccion dir ";
+        	hqlCount += " where cta.clientes.idcliente = cli.idcliente ";
+        	hqlCount += " and dto.ctacliente.idcuenta = cta.idcuenta ";
+        	hqlCount += " and dir.ctacliente.idcuenta = cta.idcuenta ";
+        	hqlCount += " and dir.correspondencia = 'I' ";
+            
+            if(nombre1 != null && nombre1.trim().length() > 0){
+            	hqlCount += " and lower(cli.nombre1) like " + "'%"+nombre1.toLowerCase().replaceAll(" ", "%")+"%' ";
+            }
+            
+            if(nombre2 != null && nombre2.trim().length() > 0){
+            	hqlCount += " and lower(cli.nombre2) like " + "'%"+nombre2.toLowerCase().replaceAll(" ", "%")+"%' ";
+            }
+            
+            if(apellido1 != null && apellido1.trim().length() > 0){
+            	hqlCount += " and lower(cli.apellido1) like " + "'%"+apellido1.toLowerCase().replaceAll(" ", "%")+"%' ";
+            }
+            
+            if(apellido2 != null && apellido2.trim().length() > 0){
+            	hqlCount += " and lower(cli.apellido2) like " + "'%"+apellido2.toLowerCase().replaceAll(" ", "%")+"%' ";
+            }
+            
+            if(numeroIdentificacion != null && numeroIdentificacion.trim().length() > 0){
+            	hqlCount += " and cli.identificacion like " + "'%"+numeroIdentificacion.replaceAll(" ", "%")+"%' ";
+            }
+            
+            if(empresa != null && empresa.trim().length() > 0){
+            	hqlCount += " and lower(cli.empresa_1) like " + "'%"+empresa.toLowerCase().replaceAll(" ", "%")+"%' ";
+            }
+            
+            if(vineta != null && vineta.trim().length() > 0){
+            	hqlCount += " and lower(dir.vineta) like " + "'%"+vineta.toLowerCase().replaceAll(" ", "%")+"%' ";
+            }
+            
+            if(nrodebito != null && nrodebito.trim().length() > 0){
+            	hqlCount += " and dto.nrodebito like " + "'%"+nrodebito.replaceAll(" ", "%")+"%' ";
+            }
+            
+            Query queryCount = session.createQuery(hqlCount);
+		
+			Object object = queryCount.uniqueResult();
 			int count = (object==null?0:Integer.parseInt(object.toString()));
 			args[0] = count;
 		}
@@ -138,7 +154,7 @@ public class CtaclienteDAO {
 			args[0] = 0;
 		}
 
-        return lisCtacliente;
+        return lisConsultaCliente;
 	}
 	
 	public void actualizarCtacliente(Session session, Ctacliente ctacliente) throws Exception {

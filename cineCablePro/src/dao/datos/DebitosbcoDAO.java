@@ -41,7 +41,7 @@ public class DebitosbcoDAO {
 		Debitobco debitobco = null;
 		
 		Criteria criteria = session.createCriteria(Debitobco.class)
-				.add( Restrictions.eq("idcuenta",idcuenta))
+				.add( Restrictions.eq("ctacliente.idcuenta",idcuenta))
 				.createAlias("bancos", "bco",1)
 				.createAlias("bancosEmisor", "bcoE",1)
 				.createAlias("tipodebito", "tdbo",1);

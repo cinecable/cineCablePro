@@ -57,9 +57,9 @@
 				</p:inputText>
             </p:panelGrid>
 			<br /><br /> 
-			<p:dataTable id="idTablaClientes" value="#{clientesBean.lisCtacliente}" var="cuenta" rowKey="#{cuenta.idcuenta}" widgetVar="vartablaCtacliente"
+			<p:dataTable id="idTablaClientes" value="#{clientesBean.lisConsultaCliente}" var="cuenta" rowKey="#{cuenta.idcuenta}" widgetVar="vartablaCtacliente"
 			paginator="true" rows="10" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-			selection="#{clientesBean.ctaclienteItem}" selectionMode="single" emptyMessage="No se encontraron registros" lazy="true">
+			selection="#{clientesBean.consultaClienteItem}" selectionMode="single" emptyMessage="No se encontraron registros" lazy="true">
 
 				<p:ajax event="rowSelect" listener="#{clientesBean.onRowSelect}" />
                             
@@ -68,31 +68,31 @@
 				</f:facet>
 				
 				<p:column id="idNombre1Header" headerText="Nombre1" style="width: 150px">
-                 	<h:outputText value="#{cuenta.clientes.nombre1}" />
+                 	<h:outputText value="#{cuenta.nombre1}" />
 				</p:column>
 				
 				<p:column id="idNombre2Header" headerText="Nombre2" style="width: 150px">
-                 	<h:outputText value="#{cuenta.clientes.nombre2}" />
+                 	<h:outputText value="#{cuenta.nombre2}" />
 				</p:column>
 				
 				<p:column id="idApellido1Header" headerText="Apellido1">
-                	<h:outputText value="#{cuenta.clientes.apellido1}" />
+                	<h:outputText value="#{cuenta.apellido1}" />
 				</p:column>
 				
 				<p:column id="idApellido2Header" headerText="Apellido2">
-                	<h:outputText value="#{cuenta.clientes.apellido2}" />
+                	<h:outputText value="#{cuenta.apellido2}" />
 				</p:column>
 				
 				<p:column id="idSecuencialHeader" headerText="Id Secuencial">
-                	<h:outputText value="#{cuenta.clientes.idcliente}" />
+                	<h:outputText value="#{cuenta.idcliente}" />
 				</p:column>
 				
 				<p:column id="idIdentificacionHeader" headerText="Identificación">
-                	<h:outputText value="#{cuenta.clientes.identificacion}" />
+                	<h:outputText value="#{cuenta.identificacion}" />
 				</p:column>
                             
                 <p:column id="idEmpresaHeader" headerText="Empresa">
-                    <h:outputText value="#{cuenta.clientes.empresa_1}" />
+                    <h:outputText value="#{cuenta.empresa}" />
 				</p:column>
 				
 				<p:column id="idNombreCuentaHeader" headerText="Nro de Cuenta" style="text-align: right;">

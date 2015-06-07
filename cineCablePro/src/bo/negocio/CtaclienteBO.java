@@ -41,6 +41,7 @@ import pojo.annotations.Referenciadir;
 import pojo.annotations.Telefono;
 import pojo.annotations.Tipocliente;
 import pojo.annotations.Tipooperacion;
+import pojo.annotations.custom.ConsultaCliente;
 import pojo.annotations.custom.ProductoId;
 import util.FacesUtil;
 import util.HibernateUtil;
@@ -85,20 +86,20 @@ public class CtaclienteBO {
     	return ctacliente;
     }
     
-    public List<Ctacliente> lisCtaclienteByPage(int pageSize, int pageNumber, int args[], String nombre1, String nombre2, String apellido1, String apellido2, String numeroIdentificacion, String empresa, String vineta) throws RuntimeException {
-        List<Ctacliente> lisCtacliente = null;
+    public List<ConsultaCliente> lisConsultaClienteByPage(int pageSize, int pageNumber, int args[], String nombre1, String nombre2, String apellido1, String apellido2, String numeroIdentificacion, String empresa, String vineta, String nrodebito) throws RuntimeException {
+        List<ConsultaCliente> lisConsultaCliente = null;
         Session session = null;
 
         try{
             session = HibernateUtil.getSessionFactory().openSession();
-            lisCtacliente = ctaclienteDAO.lisCtacliente(session, nombre1, nombre2, apellido1, apellido2, numeroIdentificacion, empresa, vineta, pageSize, pageNumber, args);
+            lisConsultaCliente = ctaclienteDAO.lisConsultaCliente(session, nombre1, nombre2, apellido1, apellido2, numeroIdentificacion, empresa, vineta, nrodebito, pageSize, pageNumber, args);
         }catch(Exception he){
                 throw new RuntimeException(he);
         }finally{
                 session.close();
         }
 
-        return lisCtacliente;
+        return lisConsultaCliente;
     }
     
     public boolean grabarCliente(Ctacliente ctacliente, Conyuge conyuge, List<ProductoId> lisProductoId, Direccion direccionInstalacion, Direccion direccionCorrespondencia, Direccion direccionCobranza, Debitobco debitobco, List<Telefono> lisTelefonos, Referenciadir referenciadirInstalacion, Referenciadir referenciadirCorrespondencia, Referenciadir referenciadirCobranza, Ordenes ordenesParam) throws Exception {
@@ -338,7 +339,7 @@ public class CtaclienteBO {
 			//debitobco
 			int maxIddebitobco = debitosbcoDAO.maxIddebitobco(session) + 1;
 			debitobco.setIddebitobco(maxIddebitobco);
-			debitobco.setIdcuenta(ctacliente.getIdcuenta());
+			debitobco.setCtacliente(ctacliente);
 			debitobco.setIdestado(1);
 			
 			//grabar
@@ -591,7 +592,7 @@ public class CtaclienteBO {
 			//debitobco
 			int maxIddebitobco = debitosbcoDAO.maxIddebitobco(session) + 1;
 			debitobco.setIddebitobco(maxIddebitobco);
-			debitobco.setIdcuenta(ctacliente.getIdcuenta());
+			debitobco.setCtacliente(ctacliente);
 			debitobco.setIdestado(1);
 			
 			//grabar

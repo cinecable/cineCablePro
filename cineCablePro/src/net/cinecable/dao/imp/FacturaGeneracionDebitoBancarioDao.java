@@ -70,7 +70,7 @@ public class FacturaGeneracionDebitoBancarioDao extends GenericDao<Factura, Long
 				sql = new StringBuilder();
 				sql.append("from Debitobco o ");
 				sql.append("left outer join fetch  o.bancos ");
-				sql.append("where o.idcuenta=:codcuenta ");
+				sql.append("where o.ctacliente.idcuenta=:codcuenta ");
 
 				if (!codBanco.isEmpty()) {
 					sql.append("and o.bancos.idbanco in (:bcos)");
