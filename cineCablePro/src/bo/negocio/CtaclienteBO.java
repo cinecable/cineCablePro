@@ -86,13 +86,13 @@ public class CtaclienteBO {
     	return ctacliente;
     }
     
-    public List<ConsultaCliente> lisConsultaClienteByPage(int pageSize, int pageNumber, int args[], String nombre1, String nombre2, String apellido1, String apellido2, String numeroIdentificacion, String empresa, String vineta, String nrodebito) throws RuntimeException {
+    public List<ConsultaCliente> lisConsultaClienteByPage(String nombre1, String nombre2, String apellido1, String apellido2, String numeroIdentificacion, String empresa, String vineta, String nrodebito, String idcliente, int idcuenta, int pageSize, int pageNumber, int args[]) throws RuntimeException {
         List<ConsultaCliente> lisConsultaCliente = null;
         Session session = null;
 
         try{
             session = HibernateUtil.getSessionFactory().openSession();
-            lisConsultaCliente = ctaclienteDAO.lisConsultaCliente(session, nombre1, nombre2, apellido1, apellido2, numeroIdentificacion, empresa, vineta, nrodebito, pageSize, pageNumber, args);
+            lisConsultaCliente = ctaclienteDAO.lisConsultaCliente(session, nombre1, nombre2, apellido1, apellido2, numeroIdentificacion, empresa, vineta, nrodebito, idcliente, idcuenta, pageSize, pageNumber, args);
         }catch(Exception he){
                 throw new RuntimeException(he);
         }finally{

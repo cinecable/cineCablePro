@@ -51,7 +51,7 @@ public class CtaclienteDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ConsultaCliente> lisConsultaCliente(Session session, String nombre1, String nombre2, String apellido1, String apellido2, String numeroIdentificacion, String empresa, String vineta, String nrodebito, int pageSize, int pageNumber, int[] args  ) throws Exception {
+	public List<ConsultaCliente> lisConsultaCliente(Session session, String nombre1, String nombre2, String apellido1, String apellido2, String numeroIdentificacion, String empresa, String vineta, String nrodebito, String idcliente, int idcuenta, int pageSize, int pageNumber, int[] args  ) throws Exception {
         List<ConsultaCliente> lisConsultaCliente;
 
         String hql = " select new pojo.annotations.custom.ConsultaCliente(cli.nombre1, cli.nombre2, cli.apellido1, cli.apellido2, cli.empresa_1, cli.identificacion, cta.idcuenta, cli.idcliente, dto.nrodebito, dir.vineta ) ";
@@ -91,6 +91,14 @@ public class CtaclienteDAO {
         
         if(nrodebito != null && nrodebito.trim().length() > 0){
             hql += " and dto.nrodebito like " + "'%"+nrodebito.replaceAll(" ", "%")+"%' ";
+        }
+        
+        if(idcliente != null && idcliente.trim().length() > 0){
+            hql += " and cli.idcliente like " + "'"+idcliente+"' ";
+        }
+        
+        if(idcuenta > 0){
+            hql += " and cta.idcuenta = " + idcuenta;
         }
         
         hql += " order by cli.nombre1 asc ";
@@ -141,6 +149,14 @@ public class CtaclienteDAO {
             
             if(nrodebito != null && nrodebito.trim().length() > 0){
             	hqlCount += " and dto.nrodebito like " + "'%"+nrodebito.replaceAll(" ", "%")+"%' ";
+            }
+            
+            if(idcliente != null && idcliente.trim().length() > 0){
+                hql += " and cli.idcliente like " + "'"+idcliente+"' ";
+            }
+            
+            if(idcuenta > 0){
+                hql += " and cta.idcuenta = " + idcuenta;
             }
             
             Query queryCount = session.createQuery(hqlCount);

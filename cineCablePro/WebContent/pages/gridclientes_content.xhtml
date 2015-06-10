@@ -18,45 +18,57 @@
 				
 				<p:outputLabel value="Primer Nombre:" for="txtnombre1" />
 				<p:inputText id="txtnombre1" value="#{clientesBean.nombre1}" >
-				    <p:ajax event="keyup" update="idTablaClientes"></p:ajax>
+				    <f:ajax render="idTablaClientes" execute="txtnombre1"></f:ajax>
 				</p:inputText>
 				
 				<p:outputLabel value="Segundo Nombre:" for="txtnombre2" />
 				<p:inputText id="txtnombre2" value="#{clientesBean.nombre2}" >
-				    <p:ajax event="keyup" update="idTablaClientes"></p:ajax>
+				    <f:ajax render="idTablaClientes" execute="txtnombre2"></f:ajax>
 				</p:inputText>
 				
 				<p:outputLabel value="Primer Apellido:" for="txtapellido1" />
 				<p:inputText id="txtapellido1" value="#{clientesBean.apellido1}" >
-				    <p:ajax event="keyup" update="idTablaClientes"></p:ajax>
+				    <f:ajax render="idTablaClientes" execute="txtapellido1"></f:ajax>
 				</p:inputText>
 				
 				<p:outputLabel value="Segundo Apellido:" for="txtapellido2" />
 				<p:inputText id="txtapellido2" value="#{clientesBean.apellido2}" >
-				    <p:ajax event="keyup" update="idTablaClientes"></p:ajax>
+				    <f:ajax render="idTablaClientes" execute="txtapellido2"></f:ajax>
 				</p:inputText>
 				
-				<p:outputLabel value="Identificación:" for="txtidentificacion" />
+				<p:outputLabel value="Cedula:" for="txtidentificacion" />
 				<p:inputText id="txtidentificacion" value="#{clientesBean.numeroIdentificacion}" >
-				    <p:ajax event="keyup" update="idTablaClientes"></p:ajax>
+				    <f:ajax render="idTablaClientes" execute="txtidentificacion"></f:ajax>
 				</p:inputText>
 				
 				<p:outputLabel value="Empresa:" for="txtempresa" />
 				<p:inputText id="txtempresa" value="#{clientesBean.empresa}" >
-				    <p:ajax event="keyup" update="idTablaClientes"></p:ajax>
+				    <f:ajax render="idTablaClientes" execute="txtempresa"></f:ajax>
 				</p:inputText>
 				
 				<p:outputLabel value="Viñeta:" for="txtvineta" />
 				<p:inputText id="txtvineta" value="#{clientesBean.vineta}" >
-				    <p:ajax event="keyup" update="idTablaClientes"></p:ajax>
+				    <f:ajax render="idTablaClientes" execute="txtvineta"></f:ajax>
 				</p:inputText>
 				
 				<p:outputLabel value="Cta.Bancaria:" for="txtctabancaria" />
 				<p:inputText id="txtctabancaria" value="#{clientesBean.ctabancaria}" >
-				    <p:ajax event="keyup" update="idTablaClientes"></p:ajax>
+				    <f:ajax render="idTablaClientes" execute="txtctabancaria"></f:ajax>
+				</p:inputText>
+				
+				<p:outputLabel value="Codigo Cliente:" for="txtcodigocliente" />
+				<p:inputText id="txtcodigocliente" value="#{clientesBean.idcliente}" >
+				    <f:ajax render="idTablaClientes" execute="txtcodigocliente"></f:ajax>
+				</p:inputText>
+				
+				<p:outputLabel value="Codigo Cuenta:" for="txtcodigocuenta" />
+				<p:inputText id="txtcodigocuenta" value="#{clientesBean.idcuenta}" >
+				    <f:ajax render="idTablaClientes" execute="txtcodigocuenta"></f:ajax>
 				</p:inputText>
             </p:panelGrid>
-			<br /><br /> 
+			<br />
+			<center><p:commandButton value="Consultar" update="idTablaClientes" icon="ui-icon-search" iconPos="right"></p:commandButton></center>
+			<br /> 
 			<p:dataTable id="idTablaClientes" value="#{clientesBean.lisConsultaCliente}" var="cuenta" rowKey="#{cuenta.idcuenta}" widgetVar="vartablaCtacliente"
 			paginator="true" rows="10" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 			selection="#{clientesBean.consultaClienteItem}" selectionMode="single" emptyMessage="No se encontraron registros" lazy="true">
@@ -67,35 +79,35 @@
 					Cuentas del Cliente
 				</f:facet>
 				
-				<p:column id="idNombre1Header" headerText="Nombre1" style="width: 150px">
+				<p:column id="idNombre1Header" headerText="Primer Nombre" style="width: 150px">
                  	<h:outputText value="#{cuenta.nombre1}" />
 				</p:column>
 				
-				<p:column id="idNombre2Header" headerText="Nombre2" style="width: 150px">
+				<p:column id="idNombre2Header" headerText="Segundo Nombre" style="width: 150px">
                  	<h:outputText value="#{cuenta.nombre2}" />
 				</p:column>
 				
-				<p:column id="idApellido1Header" headerText="Apellido1">
+				<p:column id="idApellido1Header" headerText="Primer Apellido">
                 	<h:outputText value="#{cuenta.apellido1}" />
 				</p:column>
 				
-				<p:column id="idApellido2Header" headerText="Apellido2">
+				<p:column id="idApellido2Header" headerText="Segundo Apellido">
                 	<h:outputText value="#{cuenta.apellido2}" />
 				</p:column>
 				
-				<p:column id="idSecuencialHeader" headerText="Id Secuencial">
-                	<h:outputText value="#{cuenta.idcliente}" />
-				</p:column>
-				
-				<p:column id="idIdentificacionHeader" headerText="Identificación">
+				<p:column id="idIdentificacionHeader" headerText="Cedula">
                 	<h:outputText value="#{cuenta.identificacion}" />
 				</p:column>
-                            
-                <p:column id="idEmpresaHeader" headerText="Empresa">
+				
+				<p:column id="idEmpresaHeader" headerText="Empresa">
                     <h:outputText value="#{cuenta.empresa}" />
 				</p:column>
 				
-				<p:column id="idNombreCuentaHeader" headerText="Nro de Cuenta" style="text-align: right;">
+				<p:column id="idCodigoClienteHeader" headerText="Codigo Cliente">
+                	<h:outputText value="#{cuenta.idcliente}" />
+				</p:column>
+				
+				<p:column id="idCodigoCuentaCuentaHeader" headerText="Codigo de Cuenta" style="text-align: right;">
                     <h:outputText value="#{cuenta.idcuenta}" />
 				</p:column>
 			</p:dataTable>

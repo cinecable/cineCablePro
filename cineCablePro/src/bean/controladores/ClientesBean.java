@@ -38,6 +38,8 @@ public class ClientesBean implements Serializable {
     private String numeroIdentificacion;
     private String vineta;
     private String ctabancaria; 
+    private String idcliente;
+    private int idcuenta;
     private int key;
 
     public int getKey() {
@@ -88,10 +90,10 @@ public class ClientesBean implements Serializable {
 				     List<ConsultaCliente> data = new ArrayList<ConsultaCliente>();
 				
 				     //Si no hay filtros que no consulte
-				     if((nombre1 != null && nombre1.trim().length() > 0) || (nombre2 != null && nombre2.trim().length() > 0) || (apellido1 != null && apellido1.trim().length() > 0) || (apellido2 != null && apellido2.trim().length() > 0) || (numeroIdentificacion != null && numeroIdentificacion.trim().length() > 0) || (empresa != null && empresa.trim().length() > 0) || (vineta != null && vineta.trim().length() > 0)  || (ctabancaria != null && ctabancaria.trim().length() > 0)){
+				     if((nombre1 != null && nombre1.trim().length() > 0) || (nombre2 != null && nombre2.trim().length() > 0) || (apellido1 != null && apellido1.trim().length() > 0) || (apellido2 != null && apellido2.trim().length() > 0) || (numeroIdentificacion != null && numeroIdentificacion.trim().length() > 0) || (empresa != null && empresa.trim().length() > 0) || (vineta != null && vineta.trim().length() > 0)  || (ctabancaria != null && ctabancaria.trim().length() > 0) || (idcliente != null && idcliente.trim().length() > 0) || idcuenta > 0){
 				         CtaclienteBO ctaclienteBO = new CtaclienteBO();
 				         int args[] = {0};
-				         data = ctaclienteBO.lisConsultaClienteByPage(pageSize, first, args, nombre1, nombre2, apellido1, apellido2, numeroIdentificacion, empresa, vineta, ctabancaria);
+				         data = ctaclienteBO.lisConsultaClienteByPage(nombre1, nombre2, apellido1, apellido2, numeroIdentificacion, empresa, vineta, ctabancaria, idcliente, idcuenta, pageSize, first, args);
 				         this.setRowCount(args[0]);
 				     }else{
 				    	 this.setRowCount(0);
@@ -192,6 +194,22 @@ public class ClientesBean implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public String getIdcliente() {
+		return idcliente;
+	}
+
+	public void setIdcliente(String idcliente) {
+		this.idcliente = idcliente;
+	}
+
+	public int getIdcuenta() {
+		return idcuenta;
+	}
+
+	public void setIdcuenta(int idcuenta) {
+		this.idcuenta = idcuenta;
 	}
 	
 }
