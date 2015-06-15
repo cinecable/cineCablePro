@@ -173,6 +173,40 @@ public class CtaclienteDAO {
         return lisConsultaCliente;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<Ctacliente> lisCtaclienteToolBar(Session session, String nombre1, String apellido1, String numeroIdentificacion, String idcliente, int idcuenta) throws Exception {
+        List<Ctacliente> lisCtacliente = null;
+
+        String hql = " from Ctacliente cta inner join fetch cta.clientes as cli ";
+        hql += " where 1 = 1 ";
+        
+        if(nombre1 != null && nombre1.trim().length() > 0){
+            hql += " and lower(cli.nombre1) like " + "'%"+nombre1.toLowerCase().replaceAll(" ", "%")+"%' ";
+        }
+        
+        if(apellido1 != null && apellido1.trim().length() > 0){
+            hql += " and lower(cli.apellido1) like " + "'%"+apellido1.toLowerCase().replaceAll(" ", "%")+"%' ";
+        }
+        
+        if(numeroIdentificacion != null && numeroIdentificacion.trim().length() > 0){
+            hql += " and cli.identificacion like " + "'"+numeroIdentificacion+"' ";
+        }
+        
+        if(idcliente != null && idcliente.trim().length() > 0){
+            hql += " and cli.idcliente like " + "'"+idcliente+"' ";
+        }
+        
+        if(idcuenta > 0){
+            hql += " and cta.idcuenta = " + idcuenta;
+        }
+        
+        Query query = session.createQuery(hql);
+        
+        lisCtacliente = (List<Ctacliente>) query.list();
+        
+        return lisCtacliente;
+	}
+	
 	public void actualizarCtacliente(Session session, Ctacliente ctacliente) throws Exception {
 		session.update(ctacliente);
 	}

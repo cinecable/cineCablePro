@@ -48,10 +48,7 @@ import util.HibernateUtil;
 
 public class CtaclienteBO {
     
-    private CtaclienteDAO ctaclienteDAO;
-
     public CtaclienteBO() {
-    	ctaclienteDAO = new CtaclienteDAO();
     }
     
     public Ctacliente getCtaclienteById(int idcuenta) throws Exception {
@@ -60,6 +57,7 @@ public class CtaclienteBO {
     	
     	try{
             session = HibernateUtil.getSessionFactory().openSession();
+            CtaclienteDAO ctaclienteDAO = new CtaclienteDAO();
             ctacliente = ctaclienteDAO.getCtaclienteById(session, idcuenta);
         }catch(Exception he){
             throw new Exception(he);
@@ -76,6 +74,7 @@ public class CtaclienteBO {
     	
     	try{
             session = HibernateUtil.getSessionFactory().openSession();
+            CtaclienteDAO ctaclienteDAO = new CtaclienteDAO();
             ctacliente = ctaclienteDAO.getCtaclienteByNombre(session, nombre);
         }catch(Exception he){
             throw new Exception(he);
@@ -92,6 +91,7 @@ public class CtaclienteBO {
 
         try{
             session = HibernateUtil.getSessionFactory().openSession();
+            CtaclienteDAO ctaclienteDAO = new CtaclienteDAO();
             lisConsultaCliente = ctaclienteDAO.lisConsultaCliente(session, nombre1, nombre2, apellido1, apellido2, numeroIdentificacion, empresa, vineta, nrodebito, idcliente, idcuenta, pageSize, pageNumber, args);
         }catch(Exception he){
                 throw new RuntimeException(he);
@@ -100,6 +100,23 @@ public class CtaclienteBO {
         }
 
         return lisConsultaCliente;
+    }
+    
+    public List<Ctacliente> lisCtaclienteToolBar(String nombre1, String apellido1, String numeroIdentificacion, String idcliente, int idcuenta) throws RuntimeException {
+        List<Ctacliente> lisCtacliente = null;
+        Session session = null;
+
+        try{
+            session = HibernateUtil.getSessionFactory().openSession();
+            CtaclienteDAO ctaclienteDAO = new CtaclienteDAO();
+            lisCtacliente = ctaclienteDAO.lisCtaclienteToolBar(session, nombre1, apellido1, numeroIdentificacion, idcliente, idcuenta);
+        }catch(Exception he){
+            throw new RuntimeException(he);
+        }finally{
+        	session.close();
+        }
+
+        return lisCtacliente;
     }
     
     public boolean grabarCliente(Ctacliente ctacliente, Conyuge conyuge, List<ProductoId> lisProductoId, Direccion direccionInstalacion, Direccion direccionCorrespondencia, Direccion direccionCobranza, Debitobco debitobco, List<Telefono> lisTelefonos, Referenciadir referenciadirInstalacion, Referenciadir referenciadirCorrespondencia, Referenciadir referenciadirCobranza, Ordenes ordenesParam) throws Exception {
@@ -117,6 +134,7 @@ public class CtaclienteBO {
     		TbordenesDAO tbordenesDAO = new TbordenesDAO();
     		OrdasignacionesDAO ordasignacionesDAO = new OrdasignacionesDAO();
     		TbparamasigordenDAO tbparamasigordenDAO = new TbparamasigordenDAO();
+    		CtaclienteDAO ctaclienteDAO = new CtaclienteDAO();
     		
     		session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
@@ -394,6 +412,7 @@ public class CtaclienteBO {
     		TbordenesDAO tbordenesDAO = new TbordenesDAO();
     		OrdasignacionesDAO ordasignacionesDAO = new OrdasignacionesDAO();
     		TbparamasigordenDAO tbparamasigordenDAO = new TbparamasigordenDAO();
+    		CtaclienteDAO ctaclienteDAO = new CtaclienteDAO();
     		
     		session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();

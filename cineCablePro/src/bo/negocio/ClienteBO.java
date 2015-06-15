@@ -23,10 +23,7 @@ import util.HibernateUtil;
  */
 public class ClienteBO {
     
-    private ClienteDAO clienteDAO;
-
     public ClienteBO() {
-        clienteDAO = new ClienteDAO();
     }
     
     public Clientes getClientesById(String idcliente) throws Exception {
@@ -35,6 +32,7 @@ public class ClienteBO {
     	
     	try{
             session = HibernateUtil.getSessionFactory().openSession();
+            ClienteDAO clienteDAO = new ClienteDAO();
             clientes = clienteDAO.getClientesById(session, idcliente);
         }catch(Exception he){
 			throw new Exception(he);
@@ -51,6 +49,7 @@ public class ClienteBO {
 
             try{
                 session = HibernateUtil.getSessionFactory().openSession();
+                ClienteDAO clienteDAO = new ClienteDAO();
                 lisClientes = clienteDAO.lisClientes(session, nombre1, apellido1, empresa, pageSize, pageNumber, args);
             }catch(Exception he){
                 throw new RuntimeException(he);
@@ -67,6 +66,7 @@ public class ClienteBO {
 		
 		try{
 			session = HibernateUtil.getSessionFactory().openSession();
+			ClienteDAO clienteDAO = new ClienteDAO();
 			lisClientes = clienteDAO.lisClientesByPageNombres(session, nombres, pageSize, pageNumber, args);
 		}catch(Exception e){
 			e.printStackTrace();

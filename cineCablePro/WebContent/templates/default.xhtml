@@ -6,7 +6,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:my="http://java.sun.com/jsf/composite/components/paginas">
 
 	<h:head>
 		<title><ui:insert name="title" /></title>
@@ -103,6 +104,9 @@
 					</div>
 					<div class="right">
 						<div>
+						<ui:insert name="toolbar">
+							<my:toolbar_component id="idtoolbar" />
+						</ui:insert>
 						<ui:insert name="content_page">
 							<h1>En construcción...</h1>
 						</ui:insert>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+	<composite:interface displayName="Parametros"
+		shortDescription="Recibe parametros para ser usados en el componente">
+	</composite:interface>
+
+	<composite:implementation>
+	<div id="#{cc.clientId}">
+		<h:form id="form-toolbarcomponent">
+		<p:panel header="Consultar nuevo cliente" toggleable="true" collapsed="true">
+			<p:panelGrid id="pnlcabecera" columns="4" style="width: 100%">
+				<p:outputLabel value="Primer Nombre:" for="txtnombre1" />
+				<p:inputText id="txtnombre1" value="#{toolbarComponentBean.nombre1}" >
+				</p:inputText>
+				
+				<p:outputLabel value="Primer Apellido:" for="txtapellido1" />
+				<p:inputText id="txtapellido1" value="#{toolbarComponentBean.apellido1}" >
+				</p:inputText>
+				
+				<p:outputLabel value="Cedula:" for="txtidentificacion" />
+				<p:inputText id="txtidentificacion" value="#{toolbarComponentBean.numeroIdentificacion}" >
+				</p:inputText>
+				
+				<p:outputLabel value="Codigo Cliente:" for="txtcodigocliente" />
+				<p:inputText id="txtcodigocliente" value="#{toolbarComponentBean.idcliente}" >
+				</p:inputText>
+				
+				<p:outputLabel value="Codigo Cuenta:" for="txtcodigocuenta" />
+				<p:inputText id="txtcodigocuenta" value="#{toolbarComponentBean.idcuenta}" >
+				</p:inputText>
+				
+				<h:outputText value="" />
+				<h:outputText value="" />
+            </p:panelGrid>
+            <br />
+			<center><p:commandButton value="Consultar" icon="ui-icon-search" iconPos="right" action="#{toolbarComponentBean.consultar()}"></p:commandButton></center>
+		</p:panel>
+		</h:form>
+	</div>
+	</composite:implementation>
+</ui:composition>
