@@ -15,7 +15,7 @@
 	<composite:implementation>
 	<div id="#{cc.clientId}">
 		<h:form id="form-toolbarcomponent">
-		<p:panel header="Consultar nuevo cliente" toggleable="true" collapsed="true">
+		<p:panel header="Consultar Cliente" toggleable="true" collapsed="true">
 			<p:panelGrid id="pnlcabecera" columns="4" style="width: 100%">
 				<p:outputLabel value="Primer Nombre:" for="txtnombre1" />
 				<p:inputText id="txtnombre1" value="#{toolbarComponentBean.nombre1}" >
@@ -41,7 +41,50 @@
 				<h:outputText value="" />
             </p:panelGrid>
             <br />
-			<center><p:commandButton value="Consultar" icon="ui-icon-search" iconPos="right" action="#{toolbarComponentBean.consultar()}"></p:commandButton></center>
+			<center><p:commandButton value="Consultar" update="idTablaClientesTool" icon="ui-icon-search" iconPos="right"></p:commandButton></center>
+			<br />
+			<p:dataTable id="idTablaClientesTool" value="#{toolbarComponentBean.lisConsultaCliente}" var="cuenta" rowKey="#{cuenta.idcuenta}" widgetVar="vartablaCtaclienteTool"
+			paginator="true" rows="5" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			selection="#{toolbarComponentBean.consultaClienteItem}" selectionMode="single" emptyMessage="No se encontraron registros" lazy="true">
+
+				<p:ajax event="rowSelect" listener="#{toolbarComponentBean.onRowSelect}" />
+                            
+				<f:facet name="header">
+					Cuentas del Cliente
+				</f:facet>
+				
+				<p:column id="idNombre1Header" headerText="Primer Nombre" style="width: 150px">
+                 	<h:outputText value="#{cuenta.nombre1}" />
+				</p:column>
+				
+				<p:column id="idNombre2Header" headerText="Segundo Nombre" style="width: 150px">
+                 	<h:outputText value="#{cuenta.nombre2}" />
+				</p:column>
+				
+				<p:column id="idApellido1Header" headerText="Primer Apellido">
+                	<h:outputText value="#{cuenta.apellido1}" />
+				</p:column>
+				
+				<p:column id="idApellido2Header" headerText="Segundo Apellido">
+                	<h:outputText value="#{cuenta.apellido2}" />
+				</p:column>
+				
+				<p:column id="idIdentificacionHeader" headerText="Cedula">
+                	<h:outputText value="#{cuenta.identificacion}" />
+				</p:column>
+				
+				<p:column id="idEmpresaHeader" headerText="Empresa">
+                    <h:outputText value="#{cuenta.empresa}" />
+				</p:column>
+				
+				<p:column id="idCodigoClienteHeader" headerText="Codigo Cliente">
+                	<h:outputText value="#{cuenta.idcliente}" />
+				</p:column>
+				
+				<p:column id="idCodigoCuentaCuentaHeader" headerText="Codigo de Cuenta" style="text-align: right;">
+                    <h:outputText value="#{cuenta.idcuenta}" />
+				</p:column>
+			</p:dataTable>
 		</p:panel>
 		</h:form>
 	</div>
