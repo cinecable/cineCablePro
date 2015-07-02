@@ -152,11 +152,11 @@ public class CtaclienteDAO {
             }
             
             if(idcliente != null && idcliente.trim().length() > 0){
-                hql += " and cli.idcliente like " + "'"+idcliente+"' ";
+            	hqlCount += " and cli.idcliente like " + "'"+idcliente+"' ";
             }
             
             if(idcuenta > 0){
-                hql += " and cta.idcuenta = " + idcuenta;
+            	hqlCount += " and cta.idcuenta = " + idcuenta;
             }
             
             Query queryCount = session.createQuery(hqlCount);
