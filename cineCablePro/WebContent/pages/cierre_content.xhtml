@@ -38,7 +38,7 @@
 			</p:panelGrid>
 			<br />
 			<p:commandButton id="btnConsultar" value="Consultar"
-				style="float: right;" update=":form-contentpage:idTablaIngresos, :form-contentpage:mensajes" >
+				style="float: right;" update=":form-contentpage:idTablaIngresos, :form-contentpage:idTablaEgresos, :form-contentpage:mensajes" >
 				<f:setPropertyActionListener target="#{cierreCajaBean.isconsultaejecutada}" value="true"></f:setPropertyActionListener>
 			</p:commandButton>
 			<br />
@@ -64,6 +64,33 @@
 				</p:column>
 				<p:column headerText="Valor">
 					<h:outputText value="#{ingreso.valpago}" >
+						<f:convertNumber pattern="0.00" />
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+			<br />
+			<br />
+			<br />
+			<p:dataTable id="idTablaEgresos"
+				value="#{cierreCajaBean.lisEgresosCierreCaja}" var="egreso"
+				rowKey="#{egreso.idfpago}" widgetVar="varTablaEgresos"
+				paginator="false" rows="10"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				selection="#{cierreCajaBean.egresosCierreCajaSelected}"
+				selectionMode="single" emptyMessage="No se encontraron registros"
+				lazy="true">
+	
+				<p:ajax event="rowSelect" update=":form-contentpage:iddialogeditor" oncomplete="eventDialog.show();" />
+	
+				<f:facet name="header">
+					EGRESOS
+				</f:facet>
+	
+				<p:column headerText="Forma de Pago">
+					<h:outputText value="#{egreso.nombre}" />
+				</p:column>
+				<p:column headerText="Valor">
+					<h:outputText value="#{egreso.valpago}" >
 						<f:convertNumber pattern="0.00" />
 					</h:outputText>
 				</p:column>

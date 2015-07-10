@@ -7,7 +7,7 @@
     	<!-- Descomentar para ingeniería inversa -->
 	    <!--
 	    <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-	    <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/cinecableF</property>
+	    <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/cinecable</property>
 	    <property name="hibernate.connection.username">postgres</property>
 	    <property name="hibernate.connection.password">postgres</property>-->
 
@@ -97,6 +97,9 @@
         <mapping class="pojo.annotations.Tipoidentidad" />
         <mapping class="pojo.annotations.Tipoegreso" />
         <mapping class="pojo.annotations.Egreso" />
+        <mapping class="pojo.annotations.Cierrecaja" />
+        <mapping class="pojo.annotations.CierrecajadetId" />
+        <mapping class="pojo.annotations.Cierrecajadet" />
         <mapping class="net.cinecable.model.base.Tidentidad" />
 		<mapping class="net.cinecable.model.base.ParametroDatosBanco" />
 		<mapping class="net.cinecable.model.base.GeneracionBancoDepositos" />

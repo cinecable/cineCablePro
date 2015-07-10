@@ -21,7 +21,7 @@ public class Egreso implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 2394306075592437758L;
 	private int idegreso;
-	private Tipoegreso tipoegreso;
+	private Fpago fpago;
 	private float valor;
 	private Date fechaegreso;
 	private String descripcion;
@@ -31,10 +31,10 @@ public class Egreso implements java.io.Serializable {
 	private Date fecha;
 	private String iplog;
 	
-	public Egreso(int idegreso,Tipoegreso tipoegreso,float valor,Date fechaegreso,String descripcion,
+	public Egreso(int idegreso,Fpago fpago,float valor,Date fechaegreso,String descripcion,
 				Estado estado,Empresa empresa,Usuario usuario,Date fecha,String iplog) {
 		this.idegreso = idegreso;
-		this.tipoegreso = tipoegreso;
+		this.fpago = fpago;
 		this.valor = valor;
 		this.fechaegreso = fechaegreso;
 		this.descripcion = descripcion;
@@ -56,13 +56,13 @@ public class Egreso implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "idtipoegreso", nullable = false)
-	public Tipoegreso getTipoegreso() {
-		return tipoegreso;
+	@JoinColumn(name = "idfpago", nullable = false)
+	public Fpago getFpago() {
+		return this.fpago;
 	}
 
-	public void setTipoegreso(Tipoegreso tipoegreso) {
-		this.tipoegreso = tipoegreso;
+	public void setFpago(Fpago fpago) {
+		this.fpago = fpago;
 	}
 
 	@Column(name = "valor", nullable = false, precision = 8, scale = 8)

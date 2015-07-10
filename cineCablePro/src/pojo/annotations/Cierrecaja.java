@@ -33,6 +33,9 @@ public class Cierrecaja implements java.io.Serializable {
 	private Date fecha;
 	private String iplog;
 	
+	public Cierrecaja() {
+	}
+	
 	public Cierrecaja(int idcierrecaja,Usuario usuariocaja,float saldoinicial,float saldofinal,
 			Date fechacierre,Date fechadesde,Date fechahasta,Estado estado,Empresa empresa,
 			Usuario usuario,Date fecha,String iplog) {

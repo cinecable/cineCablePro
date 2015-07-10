@@ -15,11 +15,12 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
+import bo.negocio.EgresoBO;
 import bo.negocio.PagosBO;
 import bo.negocio.UsuarioBO;
 
 import pojo.annotations.Usuario;
-import pojo.annotations.custom.IngresosCierreCaja;
+import pojo.annotations.custom.IngresosEgresosCierreCaja;
 import util.FacesUtil;
 import util.MessageUtil;
 
@@ -36,11 +37,13 @@ public class CierreCajaBean implements Serializable {
 	private Date fechaDesde;
 	private Date fechaHasta;
 	private boolean isconsultaejecutada;
-	private LazyDataModel<IngresosCierreCaja> lisIngresosCierreCaja;
-	private IngresosCierreCaja ingresosCierreCajaSelected;
+	private LazyDataModel<IngresosEgresosCierreCaja> lisIngresosCierreCaja;
+	private IngresosEgresosCierreCaja ingresosCierreCajaSelected;
+	private LazyDataModel<IngresosEgresosCierreCaja> lisEgresosCierreCaja;
+	private IngresosEgresosCierreCaja egresosCierreCajaSelected;
 	
 	public CierreCajaBean() {
-		consultarPagos();
+		consultarIngresos();
 	}
 
 	@PostConstruct
@@ -61,19 +64,62 @@ public class CierreCajaBean implements Serializable {
 	}
 
 	@SuppressWarnings("serial")
-	public void consultarPagos(){
+	public void consultarIngresos(){
         try
         {
-            lisIngresosCierreCaja = new LazyDataModel<IngresosCierreCaja>() {
+            lisIngresosCierreCaja = new LazyDataModel<IngresosEgresosCierreCaja>() {
 				@Override
-				 public List<IngresosCierreCaja> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String,String> filters) {
-				     List<IngresosCierreCaja> data = new ArrayList<IngresosCierreCaja>();
+				 public List<IngresosEgresosCierreCaja> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String,String> filters) {
+				     List<IngresosEgresosCierreCaja> data = new ArrayList<IngresosEgresosCierreCaja>();
 				
 				     //Si no hay filtros que no consulte
 				     if(isconsultaejecutada || fechaDesde != null || fechaHasta != null){
 				         PagosBO pagosBO = new PagosBO();
 				         //int args[] = {0};
 				         data = pagosBO.lisIngresosCierreCaja(idusuario, fechaDesde, fechaHasta);
+				         if(data != null && data.size() > 0){
+				        	 this.setRowCount(data.size());
+				         }
+				     }
+				
+				     return data;
+				 }
+                
+                @Override
+                public void setRowIndex(int rowIndex) {
+                    /*
+                     * The following is in ancestor (LazyDataModel):
+                     * this.rowIndex = rowIndex == -1 ? rowIndex : (rowIndex % pageSize);
+                     */
+                    if (rowIndex == -1 || getPageSize() == 0) {
+                        super.setRowIndex(-1);
+                    }
+                    else {
+                        super.setRowIndex(rowIndex % getPageSize());
+                    }      
+                }
+             };
+        }catch(Exception re){
+            re.printStackTrace();
+            new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", "");
+        }
+        
+    }
+	
+	@SuppressWarnings("serial")
+	public void consultarEgresos(){
+        try
+        {
+            lisEgresosCierreCaja = new LazyDataModel<IngresosEgresosCierreCaja>() {
+				@Override
+				 public List<IngresosEgresosCierreCaja> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String,String> filters) {
+				     List<IngresosEgresosCierreCaja> data = new ArrayList<IngresosEgresosCierreCaja>();
+				
+				     //Si no hay filtros que no consulte
+				     if(isconsultaejecutada || fechaDesde != null || fechaHasta != null){
+				         EgresoBO egresoBO = new EgresoBO();
+				         //int args[] = {0};
+				         data = egresoBO.lisEgresosCierreCaja(idusuario, fechaDesde, fechaHasta);
 				         if(data != null && data.size() > 0){
 				        	 this.setRowCount(data.size());
 				         }
@@ -151,21 +197,39 @@ public class CierreCajaBean implements Serializable {
 		this.isconsultaejecutada = isconsultaejecutada;
 	}
 
-	public LazyDataModel<IngresosCierreCaja> getLisIngresosCierreCaja() {
+	public LazyDataModel<IngresosEgresosCierreCaja> getLisIngresosCierreCaja() {
 		return lisIngresosCierreCaja;
 	}
 
 	public void setLisIngresosCierreCaja(
-			LazyDataModel<IngresosCierreCaja> lisIngresosCierreCaja) {
+			LazyDataModel<IngresosEgresosCierreCaja> lisIngresosCierreCaja) {
 		this.lisIngresosCierreCaja = lisIngresosCierreCaja;
 	}
 
-	public IngresosCierreCaja getIngresosCierreCajaSelected() {
+	public IngresosEgresosCierreCaja getIngresosCierreCajaSelected() {
 		return ingresosCierreCajaSelected;
 	}
 
 	public void setIngresosCierreCajaSelected(
-			IngresosCierreCaja ingresosCierreCajaSelected) {
+			IngresosEgresosCierreCaja ingresosCierreCajaSelected) {
 		this.ingresosCierreCajaSelected = ingresosCierreCajaSelected;
+	}
+
+	public LazyDataModel<IngresosEgresosCierreCaja> getLisEgresosCierreCaja() {
+		return lisEgresosCierreCaja;
+	}
+
+	public void setLisEgresosCierreCaja(
+			LazyDataModel<IngresosEgresosCierreCaja> lisEgresosCierreCaja) {
+		this.lisEgresosCierreCaja = lisEgresosCierreCaja;
+	}
+
+	public IngresosEgresosCierreCaja getEgresosCierreCajaSelected() {
+		return egresosCierreCajaSelected;
+	}
+
+	public void setEgresosCierreCajaSelected(
+			IngresosEgresosCierreCaja egresosCierreCajaSelected) {
+		this.egresosCierreCajaSelected = egresosCierreCajaSelected;
 	}
 }

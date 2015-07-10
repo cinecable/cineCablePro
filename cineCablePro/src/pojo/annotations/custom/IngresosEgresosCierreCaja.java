@@ -2,7 +2,7 @@ package pojo.annotations.custom;
 
 import java.io.Serializable;
 
-public class IngresosCierreCaja implements Serializable {
+public class IngresosEgresosCierreCaja implements Serializable {
 
 	/**
 	 * 
@@ -12,16 +12,18 @@ public class IngresosCierreCaja implements Serializable {
 	private int idfpago;
 	private String nombre;
 	private Double valpago;
+	private String ingresoegreso;
 	
-	public IngresosCierreCaja() {
+	public IngresosEgresosCierreCaja() {
 		
 	}
 	
-	public IngresosCierreCaja(int idusuario,int idfpago,String nombre,Double valpago) {
+	public IngresosEgresosCierreCaja(int idusuario,int idfpago,String nombre,Double valpago,String ingresoegreso) {
 		this.idusuario = idusuario;
 		this.idfpago = idfpago;
 		this.nombre = nombre;
 		this.valpago = valpago;
+		this.ingresoegreso = ingresoegreso;
 	}
 
 	public int getIdusuario() {
@@ -54,6 +56,14 @@ public class IngresosCierreCaja implements Serializable {
 
 	public void setValpago(Double valpago) {
 		this.valpago = valpago;
+	}
+
+	public String getIngresoegreso() {
+		return ingresoegreso;
+	}
+
+	public void setIngresoegreso(String ingresoegreso) {
+		this.ingresoegreso = ingresoegreso;
 	}
 
 }

@@ -8,7 +8,7 @@ import org.hibernate.Session;
 import bean.controladores.UsuarioBean;
 
 import pojo.annotations.Pagos;
-import pojo.annotations.custom.IngresosCierreCaja;
+import pojo.annotations.custom.IngresosEgresosCierreCaja;
 import util.FacesUtil;
 import util.HibernateUtil;
 import dao.datos.PagosDAO;
@@ -99,8 +99,8 @@ public class PagosBO {
 		return lisPagos;
 	}
 	
-	public List<IngresosCierreCaja> lisIngresosCierreCaja(int idusuario, Date fechaDesde, Date fechaHasta) throws RuntimeException {
-		List<IngresosCierreCaja> lisIngresosCierreCaja = null;
+	public List<IngresosEgresosCierreCaja> lisIngresosCierreCaja(int idusuario, Date fechaDesde, Date fechaHasta) throws RuntimeException {
+		List<IngresosEgresosCierreCaja> lisIngresosCierreCaja = null;
 		Session session = null;
 		
 		try{

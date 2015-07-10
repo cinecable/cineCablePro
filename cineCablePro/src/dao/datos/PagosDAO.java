@@ -10,7 +10,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
 import pojo.annotations.Pagos;
-import pojo.annotations.custom.IngresosCierreCaja;
+import pojo.annotations.custom.IngresosEgresosCierreCaja;
 
 public class PagosDAO {
 
@@ -112,10 +112,10 @@ public class PagosDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<IngresosCierreCaja> lisSumIngresosByFechas(Session session, int idusuario, int idempresa, Date fechaDesde, Date fechaHasta) throws Exception {
-		List<IngresosCierreCaja> lisIngresosCierreCaja = null;
+	public List<IngresosEgresosCierreCaja> lisSumIngresosByFechas(Session session, int idusuario, int idempresa, Date fechaDesde, Date fechaHasta) throws Exception {
+		List<IngresosEgresosCierreCaja> lisIngresosEgresosCierreCaja = null;
 		
-		String hql = " select new pojo.annotations.custom.IngresosCierreCaja(p.usuario.idusuario, f.idfpago, f.nombre, sum(t.valpago)) ";
+		String hql = " select new pojo.annotations.custom.IngresosEgresosCierreCaja(p.usuario.idusuario, f.idfpago, f.nombre, sum(t.valpago), new String('I')) ";
 		hql += " from Pagos p, Tpagos t, Fpago f ";
 		hql += " where (p.fecha between :fechadesde and :fechahasta) ";
 		hql += " and p.usuario.idusuario = :idusuario ";
@@ -142,9 +142,9 @@ public class PagosDAO {
 				.setInteger("idusuario", idusuario)
 				.setInteger("idempresa", idempresa);
 		
-		lisIngresosCierreCaja = (List<IngresosCierreCaja>) query.list();
+		lisIngresosEgresosCierreCaja = (List<IngresosEgresosCierreCaja>) query.list();
 		
-		return lisIngresosCierreCaja;
+		return lisIngresosEgresosCierreCaja;
 	}
 	
 	public void actualizarPago(Session session, Pagos pagos) throws Exception {
