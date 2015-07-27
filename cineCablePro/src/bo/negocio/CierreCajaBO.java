@@ -145,7 +145,7 @@ public class CierreCajaBO {
 		
 		Cierrecajadet cierrecajadet = new Cierrecajadet();
 		cierrecajadet.setId(cierrecajadetId);
-		cierrecajadet.setTotal(detalle.getValpago());
+		cierrecajadet.setTotal(detalle.getValpago().floatValue());
 		cierrecajadet.setIngresoegreso(ingresoEgreso);
 		Fpago fpago = new Fpago();
 		fpago.setIdfpago(detalle.getIdfpago());

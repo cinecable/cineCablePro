@@ -38,14 +38,14 @@
 			</p:panelGrid>
 			<br />
 			<p:commandButton id="btnConsultar" value="Consultar" actionListener="#{cierreCajaBean.consultarSaldoInicial()}"
-				style="float: right;" update="txtSaldoInicial, idTablaIngresos, idTablaEgresos, btnCerrarCaja, txtTotalIngresos, txtTotalEgresos, :form-contentpage:mensajes" >
+				style="float: right;" update="txtSaldoInicial, idTablaIngresos, idTablaEgresos, btnCerrarCaja, :form-contentpage:mensajes" >
 				<f:setPropertyActionListener target="#{cierreCajaBean.isconsultaejecutada}" value="true"></f:setPropertyActionListener>
 			</p:commandButton>
 			<br />
 			<br />
 			<center >
 				<h:panelGroup id="txtSaldoInicial" >
-					<h:outputText value="#{cierreCajaBean.saldoInicial}" >
+					<b>SALDO INICIAL: </b><h:outputText value="#{cierreCajaBean.saldoInicial}" >
 						<f:convertNumber pattern="0.00" />
 					</h:outputText>
 				</h:panelGroup>
