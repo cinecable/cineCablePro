@@ -37,12 +37,19 @@
 					navigator="true" />
 			</p:panelGrid>
 			<br />
-			<p:commandButton id="btnConsultar" value="Consultar"
-				style="float: right;" update=":form-contentpage:idTablaIngresos, :form-contentpage:idTablaEgresos, :form-contentpage:mensajes" >
+			<p:commandButton id="btnConsultar" value="Consultar" actionListener="#{cierreCajaBean.consultarSaldoInicial()}"
+				style="float: right;" update="txtSaldoInicial, idTablaIngresos, idTablaEgresos, btnCerrarCaja, txtTotalIngresos, txtTotalEgresos, :form-contentpage:mensajes" >
 				<f:setPropertyActionListener target="#{cierreCajaBean.isconsultaejecutada}" value="true"></f:setPropertyActionListener>
 			</p:commandButton>
 			<br />
 			<br />
+			<center >
+				<h:panelGroup id="txtSaldoInicial" >
+					<h:outputText value="#{cierreCajaBean.saldoInicial}" >
+						<f:convertNumber pattern="0.00" />
+					</h:outputText>
+				</h:panelGroup>
+			</center>
 			<br />
 			<p:dataTable id="idTablaIngresos"
 				value="#{cierreCajaBean.lisIngresosCierreCaja}" var="ingreso"
@@ -67,6 +74,16 @@
 						<f:convertNumber pattern="0.00" />
 					</h:outputText>
 				</p:column>
+				<p:summaryRow>
+		            <p:column style="text-align:right">
+		                <h:outputText value="Total:" />
+		            </p:column>
+		            <p:column>
+		                <h:outputText value="#{cierreCajaBean.totalIngresos}">
+		                    <f:convertNumber type="currency" currencySymbol="$" />
+		                </h:outputText>
+		            </p:column>
+		        </p:summaryRow>
 			</p:dataTable>
 			<br />
 			<br />
@@ -96,10 +113,11 @@
 				</p:column>
 			</p:dataTable>
 			<br />
-			<center>
-				<p:commandButton value="Cerrar Caja" 
-					update=":form-contentpage:mensajes" >
-				</p:commandButton>
+			<center >
+			<h:panelGroup id="btnCerrarCaja" >
+				<p:commandButton value="Cerrar Caja" onclick="vardialoggrabar.show()" rendered="#{cierreCajaBean.isconsultaejecutada}" />
+			</h:panelGroup>
+				
 			</center>
 		</p:panel>
 		<p:dialog id="iddialogeditor" header="Detalle de Movimientos"
@@ -112,6 +130,21 @@
 					</h:outputText>
 				</p:column>
 			</p:dataTable>
+		</p:dialog>
+		<p:dialog id="iddialoggrabar" header="Grabar" closable="true" widgetVar="vardialoggrabar" modal="true" style="min-height: 80px; width: 450px">
+			<h:panelGrid id="idpanelgrabar" columns="2" width="100%">
+				<h:outputText id="idlabelgrabar" value="Confirme si desea continuar" />
+				<h:outputText value="" />
+				<h:outputText value="" />
+				<p:panelGrid id="idpanel2grabar" style="width: 100%; text-align: right;">
+					<p:row>
+					<p:column>
+					<p:commandButton id="idconfirmargrabar" value="Confirmar" action="#{cierreCajaBean.grabar()}" onclick="vardialoggrabar.hide()" update=":form-contentpage:mensajes" />
+					<p:commandButton id="idcancelargrabar" value="Cancelar" onclick="vardialoggrabar.hide()" />
+					</p:column>
+					</p:row>
+				</p:panelGrid>
+			</h:panelGrid>
 		</p:dialog>
 	</h:form>
 </ui:composition>

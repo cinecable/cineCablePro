@@ -50,7 +50,7 @@ public class Cierrecajadet implements java.io.Serializable {
 	}
 
 	public Cierrecajadet(CierrecajadetId id, Cierrecaja cierrecaja,
-			Float total, String ingresoegreso, Fpago fpago,Estado estado,
+			float total, String ingresoegreso, Fpago fpago,Estado estado,
 			Empresa empresa,Usuario usuario, Date fecha,
 			String iplog) {
 		this.id = id;
@@ -92,10 +92,10 @@ public class Cierrecajadet implements java.io.Serializable {
 		return this.total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(float total) {
 		this.total = total;
 	}
-
+	
 	@Column(name = "ingresoegreso", length = 2)
 	public String getIngresoegreso() {
 		return this.ingresoegreso;
@@ -143,11 +143,6 @@ public class Cierrecajadet implements java.io.Serializable {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
-	}
-
-	@Column(name = "total", nullable = false, precision = 8, scale = 8)
-	public void setTotal(float total) {
-		this.total = total;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)

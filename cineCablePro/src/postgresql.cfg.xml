@@ -100,6 +100,7 @@
         <mapping class="pojo.annotations.Cierrecaja" />
         <mapping class="pojo.annotations.CierrecajadetId" />
         <mapping class="pojo.annotations.Cierrecajadet" />
+        <mapping class="pojo.annotations.Saldoscierre" />
         <mapping class="net.cinecable.model.base.Tidentidad" />
 		<mapping class="net.cinecable.model.base.ParametroDatosBanco" />
 		<mapping class="net.cinecable.model.base.GeneracionBancoDepositos" />

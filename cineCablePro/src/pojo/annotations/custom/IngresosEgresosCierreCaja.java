@@ -11,14 +11,21 @@ public class IngresosEgresosCierreCaja implements Serializable {
 	private int idusuario;
 	private int idfpago;
 	private String nombre;
-	private Double valpago;
+	private float valpago;
 	private String ingresoegreso;
 	
 	public IngresosEgresosCierreCaja() {
 		
 	}
 	
-	public IngresosEgresosCierreCaja(int idusuario,int idfpago,String nombre,Double valpago,String ingresoegreso) {
+	public IngresosEgresosCierreCaja(int idusuario,int idfpago,String nombre,float valpago) {
+		this.idusuario = idusuario;
+		this.idfpago = idfpago;
+		this.nombre = nombre;
+		this.valpago = valpago;
+	}
+	
+	public IngresosEgresosCierreCaja(int idusuario,int idfpago,String nombre,float valpago,String ingresoegreso) {
 		this.idusuario = idusuario;
 		this.idfpago = idfpago;
 		this.nombre = nombre;
@@ -50,11 +57,11 @@ public class IngresosEgresosCierreCaja implements Serializable {
 		this.nombre = nombre;
 	}
 
-	public Double getValpago() {
+	public float getValpago() {
 		return valpago;
 	}
 
-	public void setValpago(Double valpago) {
+	public void setValpago(float valpago) {
 		this.valpago = valpago;
 	}
 

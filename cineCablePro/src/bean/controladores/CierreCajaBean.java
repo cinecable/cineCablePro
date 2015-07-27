@@ -15,10 +15,13 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
+import bo.negocio.CierreCajaBO;
 import bo.negocio.EgresoBO;
 import bo.negocio.PagosBO;
+import bo.negocio.SaldoscierreBO;
 import bo.negocio.UsuarioBO;
 
+import pojo.annotations.Saldoscierre;
 import pojo.annotations.Usuario;
 import pojo.annotations.custom.IngresosEgresosCierreCaja;
 import util.FacesUtil;
@@ -41,9 +44,26 @@ public class CierreCajaBean implements Serializable {
 	private IngresosEgresosCierreCaja ingresosCierreCajaSelected;
 	private LazyDataModel<IngresosEgresosCierreCaja> lisEgresosCierreCaja;
 	private IngresosEgresosCierreCaja egresosCierreCajaSelected;
+	private List<IngresosEgresosCierreCaja> lisIngresosCierreCajaTmp;
+	private List<IngresosEgresosCierreCaja> lisEgresosCierreCajaTmp;
+	private float totalIngresos;
+	private float totalEgresos;
+	private float saldoInicial;
+	boolean tienesaldoinicial;
+	Saldoscierre saldoscierre;
 	
 	public CierreCajaBean() {
+		totalIngresos = 0;
+		totalEgresos = 0;
+		saldoInicial = 0;
+		
+		saldoscierre = new Saldoscierre();
+		
+		lisIngresosCierreCajaTmp = new ArrayList<IngresosEgresosCierreCaja>();
+		lisEgresosCierreCajaTmp = new ArrayList<IngresosEgresosCierreCaja>();
+		
 		consultarIngresos();
+		consultarEgresos();
 	}
 
 	@PostConstruct
@@ -70,19 +90,21 @@ public class CierreCajaBean implements Serializable {
             lisIngresosCierreCaja = new LazyDataModel<IngresosEgresosCierreCaja>() {
 				@Override
 				 public List<IngresosEgresosCierreCaja> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String,String> filters) {
-				     List<IngresosEgresosCierreCaja> data = new ArrayList<IngresosEgresosCierreCaja>();
+					lisIngresosCierreCajaTmp = new ArrayList<IngresosEgresosCierreCaja>();
 				
 				     //Si no hay filtros que no consulte
 				     if(isconsultaejecutada || fechaDesde != null || fechaHasta != null){
 				         PagosBO pagosBO = new PagosBO();
 				         //int args[] = {0};
-				         data = pagosBO.lisIngresosCierreCaja(idusuario, fechaDesde, fechaHasta);
-				         if(data != null && data.size() > 0){
-				        	 this.setRowCount(data.size());
+				         lisIngresosCierreCajaTmp = pagosBO.lisIngresosCierreCaja(idusuario, fechaDesde, fechaHasta);
+				         if(lisIngresosCierreCajaTmp != null && lisIngresosCierreCajaTmp.size() > 0){
+				        	 this.setRowCount(lisIngresosCierreCajaTmp.size());
+				        	 
+				        	 totalIngresos = obtenerTotal(lisIngresosCierreCajaTmp);
 				         }
 				     }
 				
-				     return data;
+				     return lisIngresosCierreCajaTmp;
 				 }
                 
                 @Override
@@ -113,19 +135,21 @@ public class CierreCajaBean implements Serializable {
             lisEgresosCierreCaja = new LazyDataModel<IngresosEgresosCierreCaja>() {
 				@Override
 				 public List<IngresosEgresosCierreCaja> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String,String> filters) {
-				     List<IngresosEgresosCierreCaja> data = new ArrayList<IngresosEgresosCierreCaja>();
+					lisEgresosCierreCajaTmp = new ArrayList<IngresosEgresosCierreCaja>();
 				
 				     //Si no hay filtros que no consulte
 				     if(isconsultaejecutada || fechaDesde != null || fechaHasta != null){
 				         EgresoBO egresoBO = new EgresoBO();
 				         //int args[] = {0};
-				         data = egresoBO.lisEgresosCierreCaja(idusuario, fechaDesde, fechaHasta);
-				         if(data != null && data.size() > 0){
-				        	 this.setRowCount(data.size());
+				         lisEgresosCierreCajaTmp = egresoBO.lisEgresosCierreCaja(idusuario, fechaDesde, fechaHasta);
+				         if(lisEgresosCierreCajaTmp != null && lisEgresosCierreCajaTmp.size() > 0){
+				        	 this.setRowCount(lisEgresosCierreCajaTmp.size());
+				        	 
+				        	 totalEgresos = obtenerTotal(lisEgresosCierreCajaTmp);
 				         }
 				     }
 				
-				     return data;
+				     return lisEgresosCierreCajaTmp;
 				 }
                 
                 @Override
@@ -148,6 +172,84 @@ public class CierreCajaBean implements Serializable {
         }
         
     }
+	
+	protected float obtenerTotal(List<IngresosEgresosCierreCaja> data) {
+		float total = 0;
+		
+		for(IngresosEgresosCierreCaja ingresoEgreso : data){
+			total += ingresoEgreso.getValpago();
+		}
+		
+		return total;
+	}
+	
+	public void consultarSaldoInicial(){
+		try
+        {
+			//obtener el saldo inicial/anterior
+			SaldoscierreBO saldoscierreBO = new SaldoscierreBO();
+			saldoscierre = saldoscierreBO.getByIdUsuario(idusuario);
+			
+			if(saldoscierre != null){
+				saldoInicial = saldoscierre.getSaldo();
+				tienesaldoinicial = true;
+			}else{
+				saldoInicial = 0f;
+				tienesaldoinicial = false;
+			}
+        }catch(Exception re){
+            re.printStackTrace();
+            new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", "");
+        }
+	}
+
+	public void grabar(){
+		if(validacionOk()){
+			try{
+				CierreCajaBO cierreCajaBO = new CierreCajaBO();
+				
+				boolean ok = false;
+				
+				ok = cierreCajaBO.procesoCierreCaja(idusuario, fechaDesde, fechaHasta, tienesaldoinicial, saldoscierre, totalIngresos, totalEgresos, lisIngresosCierreCajaTmp, lisEgresosCierreCajaTmp);
+				
+				if(ok){
+					new MessageUtil().showInfoMessage("Cierre de Caja efecutado con Exito!", "");
+					/*FacesUtil facesUtil = new FacesUtil();
+					try {
+						facesUtil.redirect("cierre.jsf?faces-redirect=true");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}*/
+				}else{
+					new MessageUtil().showWarnMessage("No se ha efectuado el cierre", "");
+				}
+			} catch(Exception re) {
+				re.printStackTrace();
+				new MessageUtil().showFatalMessage("Ha ocurrido un error inesperado. Comunicar al Webmaster!", "");
+			}
+		}
+	}
+	
+	private boolean validacionOk(){
+		boolean ok = false;
+		
+		if(this.idusuario > 0){
+			if(this.fechaDesde != null){
+				if(this.fechaHasta != null){
+					ok = true;
+				}else{
+					new MessageUtil().showWarnMessage("Ingrese Fecha Desde", null);
+				}
+			}
+			else{
+				new MessageUtil().showWarnMessage("Ingrese Fecha Hasta", null);
+			}
+		}else{
+			new MessageUtil().showWarnMessage("Seleccionar Cajero", null);
+		}
+		
+		return ok;
+	}
 	
 	public List<Usuario> getLisUsuario() {
 		return lisUsuario;
@@ -231,5 +333,29 @@ public class CierreCajaBean implements Serializable {
 	public void setEgresosCierreCajaSelected(
 			IngresosEgresosCierreCaja egresosCierreCajaSelected) {
 		this.egresosCierreCajaSelected = egresosCierreCajaSelected;
+	}
+
+	public float getTotalIngresos() {
+		return totalIngresos;
+	}
+
+	public void setTotalIngresos(float totalIngresos) {
+		this.totalIngresos = totalIngresos;
+	}
+
+	public float getTotalEgresos() {
+		return totalEgresos;
+	}
+
+	public void setTotalEgresos(float totalEgresos) {
+		this.totalEgresos = totalEgresos;
+	}
+
+	public float getSaldoInicial() {
+		return saldoInicial;
+	}
+
+	public void setSaldoInicial(float saldoInicial) {
+		this.saldoInicial = saldoInicial;
 	}
 }

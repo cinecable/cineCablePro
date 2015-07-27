@@ -18,7 +18,7 @@ public class EgresoDAO {
 	public List<IngresosEgresosCierreCaja> lisSumEgresosByFechas(Session session, int idusuario, int idempresa, Date fechaDesde, Date fechaHasta) throws Exception {
 		List<IngresosEgresosCierreCaja> lisIngresosEgresosCierreCaja = null;
 		
-		String hql = " select new pojo.annotations.custom.IngresosEgresosCierreCaja(e.usuario.idusuario, f.idfpago, f.nombre, sum(e.valor), 1) ";
+		String hql = " select new pojo.annotations.custom.IngresosEgresosCierreCaja(e.usuario.idusuario, f.idfpago, f.nombre, sum(e.valor)) ";
 		hql += " from Egreso e, Fpago f ";
 		hql += " where (e.fechaegreso between :fechadesde and :fechahasta) ";
 		hql += " and e.usuario.idusuario = :idusuario ";
