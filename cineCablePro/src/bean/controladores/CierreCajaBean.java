@@ -51,6 +51,7 @@ public class CierreCajaBean implements Serializable {
 	private float saldoInicial;
 	boolean tienesaldoinicial;
 	Saldoscierre saldoscierre;
+	private boolean haydata;
 	
 	public CierreCajaBean() {
 		totalIngresos = 0;
@@ -93,13 +94,14 @@ public class CierreCajaBean implements Serializable {
 					lisIngresosCierreCajaTmp = new ArrayList<IngresosEgresosCierreCaja>();
 				
 				     //Si no hay filtros que no consulte
-				     if(isconsultaejecutada || fechaDesde != null || fechaHasta != null){
+				     if(isconsultaejecutada && (fechaDesde != null && fechaHasta != null) ){
 				         PagosBO pagosBO = new PagosBO();
 				         //int args[] = {0};
 				         lisIngresosCierreCajaTmp = pagosBO.lisIngresosCierreCaja(idusuario, fechaDesde, fechaHasta);
 				         if(lisIngresosCierreCajaTmp != null && lisIngresosCierreCajaTmp.size() > 0){
 				        	 this.setRowCount(lisIngresosCierreCajaTmp.size());
 				        	 
+				        	 haydata = true;
 				        	 totalIngresos = obtenerTotal(lisIngresosCierreCajaTmp);
 				         }
 				     }
@@ -138,13 +140,14 @@ public class CierreCajaBean implements Serializable {
 					lisEgresosCierreCajaTmp = new ArrayList<IngresosEgresosCierreCaja>();
 				
 				     //Si no hay filtros que no consulte
-				     if(isconsultaejecutada || fechaDesde != null || fechaHasta != null){
+					 if(isconsultaejecutada && (fechaDesde != null && fechaHasta != null) ){
 				         EgresoBO egresoBO = new EgresoBO();
 				         //int args[] = {0};
 				         lisEgresosCierreCajaTmp = egresoBO.lisEgresosCierreCaja(idusuario, fechaDesde, fechaHasta);
 				         if(lisEgresosCierreCajaTmp != null && lisEgresosCierreCajaTmp.size() > 0){
 				        	 this.setRowCount(lisEgresosCierreCajaTmp.size());
 				        	 
+				        	 haydata = true;
 				        	 totalEgresos = obtenerTotal(lisEgresosCierreCajaTmp);
 				         }
 				     }
@@ -357,5 +360,13 @@ public class CierreCajaBean implements Serializable {
 
 	public void setSaldoInicial(float saldoInicial) {
 		this.saldoInicial = saldoInicial;
+	}
+
+	public boolean isHaydata() {
+		return haydata;
+	}
+
+	public void setHaydata(boolean haydata) {
+		this.haydata = haydata;
 	}
 }
