@@ -24,9 +24,14 @@ public class EgresoBO {
 		try{
             session = HibernateUtil.getSessionFactory().openSession();
             EgresoDAO egresoDAO = new EgresoDAO();
+            
             UsuarioBean usuarioBean = (UsuarioBean)new FacesUtil().getSessionBean("usuarioBean");
             int idempresa = usuarioBean.getUsuario().getEmpresa().getIdempresa();
             lisIngresosEgresosCierreCaja = egresoDAO.lisSumEgresosByFechas(session, idusuario, idempresa, fechaDesde, fechaHasta);
+            
+            for(IngresosEgresosCierreCaja reg:lisIngresosEgresosCierreCaja){
+        		//reg.setLisVegresos(vegresosDAO.lisVegresos(session, idusuario, reg.getIdfpago(), fechaDesde, fechaHasta));
+        	}
         }
         catch(Exception ex){
             throw new RuntimeException(ex);

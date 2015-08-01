@@ -1,6 +1,7 @@
 package pojo.annotations.custom;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class IngresosEgresosCierreCaja implements Serializable {
 
@@ -13,6 +14,8 @@ public class IngresosEgresosCierreCaja implements Serializable {
 	private String nombre;
 	private Double valpago;
 	private String ingresoegreso;
+	private List<Vingresos> lisVingresos;
+	private List<Vingresos> lisVegresos;
 	
 	public IngresosEgresosCierreCaja() {
 		
@@ -71,6 +74,22 @@ public class IngresosEgresosCierreCaja implements Serializable {
 
 	public void setIngresoegreso(String ingresoegreso) {
 		this.ingresoegreso = ingresoegreso;
+	}
+
+	public List<Vingresos> getLisVingresos() {
+		return lisVingresos;
+	}
+
+	public void setLisVingresos(List<Vingresos> lisVingresos) {
+		this.lisVingresos = lisVingresos;
+	}
+
+	public List<Vingresos> getLisVegresos() {
+		return lisVegresos;
+	}
+
+	public void setLisVegresos(List<Vingresos> lisVegresos) {
+		this.lisVegresos = lisVegresos;
 	}
 
 }

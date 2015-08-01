@@ -60,7 +60,7 @@
 				selectionMode="single" emptyMessage="No se encontraron registros"
 				lazy="true">
 
-				<p:ajax event="rowSelect" update=":form-contentpage:iddialogeditor" oncomplete="eventDialog.show();" />
+				<p:ajax event="rowSelect" update=":form-contentpage:iddialogdetalleingresos" oncomplete="vardialogingresos.show();" />
 
 				<f:facet name="header">
 					INGRESOS
@@ -97,7 +97,7 @@
 				selectionMode="single" emptyMessage="No se encontraron registros"
 				lazy="true">
 	
-				<p:ajax event="rowSelect" update=":form-contentpage:iddialogeditor" oncomplete="eventDialog.show();" />
+				<p:ajax event="rowSelect" update=":form-contentpage:iddialogdetalleegresos" oncomplete="vardialogegresos.show();" />
 	
 				<f:facet name="header">
 					EGRESOS
@@ -120,13 +120,60 @@
 				
 			</center>
 		</p:panel>
-		<p:dialog id="iddialogeditor" header="Detalle de Movimientos"
-			closable="true" widgetVar="eventDialog" modal="true"
+		<p:dialog id="iddialogdetalleingresos" header="Detalle de Movimientos"
+			closable="true" widgetVar="vardialogingresos" modal="true" onHide="varTablaIngresos.unselectAllRows()" 
 			showEffect="fade" hideEffect="fade" width="600">
-			<p:dataTable id="idTablaDetalle" value="#{cierreCajaBean.ingresosCierreCajaSelected}" var="detalle">
+			<p:dataTable id="idTablaDetalleIngresos" value="#{cierreCajaBean.ingresosCierreCajaSelected.lisVingresos}" var="detalle"
+			paginator="true" rows="10"
+			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
 				<p:column>
-					<f:facet name="header">Descripcion</f:facet>
-					<h:outputText value="#{detalle.nombre}">
+					<f:facet name="header">Cédula</f:facet>
+					<h:outputText value="#{detalle.numidentificacion}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">F.Pago</f:facet>
+					<h:outputText value="#{detalle.formapago}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">No.Documento</f:facet>
+					<h:outputText value="#{detalle.nrodocumento}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Entidad</f:facet>
+					<h:outputText value="#{detalle.entidad}" />
+				</p:column>
+				<p:column headerText="Valor">
+					<h:outputText value="#{detalle.valpago}" >
+						<f:convertNumber pattern="0.00" />
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+		</p:dialog>
+		<p:dialog id="iddialogdetalleegresos" header="Detalle de Movimientos"
+			closable="true" widgetVar="vardialogegresos" modal="true" onHide="varTablaEgresos.unselectAllRows()" 
+			showEffect="fade" hideEffect="fade" width="600">
+			<p:dataTable id="idTablaDetalleEgresos" value="#{cierreCajaBean.egresosCierreCajaSelected.lisVingresos}" var="detalle"
+			paginator="true" rows="10"
+			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+				<p:column>
+					<f:facet name="header">Cédula</f:facet>
+					<h:outputText value="#{detalle.numidentificacion}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">F.Pago</f:facet>
+					<h:outputText value="#{detalle.formapago}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">No.Documento</f:facet>
+					<h:outputText value="#{detalle.nrodocumento}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Entidad</f:facet>
+					<h:outputText value="#{detalle.entidad}" />
+				</p:column>
+				<p:column headerText="Valor">
+					<h:outputText value="#{detalle.valpago}" >
+						<f:convertNumber pattern="0.00" />
 					</h:outputText>
 				</p:column>
 			</p:dataTable>

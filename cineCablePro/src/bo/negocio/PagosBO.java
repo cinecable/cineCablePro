@@ -12,13 +12,11 @@ import pojo.annotations.custom.IngresosEgresosCierreCaja;
 import util.FacesUtil;
 import util.HibernateUtil;
 import dao.datos.PagosDAO;
+import dao.datos.VingresosDAO;
 
 public class PagosBO {
-
-	PagosDAO pagosDAO;
 	
 	public PagosBO() {
-		pagosDAO = new PagosDAO();
 	}
 	
 	public Pagos getPagosById(int idpago) throws Exception {
@@ -27,6 +25,8 @@ public class PagosBO {
 		
 		try{
             session = HibernateUtil.getSessionFactory().openSession();
+            PagosDAO pagosDAO = new PagosDAO();
+            
             pagos = pagosDAO.getPagosById(session, idpago);
         }
         catch(Exception ex){
@@ -45,6 +45,8 @@ public class PagosBO {
 		
 		try{
             session = HibernateUtil.getSessionFactory().openSession();
+            PagosDAO pagosDAO = new PagosDAO();
+            
             UsuarioBean usuarioBean = (UsuarioBean)new FacesUtil().getSessionBean("usuarioBean");
             int idempresa = usuarioBean.getUsuario().getEmpresa().getIdempresa();
             lisPagos = pagosDAO.lisPagosAbonosActivosByFactura(session, idfactura, idempresa);
@@ -65,6 +67,8 @@ public class PagosBO {
 		
 		try{
             session = HibernateUtil.getSessionFactory().openSession();
+            PagosDAO pagosDAO = new PagosDAO();
+            
             UsuarioBean usuarioBean = (UsuarioBean)new FacesUtil().getSessionBean("usuarioBean");
             int idempresa = usuarioBean.getUsuario().getEmpresa().getIdempresa();
             lisPagos = pagosDAO.lisPagosAbonosActivosByCuenta(session, idcuenta, idempresa);
@@ -85,6 +89,8 @@ public class PagosBO {
 		
 		try{
             session = HibernateUtil.getSessionFactory().openSession();
+            PagosDAO pagosDAO = new PagosDAO();
+            
             UsuarioBean usuarioBean = (UsuarioBean)new FacesUtil().getSessionBean("usuarioBean");
             int idempresa = usuarioBean.getUsuario().getEmpresa().getIdempresa();
             lisPagos = pagosDAO.lisPagosByFechas(session, idcuenta, idempresa, fechaDesde, fechaHasta);
@@ -105,9 +111,17 @@ public class PagosBO {
 		
 		try{
             session = HibernateUtil.getSessionFactory().openSession();
+            PagosDAO pagosDAO = new PagosDAO();
+            VingresosDAO vingresosDAO = new VingresosDAO();
+            
             UsuarioBean usuarioBean = (UsuarioBean)new FacesUtil().getSessionBean("usuarioBean");
+            
             int idempresa = usuarioBean.getUsuario().getEmpresa().getIdempresa();
             lisIngresosCierreCaja = pagosDAO.lisSumIngresosByFechas(session, idusuario, idempresa, fechaDesde, fechaHasta);
+            
+        	for(IngresosEgresosCierreCaja reg:lisIngresosCierreCaja){
+        		reg.setLisVingresos(vingresosDAO.lisVingresos(session, idusuario, reg.getIdfpago(), fechaDesde, fechaHasta));
+        	}
         }
         catch(Exception ex){
             throw new RuntimeException(ex);
