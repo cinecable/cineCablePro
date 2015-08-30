@@ -68,7 +68,9 @@ public class TpagosDAO {
             Criteria criteria = session.createCriteria(Tpagos.class)
             		.add( Restrictions.eq("pagos.idpago", idpago))
                     .createAlias("fpago", "formapago", Criteria.LEFT_JOIN)
-                    .createAlias("bancosByIdbcoemisor", "bcoemisor", Criteria.LEFT_JOIN);
+                    .createAlias("bancosByIdbcoemisor", "bcoemisor", Criteria.LEFT_JOIN)
+                    .createAlias("pagos", "pag", Criteria.LEFT_JOIN);
+            
             
             criteria.addOrder(Order.asc("idtpago"))
             .setMaxResults(pageSize)
@@ -82,6 +84,7 @@ public class TpagosDAO {
 	            		.add( Restrictions.eq("pagos.idpago", idpago))
 	                    .createAlias("fpago", "formapago", Criteria.LEFT_JOIN)
 	                    .createAlias("bancosByIdbcoemisor", "bcoemisor", Criteria.LEFT_JOIN)
+	                    .createAlias("pagos", "pag", Criteria.LEFT_JOIN)
                         .setProjection( Projections.rowCount());
 
 				Object object = criteriaCount.uniqueResult();

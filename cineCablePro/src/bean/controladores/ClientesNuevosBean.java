@@ -109,6 +109,8 @@ public class ClientesNuevosBean implements Serializable{
 		dbasCliBean.getClientes().getEstadocivil().setIdestadocivil(Parametro.ESTADO_CIVIL_SOLTERO);
 		dbasCliBean.getClientes().setGenero(Parametro.GENERO_MASCULINO);
 		dbasCliBean.getClientes().getTipocliente().setIdtipocliente(Parametro.TIPO_CLIENTE_NORMAL);
+		dbasCliBean.getClientes().setEmail("clientegeneral@standard.com");
+		dbasCliBean.getClientes().getTipoidentidad().setIdtidentidad(Parametro.TIPO_IDENTIFICACION_CEDULA);
 	}
 	
 	public void muestraCalendario(){
