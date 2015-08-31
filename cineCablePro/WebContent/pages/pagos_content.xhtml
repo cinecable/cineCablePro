@@ -22,7 +22,7 @@
         	
         	<p:ajax event="tabChange" listener="#{pagosBean.tabChangeListener}" update=":form-sidepage:idpanelsidepage, :form-contentpage:idTabTipoPagos, :form-contentpage:mensajes" />
         	
-        	<p:tab id="idanticipados" title="#{pagosBean.TAB_ANTICIPO_TITLE}" rendered="#{pagosBean.tabAnticipadosRendered}">
+        	<p:tab id="idanticipados" title="#{pagosBean.TAB_ANTICIPO_TITLE}" rendered="false">
         		<h:panelGrid id="idpanelanticipados" columns="1">
 					
 				</h:panelGrid>

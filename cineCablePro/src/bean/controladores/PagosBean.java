@@ -418,12 +418,12 @@ public class PagosBean implements Serializable {
 						ImpuestoValor impuestoValor = new ImpuestoValor();
 						//basandose en que el orden es: primero iva, segundo ice, ....
 						//primero obtenemos el iva ya que el ice depende del iva (servicio - descuentos + iva)*%ice
-						if(impservicios.getDescripcion().compareToIgnoreCase("iva") == 0){
+						if(impservicios.getDescripcion().compareToIgnoreCase("I.V.A.") == 0){
 							//iva = (servicio - descuentos)*%iva
 							valoriva = (servicio.getCostoservicio().getCosto() + servicioValor.getValorDescuento()) * impservicios.getValimpuesto();
 							valor = valoriva;
 						}else{
-							if(impservicios.getDescripcion().compareToIgnoreCase("ice") == 0){
+							if(impservicios.getDescripcion().compareToIgnoreCase("I.C.E.") == 0){
 								valorice = (servicio.getCostoservicio().getCosto() + servicioValor.getValorDescuento() + valoriva) * impservicios.getValimpuesto();
 								valor = valorice;
 							}
